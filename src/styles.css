@@ -1,1 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+.ui-select-match,textarea, form input{
+    margin-bottom: 5px !important;
+}
+.swal2-popup {
+    width: 30%;
+}
+.swal2-title {
+    font-size: 22px !important ;
+}
+.swal2-content {
+    font-size: 18px !important;
+}
+
+.content-wrapper {
+    min-height: 580px !important;
+}
+.content-header > div > strong {
+    font-size: 24px
+}
+
+.content-header  > div > strong > small{
+    font-size: 15px;
+    display: inline-block;
+    padding-left: 4px;
+    font-weight: 300;
+}
+
+.btn {
+    margin-right: 5px;
+}
+table {
+    width: 100%;
+    background: #fff !important;
+}
+.modal-title {
+    text-transform: uppercase !important;
+}

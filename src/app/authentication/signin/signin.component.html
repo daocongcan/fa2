@@ -1,0 +1,52 @@
+
+	<div class="login-page animate">
+		<div class="row">
+			<div class="row banner" >
+				<img src="/assets/images/banner.jpg" class="img-responsive" />
+			</div>
+			<div class="col-md-4 col-md-offset-4 col-xs-11">
+				
+				<!-- <h1>Geolocation</h1> -->
+				<form (ngSubmit)="onLogin()">
+				<div class="form-content">
+					
+					<div class="form-group">
+						<input type="text" class="form-control input-underline input-lg" placeholder="&#xf007;    Identifiant" [(ngModel)]="user.name_user" name="name_user" required>
+					</div>
+					<div class="form-group">
+						<input type="password" name="password" [(ngModel)]="user.password" class="form-control input-underline input-lg" required placeholder="&#xf023;    Mot de passes">
+					</div>
+					<div class="form-group pull-left" style="width: 100%">
+						<!-- <div class="checkbox">
+							<label>
+								<input type="checkbox"> Se souvenir de moi
+							</label>
+						</div> -->
+						<!-- <input type="checkbox" name="rememberMe" id="rememberMe" autocomplete="off">
+						<div class="btn-group">
+							<label for="rememberMe" class="btn btn-success">
+								<span class="glyphicon glyphicon-ok"></span>
+								<span></span>
+							</label>
+							<label for="rememberMe" class="btn btn-default active">
+								Se souvenir de moi
+							</label>
+						</div> -->
+						<!-- <div class="material-switch">
+                            <input id="someSwitchOptionSuccess" name="someSwitchOption001" type="checkbox"/>
+                            <label for="someSwitchOptionSuccess" class="label-success"></label>
+							&nbsp;Se souvenir de moi
+                        </div> -->
+					</div>
+					<div class="form-group">
+						<input type="submit" class="btn btn-info rounded-btn" value="Login" style="width: 50%" />
+					</div>
+				</div>
+				</form>
+			</div>	
+			
+		</div>
+
+	</div>
+
+

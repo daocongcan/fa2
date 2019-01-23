@@ -1,0 +1,32 @@
+<div class="row content-wrapper" >
+  <div class="content col-md-12">
+    <section class="row  content-header" style="padding-top: 0;">
+      <div class="col-md-12">
+        <strong >
+          GW
+          
+          <!-- <small >Control panel</small> -->
+        </strong>
+      </div>
+      
+    </section>
+    <form #groupForm (ngSubmit)="save();">
+      <div class="col-md-6 md gw-left">  
+        <!-- <input class="form-control" [(ngModel)]="gw._id" type="number" name="_id" placeholder="ID"> -->
+        <input class="form-control" [(ngModel)]="gw.name_gw" type="text" name="name_gw" placeholder="Name GW">
+        <input class="form-control" [(ngModel)]="gw.IP_public" type="text" name="IP_public" placeholder="IP PUBLIC">
+        <input class="form-control" [(ngModel)]="gw.OS" type="text" name="os" placeholder="OS">
+        
+      </div>
+      <div class="col-md-6 md gw-right">  
+        
+        <input class="form-control" [(ngModel)]="gw.MAC_add" type="text" name="mac_add" placeholder="MAC ADD">
+        
+      </div>
+      <div class="col-md-12">
+        <button  [routerLink]="['/gw']" class="btn btn-warning">LIST GW</button> 
+        <button class="btn btn-primary" type="submit" value=" ">ADD A GW</button>
+      </div>
+    </form>  
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<div  class="row content-wrapper">
+    <div class="col-md-12">
+      <section class="row  content-header">
+        <div class="col-md-12">
+          <strong >
+            User
+            
+            <!-- <small >Control panel</small> -->
+          </strong>
+        </div>
+        
+      </section>
+      <form (ngSubmit)="saveUser()">
+        <div class="col-md-6 md gw-left">  
+          <!-- <input class="form-control" type="number" [(ngModel)]="user._id" name="id" id="id" placeholder="ID"> -->
+          <!-- <input class="form-control" type="number" [(ngModel)]="user.id_company" name="address" id="address" placeholder="Company"> -->
+          
+          
+
+          <input class="form-control" type="text" [(ngModel)]="user.name_user"  name="name_user"  placeholder="User Name">
+          <input class="form-control" type="email"  
+          [(ngModel)]="user.email" name="email" placeholder="Email">
+          <input class="form-control" type="password" [(ngModel)]="user.password" name="password"  placeholder="Password">
+  
+        </div>
+        <div class="col-md-6 ">  
+          
+          
+              
+          <div  class="col-md-12 role" style="padding: 0">
+              
+              <!-- <div *ngFor="let role of roles; index as i" >
+                  <label><input id="role_{{role._id}}"  type="checkbox" value="{{role._id}}">{{role.role_name}}</label>
+              </div> -->
+              <!-- <select [(ngModel)]="user.id_role" name="role" id="role" class="form-control">
+                
+                <option *ngFor="let role of roles" value="{{role._id}}">{{role.role_name}}</option>
+              </select> -->
+              <ng-select #company
+                  [items]="items"
+                  (data)="refreshValue($event)"
+                  (selected)="selected($event)"
+                  (removed)="removed($event)"
+                  (typed)="typed($event)"
+                  placeholder="No Company Selected">
+              </ng-select>
+              <ng-select #role 
+                  [items]="items2"
+                  (data)="refreshValue($event)"
+                  (selected)="selected2($event)"
+                  (removed)="removed($event)"
+                  (typed)="typed($event)"
+                  placeholder="No Role Selected">
+              </ng-select>
+
+            
+          </div>
+          
+        </div>
+        <div class="col-md-12">
+          <button class="btn btn-warning" [routerLink]="['/user']" >LIST USER</button>
+          <button class="btn btn-primary" style="" type="submit" value=" ">ADD USER</button>
+        </div>
+      </form>
+  
+      
+    </div>
+  </div> 

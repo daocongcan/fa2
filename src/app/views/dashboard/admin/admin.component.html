@@ -1,0 +1,38 @@
+<div *ngIf="role == 1" class="row content-wrapper">
+  <div class="col-md-12">
+    <section class="row  content-header">
+      <div class="col-md-12">
+        <strong >
+          COMPANY
+          
+          <!-- <small >Control panel</small> -->
+        </strong>
+      </div>
+      
+    </section>
+    <form (ngSubmit)="saveCompany()">
+      <div class="col-md-6 md gw-left">  
+        <!-- <input class="form-control"  type="number" [(ngModel)]="company._id" name="_id" placeholder="ID"> -->
+        <input class="form-control" type="text" [(ngModel)]="company.name_company" name="name_company" id="name_company" placeholder="COMPANY NAME">
+        <input class="form-control" type="text" [(ngModel)]="company.address" name="address" id="address" placeholder="ADDRESS">
+        <input class="form-control" type="number" [(ngModel)]="company.tax_number"  name="tax_number" id="tax_number" placeholder="TAX">
+        <input class="form-control" type="number" [(ngModel)]="company.phone" name="phone" id="phone" placeholder="PHONE">
+
+      </div>
+      <div class="col-md-6 md gw-right">  
+        <div class="row action">
+          
+          <!-- <button class="btn-add" >ADD</button> -->
+          <!-- <button class="btn-delete">DELETE</button> -->
+          <!-- <button [routerLink]="['/user']" class="btn-user">USER</button> -->
+        </div>
+      </div>
+      <div class="col-md-12">
+        <button class="btn btn-warning" [routerLink]="['/admin/add']" >LIST COMPANY</button>
+        <button class="btn btn-primary" type="submit" value=" ">ADD COMPANY</button>
+      </div>
+    </form>
+
+    
+  </div>
+</div> 

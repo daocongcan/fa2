@@ -1,0 +1,444 @@
+<div class="content-wrapper"> 
+    <section class="row  content-header">
+      <div class="col-md-3">
+        <strong >
+          NODE
+          <!-- <small><button data-toggle="collapse" data-target="#data" > Control panel</button></small> -->
+          <small >Control panel</small>
+        </strong>
+      </div>
+      <div class="col-md-4">
+        <div class="input-group">
+            <input type="text" (keyup.enter)="seachName()" [(ngModel)]="keySearch" class="form-control" placeholder="Search...">
+              <span class="input-group-btn">
+                <button (click)="seachName()" type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                </button>
+              </span>
+        </div>
+      </div>
+      <ol class="col-md-5 ">
+        <!-- breadcrumb <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li> [routerLink]="['/node/add']" -->
+        <button (click)="addActive()" data-toggle="modal" data-target="#addModal"   class="btn btn-primary btn-add" > <i class="fa fa-plus"></i> 
+          ADD
+        </button>
+        <button *ngIf=" chart != null " class="btn btn-info btn-chart" data-toggle="modal" data-target="#chart" (click)="getChart(chart)"><i class="fa fa-line-chart"></i>
+          CHART
+        </button>
+        <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" >
+          <i class="	fa fa-times"></i> DELETE
+        </button>
+      </ol>
+    </section>
+    <div class="col-md-12">
+      <!-- <table style="width: 100%;" class="table table-striped table-hover dataTable">
+          <thead>
+            <tr>
+              <th>
+                
+              </th>
+              
+              <th>
+                Node Name
+              </th>
+              
+              <th>
+                Status
+              </th>
+              <th>
+                Codec
+              </th>
+              <th>
+                OS
+              </th>
+              <th>
+                  Name Group
+                </th>
+              
+            
+            </tr>
+          </thead>
+          <tr class="Node"  *ngFor="let node of paginations">
+            
+            <td>
+              <input type="checkbox"  value="node._id" (change)="getIdChecked($event, node._id)"  name="delete" >
+            </td>
+  
+            <td title="edit" style="cursor: pointer;" (click)="getUpdateNode(node)" data-toggle="modal" data-target="#myModal" id="{{node._id}}"  >
+             {{node.name_node}}
+             
+            
+            </td>
+            <td>
+              {{node.status}}
+            </td>
+            <td>
+              {{node.Codec}}
+            </td>
+            <td>
+                {{node.OS}}
+              </td>
+            <td >
+              <div *ngFor="let group of groups">
+                <span *ngIf="( group._id == node.id_group )">
+                  {{ group.group_name }} 
+                </span>
+                
+              </div>
+            </td>
+            
+            <td>
+              <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#myModal">
+                <i class="fa fa-lg fa-edit"></i>
+              </button>
+              &nbsp;&nbsp;
+              <button type="button" class="btn btn-danger"  >
+                <i class="fa fa-lg fa-times"></i>
+              </button>
+            </td>
+          </tr>
+        </table> -->
+        <!-- Modal -->
+        <!-- <pagination *ngIf="nodes.length > 10" [totalItems]="nodes.length" (pageChanged)="pageChanged($event)"></pagination> -->
+        
+        <div class="col-md-12 col-sm-12" style="border: 6px solid #fff;padding: 0px;">
+          <div class="col-md-8 md"  style="padding: 0">
+
+          
+            <agm-map [latitude]="10.762622" [longitude]="106.660172" [zoom]="1">
+              <agm-marker *ngIf=" lat != 0 && long != 0 "  [latitude]="lat" [longitude]="long">
+                <!-- <agm-info-window> 
+                  <p><b>Name:</b> {{nameNode}} </p>
+                  <p><b>Create time:</b> {{dateNode}}</p>
+                </agm-info-window> -->
+              </agm-marker>
+              
+            </agm-map>
+
+          </div>
+
+          <div class="col-md-4 md" style="vertical-align: top; overflow-y: scroll;
+          min-height: 420px;padding: 0">
+            <tabset>
+              <!-- <tab  heading="View" id="tab1"> -->
+                <table class="table table-striped table-hover capteur-list ng-star-inserted">
+                  <thead>
+                    <tr>
+                      <td></td>
+                      <td>
+                          
+                      </td>
+                      <td>
+                        Name
+                      </td>
+                      <td>
+                        Group
+                      </td>
+                      <td>
+                          Status
+                        </td>
+                    </tr>
+                  </thead>
+                    <tr *ngFor="let node of nodes" >
+                      <td title="Delete" >
+                        <input type="checkbox"  value="node._id" (change)="getIdChecked($event, node._id)"  name="delete" >
+                      </td>
+                      <td title="Local">
+                        <a class="icon-geo" id="{{node.name_node}}" href="javascript:void(0)" (click)="getGeo(node._id,node.name_node)" ><i class="fa fa-crosshairs fa-lg"></i></a>
+                      </td>
+                      <td title="edit" style="cursor: pointer;" (click)="getUpdateNode(node)" data-toggle="modal" data-target="#myModal" id="{{node._id}}" >
+                        {{node.name_node}}
+                      </td>
+                      <td>
+                        <div *ngFor="let group of groups">
+                          <span *ngIf="( group._id == node.id_group )">
+                            {{ group.group_name }} 
+                          </span>
+                        </div>
+                      </td>
+                      <td *ngIf="node.status == 'true'">
+                        active
+                      </td>
+                      <td *ngIf="node.status != 'true'">
+                        not active
+                      </td>
+                    </tr>
+                  </table>  
+              <!-- </tab> -->
+              <!-- <tab heading="Delete">
+
+                <table class="table table-striped table-hover capteur-list ng-star-inserted">
+                  <thead>
+                    <tr>
+                      <td >
+                          
+                      </td>
+                      <td>
+                        Name
+                      </td>
+                      <td>
+                        Group
+                      </td>
+                      <td>
+                          Status
+                        </td>
+                    </tr>
+                    </thead>
+                    <tr *ngFor="let node of nodes" >
+                      <td>
+                        
+                        <input type="checkbox"  value="node._id" (change)="getIdChecked($event, node._id)"  name="delete" >
+                      </td>
+                      <td>
+                        {{node.name_node}}
+                      </td>
+                      <td >
+                        <div *ngFor="let group of groups">
+                          <span *ngIf="( group._id == node.id_group )">
+                            {{ group.group_name }} 
+                          </span>
+                          
+                        </div>
+                      </td>
+                      <td *ngIf="node.status == 'true'">
+                          active
+                        </td>
+                      <td *ngIf="node.status != 'true'">
+                        not active
+                      </td>
+                      
+                    </tr>
+      
+                    
+                    
+                  </table>  
+
+              </tab> -->
+              
+            </tabset>
+          </div>
+        </div>
+        
+        <!-- Update Node -->
+        <div id="myModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+      
+            <form (ngSubmit)="save()">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">UPDATE NODE</h4>
+                </div>
+                <div class="row modal-body">
+
+                    <div class="col-md-12 md gw-left">  
+                        <input class="form-control" type="text" [(ngModel)]="updateNode.name_node" name="name_node"  placeholder="NAME NODE">
+                        <!-- <input class="form-control" type="text" [(ngModel)]="updateNode.status" name="status" placeholder="STATUS"> -->
+
+                        <ng-select title="" #status   style="width: 100%;display: none;"
+                          [allowClear]="true"
+                          [items]="arrStatus"
+                          (data)="refreshValue($event)"
+                          (selected)="selectedStatus($event)"
+                          (removed)="removed($event)"
+                          (typed)="typed($event)"
+                          placeholder="NO STATUS SELECTED">
+                        </ng-select>  
+
+                        <input class="form-control" type="text" [(ngModel)]="updateNode.Manufacture" name="Manufacture" placeholder="MANUFACTURE">
+                        <input class="form-control" type="text" [(ngModel)]="updateNode.Codec" name="Codec" placeholder="CODEC">
+                        <input class="form-control" type="text" [(ngModel)]="updateNode.OS" name="OS" placeholder="OS">
+                        
+                        <ng-select title="" #gr  style="width: 100%;"
+                          [allowClear]="true"
+                          [items]="items"
+                          (data)="refreshValue($event)"
+                          (selected)="selectedGroup($event)"
+                          (removed)="removed($event)"
+                          (typed)="typed($event)"
+                          placeholder="NO GROUP SELECTED">
+                        </ng-select>  
+                        
+                        <input class="form-control" type="text" [(ngModel)]="updateNode.dev_eui" name="dev_eui" placeholder="DEVEUI">
+                        <input class="form-control" type="text" [(ngModel)]="updateNode.app_eui" name="app_eui" placeholder="APPEUI">
+                        <input class="form-control" type="text" [(ngModel)]="updateNode.app_key" name="app_key" placeholder="APPKEY">
+                        <!-- <input class="form-control" type="text" [(ngModel)]="updateNode.Profile" name="Profile" placeholder="PROFILE"> -->
+                        <textarea *ngIf="profile == true" rows="5" title="Profile" class="form-control">
+  AppNonce: {{updateNode.Profile.AppNonce}}
+  DevAddr: {{updateNode.Profile.DevAddr}}
+  DevNonce: {{updateNode.Profile.DevNonce}}
+  MACPayload: {{updateNode.Profile.MACPayload}}
+  MHDR: {{updateNode.Profile.MHDR}}
+  MIC: {{updateNode.Profile.MIC}}
+  NetID: {{updateNode.Profile.NetID}}
+  PHYPayload:  {{updateNode.Profile.PHYPayload}}
+  UpdateTime: {{updateNode.Profile.UpdateTime}}
+                        </textarea>
+                    </div>
+                  </div>
+                <div class="modal-footer">
+                  <button type="button"  class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button class="btn btn-primary btn-submit btn-search"  type="submit" value=" ">SAVE</button>
+                </div>
+              
+              </div>
+            </form>  
+          </div>
+        </div>
+        <!-- End Update Node -->
+
+        <!-- Add Node -->
+        <div *ngIf=" addactive == true " id="addModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+            <form (ngSubmit)="add()">
+              <div class="row modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">ADD NODE</h4>
+                </div>
+                <div class="row modal-body">
+                    <div class="col-md-6 md gw-left">  
+                      <!-- <input class="form-control" type="number" [(ngModel)]="node._id" name="id" placeholder="ID NODE"> -->
+                      <input class="form-control" type="text" [(ngModel)]="node2.name_node" name="name_node"  placeholder="NAME NODE">
+                      <!-- <input class="form-control" type="text" [(ngModel)]="node.status" name="status" placeholder="STATUS"> -->
+                      <!-- <select class="form-control"  [(ngModel)]="node.status" name="status" id="status" >
+                        <option value="true">Active</option>
+                        <option value="false">Not Active</option>
+                      </select> -->
+              
+                      <!-- <ng-select title="" #status  style="width: 100%;"
+                        [allowClear]="true"
+                        [items]="arrStatus"
+                        (data)="refreshValue($event)"
+                        (selected)="selectedStatus($event)"
+                        (removed)="removed($event)"
+                        (typed)="typed($event)"
+                        placeholder="NO STATUS SELECTED">
+                      </ng-select>   -->
+              
+                      <input class="form-control" type="text" [(ngModel)]="node2.Manufacture" name="Manufacture" placeholder="MANUFACTURE">
+                      <!-- <input class="form-control" type="text" > -->
+                      <textarea style="margin-bottom: 5px;" class="form-control" [(ngModel)]="node2.Codec" name="Codec" placeholder="CODEC" rows="5">
+              
+                      </textarea>
+                      <input class="form-control" type="text" [(ngModel)]="node2.OS" name="OS" placeholder="OS">
+                      
+                    </div>
+                    <div class="col-md-6 ">  
+                      
+                      
+                        <ng-select title="" #groups  style="width: 100%;"
+                          [allowClear]="true"
+                          [items]="items2"
+                          (data)="refreshValue($event)"
+                          (selected)="selectedGroup($event)"
+                          (removed)="removed($event)"
+                          (typed)="typed($event)"
+                          placeholder="NO GROUP SELECTED">
+                        </ng-select>  
+                        
+                        <input class="form-control" type="text" [(ngModel)]="node2.dev_eui" name="dev_eui" placeholder="DEVEUI">
+                        <input class="form-control" type="text" [(ngModel)]="node2.app_eui" name="app_eui" placeholder="APPEUI">
+                        <input class="form-control" type="text" [(ngModel)]="node2.app_key" name="app_key" placeholder="APPKEY">
+                        <input class="form-control" type="text" [(ngModel)]="node2.latitude" name="latitude" placeholder="LATITUDE">
+                        <input class="form-control" type="text" [(ngModel)]="node2.longitude" name="longitude" placeholder="LONGITUDE">
+                        
+                        <!-- <input class="form-control" type="text" [(ngModel)]="node.Profile" name="Profile" placeholder="PROFILE"> -->
+                      
+                    </div>
+                    <div class="col-md-12 modal-footer">
+                      <button type="button" id="" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button class="btn btn-primary " type="submit" value=" ">SAVE</button>
+                    </div>
+                  </div>
+                </div>
+            </form>  
+          </div>
+        </div>
+
+        <!-- End Add Node -->  
+
+        <!-- Chart  -->
+        <div  id="chart" class="modal fade" role="dialog">
+          <div    class="modal-dialog"  >
+            <!-- Modal content -->
+            <div class="modal-content">
+              <div class="modal-header">
+
+                <!-- <ng-select title="" #node  style="width: 100%;"
+                  [allowClear]="true"
+                  [items]="itemsNode"
+                  (data)="refreshValue($event)"
+                  (selected)="selectedNode($event)"
+                  (removed)="removed($event)"
+                  (typed)="typed($event)"
+                  placeholder="NO SELECTED">
+                </ng-select>   -->
+                <div  class="col-md-12 form-group" *ngIf="getsensors.length > 0 " >
+                  
+                  <!-- <input  type="text" 
+                  placeholder="DATE"
+                  
+                  class="form-control"
+                  bsDaterangepicker 
+                  #drp="bsDaterangepicker"
+                  [bsConfig]="{ rangeInputFormat: 'DD-MM-YYYY', containerClass: 'theme-dark-blue' }"
+                  (bsValueChange)="onValueChange($event)" >  -->
+
+                    
+                  <!-- <select   (change)="onchangeDraw($event.target.value)" class="form-control" name="selectedDraw" id="selectedDraw">
+                      <option value="null"> Slected Value </option>
+                      <option style="text-transform: capitalize;" *ngFor="let getsensor of getsensors" value="{{ getsensor}}">{{ getsensor}}</option>
+                    
+                  </select> -->
+
+                  <div *ngFor="let getsensor of getsensors" style="height: 136px;" class="col-lg-4 col-xs-12">
+                    <!-- small box -->
+                    
+                    <div  *ngIf="getsensor == typeChart " style="cursor: pointer;" (click)="onchangeDraw(getsensor)" id="getsensor" class="small-box bg-aqua active">
+                      <div class="inner">
+                        <h4 style="text-transform: uppercase"><strong>{{getsensor}}</strong></h4>
+                        <p>&nbsp;</p>
+                      </div>
+                      <div class="icon">
+                        <i class="fa fa-thermometer-full"></i>
+                        <!-- <i *ngIf="getsensor == 'temperature'" class="fa fa-thermometer-full"></i>
+                        <i *ngIf="getsensor == 'humidity'" class="fa fa-snowflake-o"></i>
+                        <i *ngIf="getsensor == 'pluviometer'" class="fa fa fa-tint"></i> -->
+                        <!-- <i class="fa fa-line-chart"></i> -->
+                      </div>
+                      <a  class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                    <div *ngIf="getsensor != typeChart " style="cursor: pointer;"  (click)="onchangeDraw(getsensor)" id="getsensor" class="small-box bg-aqua ">
+                      <div class="inner">
+                        <h4 style="text-transform: uppercase"><strong>{{getsensor}}</strong></h4>
+                        <p>&nbsp;</p>
+                      </div>
+                      <div class="icon">
+                        <i class="fa fa-line-chart"></i>
+                        <!-- <i *ngIf="getsensor == 'temperature'" class="fa fa-thermometer-full"></i>
+                        <i *ngIf="getsensor == 'humidity'" class="fa fa-snowflake-o"></i>
+                        <i *ngIf="getsensor == 'pluviometer'" class="fa fa fa-tint"></i> -->
+                        <!-- <i class="fa fa-line-chart"></i> -->
+                      </div>
+                      <a  class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                    </div>
+                  </div>
+                </div>
+                <p *ngIf="getsensors.length <= 0 " style="color:#dc3545"  > Node No Data Sensor </p>
+                  
+              </div>
+              <div class="row modal-body" id="picker">
+                  <div class="col-md-12 md gw-left">  
+                    <div *ngIf="getsensors.length > 0 "  id="chart_div" ></div>
+                  </div>
+              </div> 
+              <div class="modal-footer">
+                <button type="button" id="" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+      
+          </div>
+        </div>
+        <!-- END Chart        -->
+    </div>
+  </div>
+  

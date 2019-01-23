@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-md-12">
+      <form #groupForm (ngSubmit)="save();">
+        <div class="col-md-6 md gw-left">  
+          <!-- <input class="form-control"  type="number" [(ngModel)]="gwnode._id" name="_id" placeholder="Id"> -->
+
+          <ng-select  #com 
+            [allowClear]="true"
+            [items]="itemsCom"
+            (data)="refreshValue($event)"
+            (selected)="selectedCom($event)"
+            (removed)="removed($event)"
+            (typed)="typed($event)"
+            placeholder="No Name Company Selected">
+            
+          </ng-select>
+
+          <ng-select  #gw 
+            [allowClear]="true"
+            [items]="itemsGw"
+            (data)="refreshValue($event)"
+            (selected)="selectedGw($event)"
+            (removed)="removed($event)"
+            (typed)="typed($event)"
+            placeholder="No Name Gw Selected">
+            
+          </ng-select>
+
+          <ng-select  #nod 
+            [allowClear]="true"
+            [multiple]="true"
+            [items]="itemsNod"
+            (data)="refreshValue($event)"
+            (selected)="selectedNod($event)"
+            (removed)="removed($event)"
+            (typed)="typed($event)"
+            placeholder="No Name Node Selected">
+            
+          </ng-select>
+  
+        </div>
+        <div class="col-md-6 md gw-right">  
+          <div class="row action">
+            <button style="text-decoration: none" class="btn-search" [routerLink]="['/gw-node']" >SEARCH</button>
+            <!-- <button class="btn-add" >ADD</button> -->
+            <!-- <button class="btn-delete">DELETE</button> -->
+            
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn-submit btn-search" style="width: 190px;" type="submit" value=" ">ADD GROUP</button>
+        </div>
+      </form>
+  
+      
+    </div>
+  </div> 

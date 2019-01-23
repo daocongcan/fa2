@@ -1,0 +1,91 @@
+// .custom-col {
+//     padding-left: 15px;
+//     padding-right: 15px;
+//     margin-top: 5px;
+//     margin-bottom: 5px;
+//     color: white;
+//     font-size: 12px;
+// }
+
+// .footer-social {
+//     background-color: #DBDBDB;
+//     padding: 5px;
+
+//     a {
+//         text-decoration: none;
+//         color: #acb1b7;
+//         font-size: 14px;
+//     }
+
+//     i {
+//         background-color: white;
+//         padding: 5px;
+//         border: solid 1px white;
+//         border-radius: 100%;
+//         color: #4B5258;
+//     }
+// }
+
+// .footer-legal {
+//     background-color: #4C5259;
+//     font-size: 12px;
+//     color: white;
+// }
+
+// #sateco_footer_logo {
+//     height: 50px;
+//     width: 50px;
+//     object-fit: cover;
+// }
+// .footer {
+//     background-color: #cdcdcd;
+//     padding: 15px 0;
+//     margin: 0; 
+//     font-size: 13px;
+//     padding: 5px;
+    
+// }
+// // 
+// .bell {
+//     cursor: pointer;
+// }
+// .bell .fa-bell::after {
+//     content: "";
+//     position: absolute;
+//     top: 25%;
+//     font-size: 35px;
+//     right: 15px;
+//     width: 35px;
+//     height: 35px;
+//     border-radius: 9999px;
+//     background-color: #dc3545;
+//     opacity: 0.9;
+//     z-index: 15;
+//     pointer-events: none;
+
+//     -webkit-animation: sonarWave 1s linear infinite;
+//     animation: sonarWave 1s linear infinite;
+// }
+// .bell .fa-bell::before {
+//     position: absolute;
+//     top: 25%;
+//     font-size: 35px;
+//     right: 15px;
+//     color: #dc3545;
+// }
+// .green::after {
+//     background-color: #28a745 !important;
+// }
+// .green::before {
+//     color:#28a745 !important;
+// }
+  
+// @keyframes sonarWave {
+// from {
+//     opacity: 0.4;
+// }
+// to {
+//     transform: scale(2);
+//     opacity: 0;
+// }
+// }

@@ -1,0 +1,56 @@
+agm-map {
+    height: 392px;
+    width: 100%;
+    table td {
+      padding: 3px;
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+    
+  }
+  .btn-add,.btn-search,.btn-delete {
+    border-radius: 20px;
+    padding: 3px 30px;
+    width: 123px;
+    margin-right: 5px;
+  }
+  .btn-search {
+    border:1px solid #67b4c8 ;
+    color: #67b4c8;
+    
+
+  }
+  .btn-add {
+    border:1px solid #7ac29a ;
+    color: #7ac29a;
+    
+  }
+  .btn-delete {
+    border:1px solid #f3ba46 ;
+    color: #f3ba46;
+  }
+  .si-content-wrapper {
+    padding: 15px;
+  }
+  .capteur-list > thead {
+    font-weight: bold
+  }
+  .yes-padding-left {
+    padding-left: 15px;    
+  }
+  
+  // @media screen and (max-width: 768px) {
+  //   .yes-padding-left {
+  //     padding-left: 0px;    
+  //   }
+  // }
+  .mat-tab-group {
+    font-family: 'Ubuntu Condensed' !important;
+  }
+  
+  .mat-tab-label {
+    font-family: 'Ubuntu Condensed' !important;
+  }
+  .right > .sebm-google-map-container > .agm-map-container-inner,.sebm-google-map-container-inner {
+    height: 390px !important;
+  }

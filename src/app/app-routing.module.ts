@@ -1,10 +1,50 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
-const routes: Routes = [];
+import {DashboardLayoutComponent} from './layouts/dashboard-layout/dashboard-layout.component';
+import {AuthGuard} from './guards/auth.guard';
+import {AuthLayoutComponent} from './layouts/auth-layout/auth-layout.component';
+
+
+
+const routes: Routes = [
+  {
+    path: '',
+    redirectTo: '/gw',
+    pathMatch: 'full'
+  },
+  {
+    path: '',
+    component: DashboardLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: './views/dashboard/dashboard.module#DashboardModule'
+      }
+    ]
+  },
+  {
+    path: '',
+    component: AuthLayoutComponent,
+    children: [
+      {
+        path: 'auth',
+        loadChildren: './authentication/authentication.module#AuthenticationModule'
+      }
+    ]
+  }
+];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes)
+  ],
+  exports:[
+    RouterModule
+  ]
+  ,
+  declarations: []
 })
 export class AppRoutingModule { }

@@ -1,0 +1,218 @@
+<div class="row content-wrapper" style=""> 
+  <div class="col-md-12">
+      <div class="row" style="margin-bottom: 10px; ">
+        <!-- <div class="col-md-6 md">
+          <input type="text" #key (keyup.enter)="seachName(key.value)" [(ngModel)]="keySearch" name="keySearch" placeholder="Enter name" class="form-control">
+          
+        </div> -->
+        <!-- <div class="col-md-6 md" >
+          <button class="btn-search" (click)="seachName(key.value)" >SEARCH</button>
+          
+          <button  [routerLink]="['/user/add']"  class="btn-add" >ADD</button>
+          <button [ngClass]="'delete'"  class="btn-search btn-delete "  (click)="deleteAll()" >DELETE</button>
+        </div> -->
+          <section class="row  content-header">
+            <div class="col-md-3">
+              <strong >
+                User
+                <!-- <small><button data-toggle="collapse" data-target="#data" > Control panel</button></small> -->
+                <small >Control panel</small>
+              </strong>
+            </div>
+            <div class="col-md-4">
+              <div class="input-group">
+                  <input type="text" (keyup.enter)="seachName()" [(ngModel)]="keySearch" class="form-control" placeholder="Search...">
+                  <span class="input-group-btn">
+                    <button (click)="seachName()" type="submit" name="search" id="search-btn" class="btn btn-flat">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </span>
+              </div>
+            </div>
+            <ol class="col-md-5 ">
+      
+              <!-- breadcrumb <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+              <li class="active">Dashboard</li> [routerLink]="['/user/add']" -->
+      
+              <button (click)="activeAdd()" data-toggle="modal" data-target="#addModal"  class="btn btn-primary" ><i class="	fa fa-plus"></i> ADD</button>
+              <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" > <i class="	fa fa-times"></i> DELETE</button>
+              
+            </ol>
+          </section>
+      </div>
+      <div style="overflow-x:auto;"> 
+        <table style="width: 100%;" class="table table-striped table-hover dataTable">
+            <thead>
+              <tr>
+                <th>
+                  <!-- <input id="checkall" type="checkbox" name="delete" (change)="getCheckAll($event);"> -->
+                </th>
+                <th>
+                  Name
+                </th>
+                <th>
+                  Email   
+                </th>
+                <th>
+                  Role
+                </th>
+    
+                <th>
+                  Company       
+                </th>
+                
+                <!-- <th style="width: 12%;"> 
+                    
+                </th> -->
+              </tr>
+            </thead>
+            <tr class="user"  *ngFor="let user of returnedArray  "  >
+              
+              <td>
+                <input type="checkbox" class="checkbox" (change)="getIdChecked($event,user._id);" id="{{user._id}}">
+              </td>
+    
+              <td title="edit" style="cursor: pointer;" (click)="getUpdateUser(user)" data-toggle="modal" data-target="#myModal" id="{{user._id}}"  >
+               {{user.name_user}}
+               
+               <i class="fa fa-lg fa-edit edit"></i>
+              </td>
+    
+              <td>
+                {{user.email}}
+              </td>
+    
+              <td >
+                <div *ngFor="let role of items2">
+                  <span *ngIf="( role.id == user.id_role )">
+                    {{ role.text }}
+                  </span>   
+                </div>
+              </td>
+    
+              <td >
+                <div *ngFor="let company of companies">
+                  <span *ngIf="( company._id == user.id_company )">
+                    {{company.name_company}} 
+                  </span>
+                </div>
+              </td>
+              
+              <!-- <td>
+                <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#myModal">
+                  <i class="fa fa-lg fa-edit"></i>
+                </button>
+                &nbsp;&nbsp;
+                <button type="button" class="btn btn-danger"  >
+                  <i class="fa fa-lg fa-times"></i>
+                </button>
+              </td> -->
+            </tr>
+        </table>
+      </div>
+      
+      <pagination *ngIf="users.length > 10" [totalItems]="users.length" (pageChanged)="pageChanged($event)"></pagination>
+      <!-- Modal -->
+      <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <form (ngSubmit)="saveUser()">
+            <!-- Modal content -->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Update User</h4>
+              </div>
+              <div class="row modal-body">
+                
+                  <div class="col-md-12 md gw-left">  
+                    <!-- <input class="form-control" type="number" [(ngModel)]="company._id" name="id" id="_id" placeholder="ID" readonly value="{{updateUser._id}}"> -->
+                    <input title="Username" class="form-control" type="text" [(ngModel)]="updateUser.name_user"  name="name_user" placeholder="User Name">
+                    <input title="Email" class="form-control" type="email" [(ngModel)]="updateUser.email" name="email"  placeholder="Email">
+                    <input title="Password"  autocomplete="off" class="form-control" type="password" [(ngModel)]="updateUser.password" name="password" placeholder="Password">
+                    <!-- <input class="form-control" type="password" [(ngModel)]="user.id_role" name="password" id="password" placeholder="Password">
+                    <input class="form-control" type="password" [(ngModel)]="user.id_company" name="password" id="password" placeholder="Password"> -->
+                    <ng-select title="Company" #company 
+                      [items]="items"
+                      [allowClear]="true"
+                      (data)="refreshValue($event)"
+                      (selected)="selected($event)"
+                      (removed)="removed($event)"
+                      (typed)="typed($event)"
+                      placeholder="No Company Selected">
+                    </ng-select>
+                    <ng-select title="Role" #role 
+                      [items]="items2"
+                      [allowClear]="true"
+                      (data)="refreshValue($event)"
+                      (selected)="selected2($event)"
+                      (removed)="removed($event)"
+                      (typed)="typed($event)"
+                      placeholder="No Role Selected">
+                    </ng-select>
+                  </div>
+                  <div class="row">
+                    
+                  </div>
+                
+              </div>
+              <div class="modal-footer">
+                <button type="button" id="update" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary"  type="submit" value=" ">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+      <!--ADD Modal -->
+      <div *ngIf="checkAdd == true" id="addModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <form (ngSubmit)="add()">
+          <!-- Modal content -->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">ADD USER</h4>
+              </div>
+              <div class="row modal-body">
+                <div class="col-md-12 md gw-left">  
+                  <!-- <input class="form-control" type="number" [(ngModel)]="company._id" name="id" id="_id" placeholder="ID" readonly value="{{updateUser._id}}"> -->
+                  <input title="Username" class="form-control" type="text" [(ngModel)]="user.name_user"  name="name_user" placeholder="User Name">
+                  <input title="Email" class="form-control" type="email" [(ngModel)]="user.email" name="email"  placeholder="Email">
+                  <input title="Password"  autocomplete="off" class="form-control" type="password" [(ngModel)]="user.password" name="password" placeholder="Password">
+                  <!-- <input class="form-control" type="password" [(ngModel)]="user.id_role" name="password" id="password" placeholder="Password">
+                  <input class="form-control" type="password" [(ngModel)]="user.id_company" name="password" id="password" placeholder="Password"> -->
+                  <ng-select title="Company" #company 
+                    [items]="items"
+                    [allowClear]="true"
+                    (data)="refreshValue($event)"
+                    (selected)="selected($event)"
+                    (removed)="removed($event)"
+                    (typed)="typed($event)"
+                    placeholder="No Company Selected">
+                  </ng-select>
+                  <ng-select title="Role" #role 
+                    [allowClear]="true"
+                    [items]="items2"
+                    (data)="refreshValue($event)"
+                    (selected)="selected2($event)"
+                    (removed)="removed($event)"
+                    (typed)="typed($event)"
+                    placeholder="No Role Selected">
+                  </ng-select>
+                  <!-- <select>
+                    <option value="1">Supper Admin</option>
+                    <option value="2">Admin</option>
+                    <option value="3">User</option>
+                  </select> -->
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" id="add" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary"  type="submit" value=" ">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div>
+</div>
