@@ -116,7 +116,7 @@ export class CompaniesService extends BaseService {
         params: __params,
         responseType: 'json'
       });
-    console.log(req);
+    
     return this.http.request<any>(req).pipe(
       filter(_r => _r instanceof HttpResponse),
       map(_r => {
@@ -133,8 +133,6 @@ export class CompaniesService extends BaseService {
    * @param body - Created Company object
    */
   createCompany(body?: CreateCompany): Observable<Company> {
-    console.log("createCompany: ");
-    console.log(body);
     return this.createCompanyResponse(body).pipe(
       map(_r => _r.body)
     );
@@ -240,13 +238,10 @@ export class CompaniesService extends BaseService {
       map(_r => {
         let _resp = _r as HttpResponse<any>;
         let _body: void = null;
-        
         return _resp.clone({body: _body}) as HttpResponse<void>;
       })
     );
   }
-
-  
 
   /**
    * Delete a company
@@ -298,7 +293,6 @@ export class CompaniesService extends BaseService {
       map(_r => _r.body)
     );
   }
-  
 
 }
    

@@ -3,19 +3,15 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { DashboardService } from '../../dashboard.service';
-
 import * as $ from 'jquery';
 import { Directive } from '@angular/core/src/metadata/directives';
-
 import { Pipe } from '@angular/core';
 import { PipeTransform } from '@angular/core';
 import { ModalModule, BsModalService } from 'ngx-bootstrap/modal';
 import { CommonService } from '../../../../shared/common.service';
 import { CompaniesService } from '../../../../api/services/companies.service';
 import { Company } from '../../../../api/models/company';
-
 import { Locale } from '../../../../locale';
-
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 @Component({
@@ -33,6 +29,7 @@ export class ListComponent implements OnInit {
   paginations = [];
   role=null;
   checkAdd = false;
+
   constructor(
     private router: Router,
     private apiCompanyService: CompaniesService,
@@ -46,13 +43,12 @@ export class ListComponent implements OnInit {
    }
 
   ngOnInit() {
-
     if(this.role !=1 ) {
       this.router.navigate(['/404']);
     }
     this.renderView()
-    
   }
+
   renderView() {
     this.getAllCompanies();
   }
@@ -61,10 +57,9 @@ export class ListComponent implements OnInit {
     const startItem = (event.page - 1) * event.itemsPerPage;
     const endItem = event.page * event.itemsPerPage;
     this.paginations = this.companies.slice(startItem, endItem);
-    // console.log(this.users);
   }
+
   getUpdateCompany(editCompany: Company){
-    
     this.updateCompany = {
       _id: editCompany._id,
       name_company: editCompany.name_company,
@@ -74,11 +69,8 @@ export class ListComponent implements OnInit {
     };
   };
 
-  
-
   deleteCompany(companyId){
     if(confirm("Are you sure to delete")) {
-
       this.apiCompanyService.deleteCompany(companyId)
       .subscribe(
         response => {
@@ -90,18 +82,14 @@ export class ListComponent implements OnInit {
           this.commonService.notifyError(this.locale.SORRY, this.locale.Error , 1500);
         }
       );
-      
     }
-    
   };
 
   getAllCompanies(){
     this.apiCompanyService.listCompanies().subscribe(
       data => {
-
         this.companies = data;
         this.paginations = this.companies.slice(0, 10);
-
       }
     );
   };
@@ -114,7 +102,6 @@ export class ListComponent implements OnInit {
       this.apiCompanyService.searchCompanyResponse(key)
         .subscribe(
           data => {
-            
             this.companies = data.body;
           },
           err => {
@@ -125,17 +112,15 @@ export class ListComponent implements OnInit {
   }
 
   getIdChecked(e,id){
-    // console.log(e.target.checked);
     if (e.target.checked) {
       this.allIdChecked.push(id);
     }  else {
       this.allIdChecked.splice(this.allIdChecked.indexOf(id), 1);
     }
-    // console.log(this.allIdChecked);
   }
   
   deleteAll(){
-    if(this.allIdChecked.length>0 ) {
+    if( this.allIdChecked.length > 0 ) {
       if(confirm("Are you sure delete")){
         for (let index = 0; index < this.allIdChecked.length; index++) {
           this.apiCompanyService.deleteCompany(this.allIdChecked[index]).subscribe(
@@ -166,7 +151,6 @@ export class ListComponent implements OnInit {
       }
     }); 
     return count;
-    
   }
 
   saveCompany(){
@@ -184,7 +168,7 @@ export class ListComponent implements OnInit {
     } else if ( !this.updateCompany.phone) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.Phone_is_required , 1500);
     } else {
-      // console.log(this.updateCompany);
+
       this.apiCompanyService.updateCompany(this.updateCompany)
         .subscribe(
           response => {
@@ -211,16 +195,7 @@ export class ListComponent implements OnInit {
     }); 
   }
 
-  
-
   add() {
-    
-    // if (this.company._id < 1 || !this.company._id) {
-    //   this.commonService.notifyError(this.locale.SORRY, this.locale.ID_IS_REQUIRED, 1500);
-    // }
-    // else if (this.idExists(this.company._id) == true){
-    //   this.commonService.notifyError(this.locale.SORRY, this.locale.ID_Existed, 1500);
-    // } 
     if ( !this.company.name_company || !this.company.name_company.trim()) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.NAME_IS_REQUIRED, 1500);
     } 
@@ -234,7 +209,6 @@ export class ListComponent implements OnInit {
     } else if ( !this.company.phone  ) {
       this.commonService.notifyError(this.locale.SORRY,  this.locale.Phone_is_required, 1500);
     } else {
-      
       // console.log(this.company);
       this.apiCompanyService.createCompany(this.company)
         .subscribe(
@@ -249,14 +223,12 @@ export class ListComponent implements OnInit {
           }
         );
     }
-    
   }
 
   public filterItems(query) {
     return this.companies.filter(function(el) {
         return el.name_company.toLowerCase().indexOf(query.toLowerCase())  > -1;
     })
-    
   }
 
   public seachName (){
@@ -265,7 +237,6 @@ export class ListComponent implements OnInit {
         this.companies = data;
         this.companies = (this.filterItems(this.keySearch));
         this.paginations = this.companies.slice(0, 10);
-        
       }
     );
   }

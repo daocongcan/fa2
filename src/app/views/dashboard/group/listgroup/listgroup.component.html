@@ -83,10 +83,10 @@
           <tr class="group"  *ngFor="let group of paginations">
             
             <td>
-              <input type="checkbox"  value="group._id" (change)="getIdChecked($event, group._id)"  name="delete" >
+              <input  type="checkbox"  value="group._id" (change)="getIdChecked($event, group._id)"  name="delete" >
             </td>
 
-            <td title="edit" style="cursor: pointer;" (click)="getUpdateGroup(group)" data-toggle="modal" data-target="#myModal" id="{{group._id}}"  >
+            <td (click)="updateActive()" title="edit" style="cursor: pointer;" (click)="getUpdateGroup(group)" data-toggle="modal" data-target="#myModal" id="{{group._id}}"  >
             {{group.group_name}} 
             
             <!-- <i class="fa fa-lg fa-edit edit"></i> -->
@@ -116,7 +116,7 @@
     </div>
       <pagination *ngIf="groups.length>10" [totalItems]="groups.length" (pageChanged)="pageChanged($event)"></pagination>
       <!-- Modal -->
-      <div id="myModal" class="modal fade" role="dialog">
+      <div *ngIf=" checkUpdate == true "  id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
           <form (ngSubmit)="save()">
           <!-- Modal content -->
@@ -143,7 +143,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" id="update" class="btn btn-default" data-dismiss="modal">Close</button>
               <button class="btn btn-primary"  type="submit" value=" ">SAVE</button>
               
             </div>
@@ -175,7 +175,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" id="add" class="btn btn-default" data-dismiss="modal">Close</button>
               <button class="btn btn-primary"  type="submit" value=" ">SAVE</button>
               
             </div>

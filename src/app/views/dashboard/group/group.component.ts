@@ -32,7 +32,7 @@ export class GroupComponent implements OnInit {
   companies: Company[] = [];
 
   public items:any = [] ;
-  selectCompany:number = 0;
+  selectCompany;
   private value:any = {};
   private _disabledV:string = '0';
   private disabled:boolean = false;

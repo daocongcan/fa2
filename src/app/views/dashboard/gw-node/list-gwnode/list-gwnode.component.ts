@@ -171,21 +171,21 @@ export class ListGwnodeComponent implements OnInit {
     
     // this.ngSelect.active =  { "id": updateGroup.id_company };
     
-    this.apiCompanyService.listCompanies().subscribe(
-      data => {
-        this.companies = data;
-        data.forEach(e => {
+    // this.apiCompanyService.listCompanies().subscribe(
+    //   data => {
+    //     this.companies = data;
+    //     data.forEach(e => {
           
-          if(this.updateGwNode.id_company == e._id){
-            activeGroup.push({'text':e.name_company,"id":e._id});
-            // console.log(this.activeCompany);
-            this.ngSelectCo.active = activeGroup;
-            this.selectCom = e._id ;
-            // this.co=e.name_company;
-          }
-        });
-      }
-    );
+    //       if(this.updateGwNode.id_company == e._id){
+    //         activeGroup.push({'text':e.name_company,"id":e._id});
+    //         // console.log(this.activeCompany);
+    //         this.ngSelectCo.active = activeGroup;
+    //         this.selectCom = e._id ;
+    //         // this.co=e.name_company;
+    //       }
+    //     });
+    //   }
+    // );
 
     this.apiNodeService.listNode().subscribe(
       data => {

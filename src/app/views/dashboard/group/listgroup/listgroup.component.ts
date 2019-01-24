@@ -56,6 +56,7 @@ export class ListgroupComponent implements OnInit {
 
   paginations = [];
   checkAdd = false;
+  checkUpdate = true;
   constructor(
     private router: Router,
     private apiGroupService: GroupsService,
@@ -68,6 +69,7 @@ export class ListgroupComponent implements OnInit {
 
   ngOnInit() {
     this.renderView();
+    
     
   }
 
@@ -263,6 +265,8 @@ export class ListgroupComponent implements OnInit {
           response => {
             this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Update_success, 1500);
             this.renderView();
+            this.items = [];
+            $("#update").click();
           },
           err => {
             this.commonService.notifyError(this.locale.SORRY, this.locale.Error , 1500);
@@ -305,15 +309,16 @@ export class ListgroupComponent implements OnInit {
     else {
       // console.log(this.group);
       this.group.id_company = this.selectCompany;
-      
       this.apiGroupService.createGroup(this.group)
         .subscribe(
           response => {
             this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success, 1500);
-            
-            this.group = new Group ;  
+            this.group = new Group ;
+            this.items =[];  
             this.ngSelect.active = null;
             this.selectCompany = null;
+            this.renderView();
+            $("#add").click();
             
           },
           err => {
@@ -343,10 +348,15 @@ export class ListgroupComponent implements OnInit {
 
   activeAdd(){
     this.checkAdd = true;
+    this.checkUpdate = false;
+  }
+  updateActive() {
+    this.checkUpdate = true;
   }
   
   public selected(value:any):void {
     this.selectCompany = value.id;
+    
   }
 
   private get disabledV():string {
