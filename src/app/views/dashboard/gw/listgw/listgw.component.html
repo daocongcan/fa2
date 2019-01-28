@@ -219,8 +219,9 @@ ackr: {{updateGw.Profile.ackr}},
 dwnb: {{updateGw.Profile.dwnb}},
 txnb: {{updateGw.Profile.txnb}}                        
                           </textarea> -->
+
+                          <textarea rows="5" class="form-control">{{updateGw.Profile | json }}</textarea>
                         </div>
-                        
                       </div>
                       <div class="modal-footer">
                         <button type="button" id="update" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -244,6 +245,7 @@ txnb: {{updateGw.Profile.txnb}}
                             <input class="form-control" [(ngModel)]="gw.IP_public" type="text" name="IP_public" placeholder="IP PUBLIC">
                             <input class="form-control" [(ngModel)]="gw.OS" type="text" name="os" placeholder="OS">
                             <input class="form-control" [(ngModel)]="gw.MAC_add" type="text" name="mac_add" placeholder="MAC ADD">
+                            
                         </div>
                       </div>
                       <div class="modal-footer">

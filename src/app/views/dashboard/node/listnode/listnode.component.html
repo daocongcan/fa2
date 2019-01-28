@@ -264,15 +264,7 @@
                         <input class="form-control" type="text" [(ngModel)]="updateNode.app_key" name="app_key" placeholder="APPKEY">
                         <!-- <input class="form-control" type="text" [(ngModel)]="updateNode.Profile" name="Profile" placeholder="PROFILE"> -->
                         <textarea *ngIf="profile == true" rows="5" title="Profile" class="form-control">
-  AppNonce: {{updateNode.Profile.AppNonce}}
-  DevAddr: {{updateNode.Profile.DevAddr}}
-  DevNonce: {{updateNode.Profile.DevNonce}}
-  MACPayload: {{updateNode.Profile.MACPayload}}
-  MHDR: {{updateNode.Profile.MHDR}}
-  MIC: {{updateNode.Profile.MIC}}
-  NetID: {{updateNode.Profile.NetID}}
-  PHYPayload:  {{updateNode.Profile.PHYPayload}}
-  UpdateTime: {{updateNode.Profile.UpdateTime}}
+{{ updateNode.Profile | json  }}                          
                         </textarea>
                     </div>
                   </div>

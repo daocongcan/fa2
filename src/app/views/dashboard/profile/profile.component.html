@@ -1,0 +1,199 @@
+<div class="content-wrapper"> 
+  <section class="row  content-header">
+    <div class="col-md-3">
+      <strong >
+        NODE
+        <!-- <small><button data-toggle="collapse" data-target="#data" > Control panel</button></small> -->
+        <small >Control panel</small>
+      </strong>
+    </div>
+    <div class="col-md-4">
+      <div class="input-group">
+          <input type="text" (keyup.enter)="seachName()" [(ngModel)]="keySearch" class="form-control" placeholder="Search...">
+            <span class="input-group-btn">
+              <button (click)="seachName()" type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+              </button>
+            </span>
+      </div>
+    </div>
+    <ol class="col-md-5 ">
+      <!-- breadcrumb <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Dashboard</li> [routerLink]="['/node/add']" -->
+      <button (click)="addActive()" data-toggle="modal" data-target="#addModal"   class="btn btn-primary btn-add" > <i class="fa fa-plus"></i> 
+        ADD
+      </button>
+      <button *ngIf=" chart != null " class="btn btn-info btn-chart" data-toggle="modal" data-target="#chart" (click)="getChart(chart)"><i class="fa fa-line-chart"></i>
+        CHART
+      </button>
+      <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" >
+        <i class="	fa fa-times"></i> DELETE
+      </button>
+    </ol>
+  </section>
+  <div class="col-md-12">
+    <!-- <table style="width: 100%;" class="table table-striped table-hover dataTable">
+        <thead>
+          <tr>
+            <th>
+              
+            </th>
+            
+            <th>
+              Node Name
+            </th>
+            
+            <th>
+              Status
+            </th>
+            <th>
+              Codec
+            </th>
+            <th>
+              OS
+            </th>
+            <th>
+                Name Group
+              </th>
+            
+          
+          </tr>
+        </thead>
+        <tr class="Node"  *ngFor="let node of paginations">
+          
+          <td>
+            <input type="checkbox"  value="node._id" (change)="getIdChecked($event, node._id)"  name="delete" >
+          </td>
+
+          <td title="edit" style="cursor: pointer;" (click)="getUpdateNode(node)" data-toggle="modal" data-target="#myModal" id="{{node._id}}"  >
+           {{node.name_node}}
+           
+          
+          </td>
+          <td>
+            {{node.status}}
+          </td>
+          <td>
+            {{node.Codec}}
+          </td>
+          <td>
+              {{node.OS}}
+            </td>
+          <td >
+            <div *ngFor="let group of groups">
+              <span *ngIf="( group._id == node.id_group )">
+                {{ group.group_name }} 
+              </span>
+              
+            </div>
+          </td>
+          
+          <td>
+            <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#myModal">
+              <i class="fa fa-lg fa-edit"></i>
+            </button>
+            &nbsp;&nbsp;
+            <button type="button" class="btn btn-danger"  >
+              <i class="fa fa-lg fa-times"></i>
+            </button>
+          </td>
+        </tr>
+      </table> -->
+      <!-- Modal -->
+      <!-- <pagination *ngIf="nodes.length > 10" [totalItems]="nodes.length" (pageChanged)="pageChanged($event)"></pagination> -->
+      
+      
+      <div class="col-md-12 " style="vertical-align: top; padding: 0">
+        <tabset>
+          <!-- <tab  heading="View" id="tab1"> -->
+            <table class="table table-striped table-hover capteur-list ng-star-inserted">
+              <thead>
+                <tr>
+                  <td></td>
+                  <td>
+                    Name
+                  </td>
+                  <td>
+                    Codec
+                  </td>
+                  
+                </tr>
+              </thead>
+                <tr *ngFor="let modelProfile of modelProfiles" >
+                  <td title="Delete" >
+                    <input type="checkbox"  value="modelProfile._id" (change)="getIdChecked($event, modelProfile._id)"  name="delete" >
+                  </td>
+                  
+                  <td title="edit" style="cursor: pointer;" (click)="getUpdateProfile(modelProfile)" data-toggle="modal" data-target="#myModal" id="{{modelProfile._id}}" >
+                    {{modelProfile.name_profile}}
+                  </td>
+
+                  <td>
+                    {{modelProfile.Codec | json }}
+                  </td>
+
+                </tr>
+              </table>  
+        </tabset>
+      </div>
+      
+      
+      <!-- Update Node -->
+      <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+    
+          <form (ngSubmit)="save()">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">UPDATE PROFILE</h4>
+              </div>
+              <div class="row modal-body">
+
+                <div class="col-md-12 md gw-left">  
+                  <input class="form-control" title="Name profile" type="text" [(ngModel)]="updateProfile.name_profile" name="name_profile"  placeholder="NAME">
+                  <textarea rows="15" title="Codec" name="Codec" class="form-control">
+{{updateProfile.Codec | json}}
+                  </textarea>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" id="update"  class="btn btn-default" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary btn-submit btn-search"  type="submit" value=" ">SAVE</button>
+              </div>
+            
+            </div>
+          </form>  
+        </div>
+      </div>
+      <!-- End Update Node -->
+
+      <!-- Add Node -->
+      <div *ngIf=" addactive == true " id="addModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <form (ngSubmit)="add()">
+            <div class="row modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">ADD PROFILE</h4>
+              </div>
+              <div class="row modal-body">
+                  <div class="col-md-6 md gw-left">  
+                    
+                    <input class="form-control" type="text" [(ngModel)]="modelProfile.name_profile" name="name_profile"  placeholder="NAME NODE">
+                    <textarea style="margin-bottom: 5px;" class="form-control" [(ngModel)]="modelProfile.Codec" name="Codec" placeholder="CODEC" rows="15">
+            
+                    </textarea>
+                   
+                  </div>
+                  <div class="col-md-12 modal-footer">
+                    <button type="button" id="add" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary " type="submit" value=" ">SAVE</button>
+                  </div>
+                </div>
+              </div>
+          </form>  
+        </div>
+      </div>
+
+      <!-- End Add Node -->  
+      
+  </div>
+</div>

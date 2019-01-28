@@ -66,6 +66,7 @@ import { BsDatepickerModule,DatepickerModule } from 'ngx-bootstrap/datepicker';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { DatePipe } from '@angular/common';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   imports: [
@@ -135,6 +136,7 @@ import { DatePipe } from '@angular/common';
     ScheduleComponent,
     ListScheduleComponent,
     NotfoundComponent,
+    ProfileComponent,
     
   ],
   schemas: [

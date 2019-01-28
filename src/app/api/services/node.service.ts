@@ -11,6 +11,7 @@ import { filter } from 'rxjs/operators/filter';
 import { catchError } from 'rxjs/operators';
 
 import { Node } from '../models/node';
+import { NodeProfile } from '../models/node-profile';
 import { Nodedata } from '../models/node-data';
 import { NodeGPS } from '../models/node-gps';
 import { Alarm } from '../models/alarm';
@@ -71,6 +72,43 @@ export class NodeService extends BaseService {
     );
   }
 
+
+  /**
+   * get list of Node Profile
+   */
+  listProfileResponse(): Observable<HttpResponse<NodeProfile[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `profile/getall`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: NodeProfile[] = null;
+        _body = _resp.body as NodeProfile[]
+        return _resp.clone({body: _body}) as HttpResponse<NodeProfile[]>;
+      })
+    );
+  }
+
+  /**
+   * get list of list Profile
+   */
+  listProfile(): Observable<NodeProfile[]> {
+    return this.listProfileResponse().pipe(
+      map(_r => _r.body)
+    );
+  }
 
   /**
    * get list of Alarm

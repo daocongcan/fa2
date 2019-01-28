@@ -137,7 +137,7 @@ export class ListgwComponent implements OnInit {
     if( Object.keys(this.updateGw.Profile).length > 0 ) {
       this.profile =  true;  
     }
-    
+    console.log(this.updateGw.Profile);
   };
 
 

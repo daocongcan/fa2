@@ -28,6 +28,8 @@ import {ListGwnodeComponent} from './gw-node/list-gwnode/list-gwnode.component';
 import {ScheduleComponent} from './schedule/schedule.component';
 import {ListScheduleComponent} from './schedule/list-schedule/list-schedule.component';
 
+import {ProfileComponent} from './profile/profile.component';
+
 import {NotfoundComponent} from './notfound/notfound.component';
 
 
@@ -40,6 +42,10 @@ const routes: Routes = [
   {
     path: 'gw',
     component: ListgwComponent
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent
   },
   // {
   //   path: 'gw/add',
