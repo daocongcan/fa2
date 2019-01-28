@@ -60,17 +60,17 @@
             <i class="fa fa-fw fa-bars"></i>&nbsp;GW NODE
         </a> -->
         <li class="treeview" *ngIf="role == 1" >
-          
-              
-          <a   style="margin-top: 50px;"  [routerLink]="['/admin']" [routerLinkActive]="['router-link-active']"  id="client-category">
+          <a style="margin-top: 50px;"  [routerLink]="['/admin']" [routerLinkActive]="['router-link-active']"  id="client-category">
               <i class="fa fa-fw fa-cogs"></i>&nbsp;<span>ADMIN </span>
-              
           </a>
         </li>
-        <li class="treeview" *ngIf="role == 1" >  
-          <a  [routerLink]="['/user']" [routerLinkActive]="['router-link-active']"  id="client-category">
+
+        <li  class="treeview" *ngIf="role == 1 || role == 2" >  
+          <a *ngIf="role == 2 " style="margin-top:50px"  [routerLink]="['/user']" [routerLinkActive]="['router-link-active']"  id="client-category">
+            <i class="fa fa-fw fa-user"></i>&nbsp;<span>USER</span>
+          </a>
+          <a *ngIf="role == 1"  [routerLink]="['/user']" [routerLinkActive]="['router-link-active']"  id="client-category">
               <i class="fa fa-fw fa-user"></i>&nbsp;<span>USER</span>
-              
           </a>
         </li>
       </ul>

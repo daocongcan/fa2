@@ -52,8 +52,8 @@ export class AppHeaderComponent implements OnInit {
   public allIdChecked = [];
 
 
-  public items:any = [] ;
-  public items2:any = [] ;
+  public itemsCompany:any = [] ;
+  public itemsRole:any = [] ;
   public itemUsers:any = [] ;
  
   private value:any = {};
@@ -79,10 +79,14 @@ export class AppHeaderComponent implements OnInit {
 	isMobile: Boolean = false;
 	lastClick: String = '';
 
-  username: String = sessionStorage.getItem('name_user');
+ 	username: String = sessionStorage.getItem('name_user');
 	userString = sessionStorage.getItem('user');
 	userData = JSON.parse(this.userString);
-	hostName;
+	
+	public textRole ;
+	public textCompany ;
+	public arrRoles:any = [{'text':'Supper Admin',"id":1},{'text':'Admin',"id":2},{'text':'User',"id":3}] ;
+
   constructor (
       public router: Router,
 	  private apiUserService: UsersService,
@@ -114,13 +118,10 @@ export class AppHeaderComponent implements OnInit {
       }
 		this.renderView();
 			
-			
-			
-			
 	}
 	
-	@ViewChild('company') ngSelect: SelectComponent;
-  @ViewChild('role') ngSelect2: SelectComponent;
+	@ViewChild('company1') ngSelect: SelectComponent;
+  @ViewChild('role1') ngSelect2: SelectComponent;
   
   notShow(){
       $(".bell").class("display:none");
@@ -181,7 +182,6 @@ export class AppHeaderComponent implements OnInit {
     }
 
 		renderView(){
-			
 			if( this.checkUpdate == true ) {
 				this.getAllCompany();
 				this.getAllRole();
@@ -190,16 +190,15 @@ export class AppHeaderComponent implements OnInit {
 		};
 		
 		getAllCompany() {
-	
 			this.apiCompanyService.listCompanies().subscribe(
 				data => {
 					this.companies = data;
 					data.forEach(e => {
+						this.itemsCompany.push({'text':e.name_company,"id":e._id});
+						this.ngSelect.items = this.itemsCompany;
 						
-						this.items.push({'text':e.name_company,"id":e._id});
-						this.ngSelect.items = this.items;
+
 					});
-					
 				}
 			);
 		}
@@ -209,13 +208,12 @@ export class AppHeaderComponent implements OnInit {
 				data => {
 					this.roles = data;
 					data.forEach(e => {
-						
 						if(this.ro === e.role_name) {
 							this.user.id_role = e._id;
 						}
-
-						this.items2.push({ "id":e._id ,"text":e.role_name});
-						this.ngSelect2.items = this.items2;
+						
+						this.itemsRole.push({ "id":e._id ,"text":e.role_name});
+						this.ngSelect2.items = this.itemsRole;
 					});
 				}
 			);
@@ -253,7 +251,7 @@ export class AppHeaderComponent implements OnInit {
 			);
 		}
 	
-		getUpdateUser( updateUser: User){
+		getUpdateUser2( updateUser: User){
 			this.checkUpdate = true;
 			this.updateUser = {
 				_id: updateUser._id,
@@ -268,36 +266,27 @@ export class AppHeaderComponent implements OnInit {
 				data => {
 					this.companies = data;
 					data.forEach(e => {
-						
 						if(this.updateUser.id_company == e._id){
 							this.activeCompany.push({'text':e.name_company,"id":e.name_company});
 							// console.log(this.activeCompany);
 							this.ngSelect.active = this.activeCompany;
 							this.co = e.name_company;
+							
+							this.textCompany = e.name_company ;
 						}
-	
-					});
-					
-				}
-			);
-	
-			this.apiRoleService.listRoles().subscribe(
-				data => {
-					this.roles = data;
-					
-					data.forEach(e => {
-						
-						if(this.updateUser.id_role == e._id){
-							this.activeRole.push({'text':e.role_name,"id":e.role_name});
-							// console.log(this.activeRole);
-							this.ro=e.role_name;
-							this.ngSelect2.active = this.activeRole;
-						}
-						
 					});
 				}
 			);
-	
+
+			this.arrRoles.forEach(e => {
+				if(this.updateUser.id_role == e.id){
+					// this.activeRole.push({'text':e.role_name,"id":e.role_name});
+					// this.ro=e.role_name;
+					// this.ngSelect2.active = this.activeRole;
+					this.textRole = e.text ;
+				}
+			});
+
 		};
 	
 		nameExists(value,id) {
@@ -312,7 +301,6 @@ export class AppHeaderComponent implements OnInit {
 			}); 
 			return count;
 		}
-	
 	
 		emailExists(value,id) {
 			let count = 1;
@@ -333,9 +321,6 @@ export class AppHeaderComponent implements OnInit {
 		}
 	
 		saveUser() {
-	
-			
-			
 			if ( !this.updateUser.name_user || !this.updateUser.name_user.trim() ) {
 				this.commonService.notifyError(this.locale.SORRY, this.locale.USER_NAME_IS_REQUIRED, 1500);
 			}
@@ -356,18 +341,20 @@ export class AppHeaderComponent implements OnInit {
 			else if ( !this.updateUser.password ) {
 				this.commonService.notifyError(this.locale.SORRY, this.locale.PASSWORD_IS_REQUIRED, 1500);
 			} 
-			else if (this.ro === "" ) {
-				this.commonService.notifyError(this.locale.SORRY, this.locale.ROLE_IS_REQUIRED, 1500);
-			} 
-			else if( this.co === "" ) {
-				this.commonService.notifyError(this.locale.SORRY, this.locale.COMPANY_IS_REQUIRED, 1500);
-			}
+			// else if (this.ro === "" ) {
+			// 	this.commonService.notifyError(this.locale.SORRY, this.locale.ROLE_IS_REQUIRED, 1500);
+			// } 
+			// else if( this.co === "" ) {
+			// 	this.commonService.notifyError(this.locale.SORRY, this.locale.COMPANY_IS_REQUIRED, 1500);
+			// }
 			else {
 				// console.log(this.updateUser);
 	
 				this.encrypted = CryptoJS.AES.encrypt(this.updateUser.password, this.key).toString();
 				this.updateUser.password = this.encrypted;
-				
+				this.updateUser.id_company = this.userData.id_company;
+				this.updateUser.id_role = this.userData.id_role;
+
 				this.apiUserService.updateUser(this.updateUser)
 					.subscribe(
 						response => {

@@ -409,6 +409,7 @@ export class ListnodeComponent implements OnInit {
           response => {
             this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Update_success, 1500);
             this.renderView();
+            $("#update").click();
           },
           err => {
             this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);
@@ -708,6 +709,8 @@ export class ListnodeComponent implements OnInit {
         response => {
           this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success, 1500);
           this.node2 = new Node;
+          this.renderView();
+          $("#add").click();
           this.router.navigate(['/node']);
         },
         err => {

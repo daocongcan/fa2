@@ -209,14 +209,16 @@ export class ListComponent implements OnInit {
     } else if ( !this.company.phone  ) {
       this.commonService.notifyError(this.locale.SORRY,  this.locale.Phone_is_required, 1500);
     } else {
-      // console.log(this.company);
+      
       this.apiCompanyService.createCompany(this.company)
         .subscribe(
           response => {
             this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success , 1500);
+            $('#add').click();
             this.company = new Company;
             this.renderView();
-            this.router.navigate(['/admin']);
+            
+            
           },
           err => {
             this.commonService.notifyError(this.locale.SORRY, this.locale.Error , 1500);

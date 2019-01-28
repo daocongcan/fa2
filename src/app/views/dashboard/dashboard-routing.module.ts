@@ -33,46 +33,46 @@ import {NotfoundComponent} from './notfound/notfound.component';
 
 const routes: Routes = [
    
-  {
-    path: 'gw/add',
-    component: GwComponent
-  },
+  // {
+  //   path: 'gw/add',
+  //   component: GwComponent
+  // },
   {
     path: 'gw',
     component: ListgwComponent
   },
-  {
-    path: 'gw/add',
-    component: GwComponent
-  },
-  {
-    path: 'node/add',
-    component: NodeComponent
-  },
+  // {
+  //   path: 'gw/add',
+  //   component: GwComponent
+  // },
+  // {
+  //   path: 'node/add',
+  //   component: NodeComponent
+  // },
   {
     path: 'node',
     component: ListnodeComponent
   },
-  {
-    path: 'admin/add',
-    component: AdminComponent
-  },
+  // {
+  //   path: 'admin/add',
+  //   component: AdminComponent
+  // },
   {
     path: 'admin',
     component: ListComponent
   },
-  {
-    path: 'user/add',
-    component: UserComponent
-  },
+  // {
+  //   path: 'user/add',
+  //   component: UserComponent
+  // },
   {
     path: 'user',
     component: ListuserComponent
   },
-  {
-    path: 'role',
-    component: ListroleComponent
-  },
+  // {
+  //   path: 'role',
+  //   component: ListroleComponent
+  // },
   // {
   //   path: 'role/add',
   //   component: RoleComponent
@@ -81,18 +81,18 @@ const routes: Routes = [
     path: 'group',
     component: ListgroupComponent
   },
-  {
-    path: 'group/add',
-    component: GroupComponent
-  },
-  {
-    path: 'gw-node',
-    component: ListGwnodeComponent
-  },
-  {
-    path: 'gw-node/add',
-    component: GwNodeComponent
-  },
+  // {
+  //   path: 'group/add',
+  //   component: GroupComponent
+  // },
+  // {
+  //   path: 'gw-node',
+  //   component: ListGwnodeComponent
+  // },
+  // {
+  //   path: 'gw-node/add',
+  //   component: GwNodeComponent
+  // },
   { 
     path: '404',  
     component: NotfoundComponent

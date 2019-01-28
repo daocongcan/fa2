@@ -285,6 +285,7 @@ export class ListgwComponent implements OnInit {
           response => {
             this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success, 1500);
             this.renderView();
+            $("#add").click();
           },
           err => {
             this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);
@@ -342,7 +343,9 @@ export class ListgwComponent implements OnInit {
           response => {
             this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success, 1500);
             this.gw = new Gw ;  
-            this.router.navigate(['/gw']);
+            $("#add").click();
+            this.renderView();
+            // this.router.navigate(['/gw']);
           },
           err => {
             this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);

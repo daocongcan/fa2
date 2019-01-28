@@ -42,7 +42,6 @@ export class ListuserComponent implements OnInit {
   companies: Company[] = [];
   public allIdChecked = [];
 
-
   public items:any = [] ;
   public items2:any = [{'text':'Supper Admin',"id":1},{'text':'Admin',"id":2},{'text':'User',"id":3}] ;
   public itemUsers:any = [] ;
@@ -66,6 +65,11 @@ export class ListuserComponent implements OnInit {
   public returnedArray= [];
   role = null;
   
+  userString = sessionStorage.getItem('user');
+  userData = JSON.parse(this.userString);
+  
+  itemsCompany = [];
+  itemsRole = [{'text':'Admin',"id":2},{'text':'User',"id":3}];
 
   constructor(
     private router: Router,
@@ -77,10 +81,10 @@ export class ListuserComponent implements OnInit {
     private locale: Locale,
   ) {
     this.role = this.commonService.getRoleOfUser();
-   }
+  }
 
   ngOnInit() {
-    if(this.role !=1 ) {
+    if( this.role == 3 ) {
       this.router.navigate(['/404']);
     }
     this.renderView();
@@ -90,12 +94,10 @@ export class ListuserComponent implements OnInit {
   @ViewChild('role') ngSelect2: SelectComponent;
   @ViewChild('search') ngSelect3: SelectComponent;
   
-
   renderView(){
     this.getAllUser();
     this.getAllCompany();
     this.getAllRole();
-    
   };
 
   pageChanged(event: PageChangedEvent): void {
@@ -106,18 +108,33 @@ export class ListuserComponent implements OnInit {
   }
 
   getAllUser() {
-    this.apiUserService.listUsers().subscribe(
-      data => {
-        this.users = data;
-        this.returnedArray = this.users.slice(0, 10);
-        // console.log(this.returnedArray);
-        this.users.forEach( e => {
-          this.itemUsers.push({'text':e.name_user,"id":e._id});
-          // this.items = e.name_company;
-          // this.ngSelect3.items = this.itemUsers;
-        });
-      }
-    );
+    if(this.role == 2) {
+      this.apiUserService.getUserByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.users = data;
+          this.returnedArray = this.users.slice(0, 10);
+          // console.log(this.returnedArray);
+          this.users.forEach( e => {
+            this.itemUsers.push({'text':e.name_user,"id":e._id});
+            // this.items = e.name_company;
+            // this.ngSelect3.items = this.itemUsers;
+          });
+        }
+      );
+    }else {
+      this.apiUserService.listUsers().subscribe(
+        data => {
+          this.users = data;
+          this.returnedArray = this.users.slice(0, 10);
+          // console.log(this.returnedArray);
+          this.users.forEach( e => {
+            this.itemUsers.push({'text':e.name_user,"id":e._id});
+            // this.items = e.name_company;
+            // this.ngSelect3.items = this.itemUsers;
+          });
+        }
+      );
+    }
   };
 
   checkedID(id:number){
@@ -131,11 +148,12 @@ export class ListuserComponent implements OnInit {
         this.companies = data;
         data.forEach(e => {
           this.items.push({'text':e.name_company,"id":e._id});
+          
           this.ngSelect.items = this.items;
+          
         });
       }
-    );
-    
+    );   
   }
 
   getAllRole(){
@@ -158,7 +176,6 @@ export class ListuserComponent implements OnInit {
 
   public selected(value:any):void {
     this.co = value.id;
-    
     this.apiCompanyService.listCompanies().subscribe(
       data => {
         this.companies = data;
@@ -172,31 +189,28 @@ export class ListuserComponent implements OnInit {
     );
   }
 
-
   public selectedSearch(value:any):void {
     let name = value.text;
     this.users=[];
-    this.apiUserService.listUsers()
-        .subscribe(
-          data => {
-            // console.log(data.body);
-            data.forEach(e => {
-              if(e.name_user == name){
-                this.users.push(e);
-              }              
-            });
-          },
-          err => {
-            this.commonService.notifyError(this.locale.SORRY, "Data error", 1500);
-          }
-        ); 
+    this.apiUserService.listUsers().subscribe(
+      data => {
+        // console.log(data.body);
+        data.forEach(e => {
+          if(e.name_user == name){
+            this.users.push(e);
+          }              
+        });
+      },
+      err => {
+        this.commonService.notifyError(this.locale.SORRY, "Data error", 1500);
+      }
+    ); 
       // console.log(this.users);
   }
 
 
   public selected2(value:any):void {
     this.ro = value.id;
-    
     // this.apiRoleService.listRoles().subscribe(
     //   data => {
     //     this.roles = data;
@@ -215,9 +229,7 @@ export class ListuserComponent implements OnInit {
     if (e.target.checked) {
       $('.checkbox:checkbox').each(function() {
         this.checked = true;
-        
         id.push( $(this).attr('id'));
-        
       });
     }
     this.allIdChecked.push(id);  
@@ -262,7 +274,6 @@ export class ListuserComponent implements OnInit {
       this.commonService.notifyError(this.locale.SORRY, "Enter name", 1500);
       this.renderView();
     }else {
-      
       this.apiUserService.listUsers()
         .subscribe(
           data => {
@@ -273,11 +284,9 @@ export class ListuserComponent implements OnInit {
                 this.users.push(e);
               }              
             });
-            
             // this.companies = data;
             // this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.ADD_NEW_PRODUCT_SUCCESSFULLY, 1500);
             // $('#closeModal').click();
-            
           },
           err => {
             this.commonService.notifyError(this.locale.SORRY, "Data error", 1500);
@@ -287,6 +296,7 @@ export class ListuserComponent implements OnInit {
   }
 
   getUpdateUser( updateUser: User){
+
     this.checkEdit = true;
     this.updateUser = {
       _id: updateUser._id,
@@ -296,35 +306,45 @@ export class ListuserComponent implements OnInit {
       id_company: updateUser.id_company,
       id_role: updateUser.id_role
     };
-    
+    this.items = [];
+    this.activeCompany=[];
     this.apiCompanyService.listCompanies().subscribe(
       data => {
         this.companies = data;
         data.forEach(e => {
-          
-          if(this.updateUser.id_company == e._id){
-            this.activeCompany.push({'text':e.name_company,"id":e.name_company});
-            // console.log(this.activeCompany);
-            this.ngSelect.active = this.activeCompany;
-            this.co=e.name_company;
+          if(this.role == 2) {
+            if(this.updateUser.id_company == e._id){
+              this.activeCompany.push({'text':e.name_company,"id":e.name_company});
+              this.ngSelect.active = this.activeCompany;
+              this.items.push({'text':e.name_company,"id":e.name_company});
+              this.ngSelect.items = this.items;
+              this.co=e.name_company;
+            }
+          }else {
+            if(this.updateUser.id_company == e._id){
+              this.activeCompany.push({'text':e.name_company,"id":e.name_company});
+              this.ngSelect.active = this.activeCompany;
+              this.co=e.name_company;
+            }
+            this.items.push({'text':e.name_company,"id":e.name_company});
+            this.ngSelect.items = this.items;
           }
-
         });
-        
       }
     );
+    
+    this.activeRole = [];
+    if(this.role == 2 ){
+      this.items2 = [{'text':'Admin',"id":2},{'text':'User',"id":3}] ;
+    }
 
     this.items2.forEach(e => {
-          
       if(this.updateUser.id_role == e.id){
         this.activeRole.push({'text':e.text,"id":e.id});
-        // console.log(this.activeRole);
-        this.ro=e.id;
+        this.ro = e.id;
         this.ngSelect2.active = this.activeRole;
       }
-     
     });
-   
 
   };
 
@@ -361,12 +381,25 @@ export class ListuserComponent implements OnInit {
   }
 
   activeAdd() {
+    this.items = [];
     this.checkAdd = true;
+    this.checkEdit = false;
+    this.companies.forEach(e => {
+      if(this.role == 2) {
+        this.items2 = [{'text':'Admin',"id":2},{'text':'User',"id":3}];
+        if( this.userData.id_company == e._id ) {
+          this.items.push({'text':e.name_company,'id':e._id});
+          this.ngSelect.items = this.items;
+        }
+      }else {
+        this.items.push({'text':e.name_company,'id':e._id});
+        this.ngSelect.items = this.items;
+      }
+    });
+    
   }
 
   saveUser() {
-
-    
     if( this.co === "" ) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.COMPANY_IS_REQUIRED, 1500);
     }
@@ -394,7 +427,6 @@ export class ListuserComponent implements OnInit {
     }
     else {
       // console.log(this.updateUser);
-
       this.encrypted = CryptoJS.AES.encrypt(this.updateUser.password, this.key).toString();
       this.updateUser.password = this.encrypted;
 
@@ -420,18 +452,33 @@ export class ListuserComponent implements OnInit {
     return this.users.filter(function(el) {
         return el.name_user.toLowerCase().indexOf(query.toLowerCase())  > -1;
     })
-    
   }
 
   public seachName (){
-
-    this.apiUserService.listUsers().subscribe(
-      data => {
-        this.users = data;
-        this.users = (this.filterItems(this.keySearch));
-        this.returnedArray = this.users.slice(0, 10);
-      }
-    );
+    // this.apiUserService.listUsers().subscribe(
+    //   data => {
+    //     this.users = data;
+    //     this.users = (this.filterItems(this.keySearch));
+    //     this.returnedArray = this.users.slice(0, 10);
+    //   }
+    // );
+    if(this.role == 2) {
+      this.apiUserService.getUserByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.users = data;
+          this.users = (this.filterItems(this.keySearch));
+          this.returnedArray = this.users.slice(0, 10);
+        }
+      );
+    }else {
+      this.apiUserService.listUsers().subscribe(
+        data => {
+          this.users = data;
+          this.users = (this.filterItems(this.keySearch));
+          this.returnedArray = this.users.slice(0, 10);
+        }
+      );
+    }
   }
 
   idExists(value) {
@@ -441,7 +488,6 @@ export class ListuserComponent implements OnInit {
   }
 
   nameExists2(value:string) {
-    
     return this.users.some(function(el) {
       return el.name_user.toLowerCase() === value.toLowerCase();
     }); 
@@ -454,6 +500,7 @@ export class ListuserComponent implements OnInit {
   }
 
   add() {
+    
     
     // if (this.user._id < 1 || !this.user._id  ) {
     //   this.commonService.notifyError(this.locale.SORRY, this.locale.ID_Existed, 1500);
@@ -484,16 +531,15 @@ export class ListuserComponent implements OnInit {
     }
     else if ( !this.user.password ) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.PASSWORD_IS_REQUIRED, 1500);
-    } else if (this.ro === "" ) {
+    } 
+    else if (this.ro === "" ) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.ROLE_IS_REQUIRED, 1500);
     }
 
     else {
 
-      
       this.encrypted = CryptoJS.AES.encrypt(this.user.password, this.key).toString();
       this.user.password = this.encrypted;
-
       this.user.id_company = this.co;
       this.user.id_role = this.ro;
 
@@ -501,7 +547,6 @@ export class ListuserComponent implements OnInit {
         .subscribe(
           response => {
             this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success, 1500);
-            
             this.renderView();
             this.user= new User;
             this.router.navigate(['/user']);

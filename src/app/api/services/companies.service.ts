@@ -101,12 +101,11 @@ export class CompaniesService extends BaseService {
    * Create Company
    * @param body - Created Company object
    */
-  createCompanyResponse(body?: CreateCompany): Observable<HttpResponse<Company>> {
+  createCompanyResponse(body: Company): Observable<HttpResponse<Company>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
     __body = body;
-    
     let req = new HttpRequest<any>(
       "POST",
       this.rootUrl + `company/create`,
@@ -116,7 +115,7 @@ export class CompaniesService extends BaseService {
         params: __params,
         responseType: 'json'
       });
-    
+
     return this.http.request<any>(req).pipe(
       filter(_r => _r instanceof HttpResponse),
       map(_r => {
@@ -129,14 +128,16 @@ export class CompaniesService extends BaseService {
   }
 
   /**
-   * Create Company
-   * @param body - Created Company object
+   * Create Device
+   * @param body - Created Device
    */
-  createCompany(body?: CreateCompany): Observable<Company> {
+  createCompany(body: Company): Observable<Company> {
     return this.createCompanyResponse(body).pipe(
       map(_r => _r.body)
     );
   }
+
+
   
   /**
    * @param body - undefined

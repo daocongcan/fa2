@@ -146,10 +146,7 @@ export class NodeService extends BaseService {
       
     );
   }
-
-
   
-
   listDrawAccelerometerResponse(name,value): Observable<HttpResponse<Accelerometer[]>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
@@ -184,6 +181,47 @@ export class NodeService extends BaseService {
     );
   }
 
+  /**
+   *  get by profile
+   */
+
+  listNodeGetByProfileResponse(id): Observable<HttpResponse<Node[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `node/getbyprofile/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: Node[] = null;
+        _body = _resp.body as Node[]
+        return _resp.clone({body: _body}) as HttpResponse<Node[]>;
+      })
+    );
+  }
+
+  /**
+   * list Node Get by profile
+   */
+  listNodeGetbyprofile(id): Observable<Node[]> {
+    return this.listNodeGetByProfileResponse(id).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * list Draw Response
+   */
 
   listDrawResponse(name,value): Observable<HttpResponse<Temperature[]>> {
     let __params = this.newParams();

@@ -41,7 +41,7 @@ export class SigninComponent implements OnInit {
         data => {
           // console.clear();
           // console.log('User is logged in');
-          this.router.navigate(['/gw']);
+          this.router.navigate(['/node']);
         },
         error => {
           console.log('Login failed');
@@ -49,6 +49,6 @@ export class SigninComponent implements OnInit {
         }
       );
     // localStorage.setItem('token', 'abc');
-    this.router.navigate(['/gw']);
+    this.router.navigate(['/node']);
   }
 }

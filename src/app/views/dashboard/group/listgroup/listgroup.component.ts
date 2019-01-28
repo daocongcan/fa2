@@ -39,6 +39,7 @@ export class ListgroupComponent implements OnInit {
   
   public groups: Group[] = [];
   public nodes: Node[] = [];
+  public nodesByGroup: Node[] = [];
 
   public keySearch:string ="";
   
@@ -57,6 +58,7 @@ export class ListgroupComponent implements OnInit {
   paginations = [];
   checkAdd = false;
   checkUpdate = true;
+
   constructor(
     private router: Router,
     private apiGroupService: GroupsService,
@@ -199,6 +201,7 @@ export class ListgroupComponent implements OnInit {
   };
 
   getUpdateGroup( updateGroup: Group){
+    this.checkUpdate = true;
     this.updateGroup = {
       _id: updateGroup._id,
       group_name: updateGroup.group_name,
@@ -350,9 +353,7 @@ export class ListgroupComponent implements OnInit {
     this.checkAdd = true;
     this.checkUpdate = false;
   }
-  updateActive() {
-    this.checkUpdate = true;
-  }
+  
   
   public selected(value:any):void {
     this.selectCompany = value.id;
@@ -380,6 +381,13 @@ export class ListgroupComponent implements OnInit {
     this.value = value;
   }
 
+  getByGroup(id){
+    this.apiNodeService.getByGroup(id).subscribe(
+      data => {
+        this.nodesByGroup = data;
+      }
+    )
+  };
   
 
 }

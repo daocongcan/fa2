@@ -138,6 +138,41 @@ export class UsersService extends BaseService {
       map(_r => _r.body)
     );
   }
+
+  getUserByCompanyResponse(idComapny: string): Observable<HttpResponse<User[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `user/getbycompany/${idComapny}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: User[] = null;
+        _body = _resp.body as User[]
+        return _resp.clone({body: _body}) as HttpResponse<User[]>;
+      })
+    );
+  }
+
+  /**
+   * Returns a single User
+   * @param userId - ID of User to return
+   */
+  getUserByCompany(idComapny: string): Observable<User[]> {
+    return this.getUserByCompanyResponse(idComapny).pipe(
+      map(_r => _r.body)
+    );
+  }
   /**
    * Delete a User
    * @param userId - user Id to delete
