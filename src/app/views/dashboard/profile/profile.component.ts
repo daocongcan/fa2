@@ -208,7 +208,7 @@ export class ProfileComponent implements OnInit {
           this.paginations = this.nodes.slice(0, 10);
         },
         err => {
-          this.commonService.notifyError(this.locale.SORRY, "No Data", 1500);
+          // this.commonService.notifyError(this.locale.SORRY, "No Data", 1500);
         }
       );
     } else {
@@ -219,7 +219,7 @@ export class ProfileComponent implements OnInit {
           this.paginations = this.nodes.slice(0, 10);
         },
         err => {
-          this.commonService.notifyError(this.locale.SORRY, "No Data", 1500);
+          // this.commonService.notifyError(this.locale.SORRY, "No Data", 1500);
         }
       );
     }  
