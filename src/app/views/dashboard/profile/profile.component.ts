@@ -204,14 +204,22 @@ export class ProfileComponent implements OnInit {
       this.apiNodeService.listProfile().subscribe(
         data => {
           this.modelProfiles = data;
+          console.log(data);
           this.paginations = this.nodes.slice(0, 10);
+        },
+        err => {
+          this.commonService.notifyError(this.locale.SORRY, "No Data", 1500);
         }
       );
     } else {
       this.apiNodeService.getProfileByCompany(this.userData.id_company).subscribe(
         data => {
           this.modelProfiles = data;
+          console.log(data);
           this.paginations = this.nodes.slice(0, 10);
+        },
+        err => {
+          this.commonService.notifyError(this.locale.SORRY, "No Data", 1500);
         }
       );
     }  
@@ -349,20 +357,31 @@ export class ProfileComponent implements OnInit {
   };
 
   public filterItems(query) {
-    return this.nodes.filter(function(el) {
-        return el.name_node.toLowerCase().indexOf(query.toLowerCase())  > -1;
+    return this.modelProfiles.filter(function(el) {
+        return el.name_profile.toLowerCase().indexOf(query.toLowerCase())  > -1;
     })
   }
   
   public seachName (){
     
-    this.apiNodeService.listNode().subscribe(
-      data => {
-        this.nodes = data;
-        this.nodes = (this.filterItems(this.keySearch));
-        this.paginations = this.nodes.slice(0, 10);
-      }
-    );
+    if(this.role == 1) {
+      this.apiNodeService.listProfile().subscribe(
+        data => {
+          this.modelProfiles = data;
+          this.modelProfiles = (this.filterItems(this.keySearch));
+          this.paginations = this.modelProfiles.slice(0, 10);
+        }
+      );
+    }else {
+      this.apiNodeService.getProfileByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.modelProfiles = data;
+          this.modelProfiles = (this.filterItems(this.keySearch));
+          this.paginations = this.modelProfiles.slice(0, 10);
+        }
+      );
+    }
+
   }
 
 
