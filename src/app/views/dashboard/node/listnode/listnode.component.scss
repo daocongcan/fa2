@@ -68,19 +68,3 @@ thead th  {
       }
     }
   }
-@media (min-width: 1351px) {
-    agm-map {
-        height: 495px !important;
-        width: 100%;
-        position: relative;
-        
-    }
-}
-@media (min-width: 1352px) and (max-width: 2000px) {
-	agm-map {
-        height: 795px !important;
-        width: 100%;
-        position: relative;
-        
-    }
-}
