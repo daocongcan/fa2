@@ -24,11 +24,11 @@ import { NgClass } from '@angular/common';
 import * as CryptoJS from 'crypto-js';
 
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
-
+import { OrderPipe } from 'ngx-order-pipe';
 @Component({
   selector: 'app-listuser',
   templateUrl: './listuser.component.html',
-  styleUrls: ['./listuser.component.css']
+  styleUrls: ['./listuser.component.scss']
 })
 export class ListuserComponent implements OnInit {
 
@@ -71,6 +71,10 @@ export class ListuserComponent implements OnInit {
   itemsCompany = [];
   itemsRole = [{'text':'Admin',"id":2},{'text':'User',"id":3}];
 
+  order: string = 'name_user';
+  reverse: boolean = false;
+  sortedCollection: any[];
+
   constructor(
     private router: Router,
     private apiUserService: UsersService,
@@ -79,8 +83,11 @@ export class ListuserComponent implements OnInit {
     private commonService: CommonService,
     private modalService: BsModalService,
     private locale: Locale,
+    private orderPipe: OrderPipe
   ) {
     this.role = this.commonService.getRoleOfUser();
+    this.sortedCollection = orderPipe.transform(this.returnedArray, 'name_user');
+
   }
 
   ngOnInit() {
@@ -108,12 +115,13 @@ export class ListuserComponent implements OnInit {
   }
 
   getAllUser() {
-    if(this.role == 2) {
+    if(this.role != 1) {
       this.apiUserService.getUserByCompany(this.userData.id_company).subscribe(
         data => {
           this.users = data;
+          
           this.returnedArray = this.users.slice(0, 10);
-          // console.log(this.returnedArray);
+          
           this.users.forEach( e => {
             this.itemUsers.push({'text':e.name_user,"id":e._id});
             // this.items = e.name_company;
@@ -125,6 +133,7 @@ export class ListuserComponent implements OnInit {
       this.apiUserService.listUsers().subscribe(
         data => {
           this.users = data;
+          
           this.returnedArray = this.users.slice(0, 10);
           // console.log(this.returnedArray);
           this.users.forEach( e => {
@@ -578,6 +587,13 @@ export class ListuserComponent implements OnInit {
  
   public refreshValue(value:any):void {
     this.value = value;
+  }
+
+  setOrder(value: string) {
+    if (this.order === value) {
+      this.reverse = !this.reverse;
+    }
+    this.order = value;
   }
 
 }

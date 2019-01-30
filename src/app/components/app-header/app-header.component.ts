@@ -107,7 +107,9 @@ export class AppHeaderComponent implements OnInit {
         ) {
             this.toggleSidebar();
         }
-    });
+	});
+	
+	this.role = this.commonService.getRoleOfUser();
   }
 
 	
@@ -143,12 +145,19 @@ export class AppHeaderComponent implements OnInit {
   }
 
   getAllAlarm(){
-    this.apiNodeService.listAlarm().subscribe(
-      data => {
-        this.alarms = data;
-        
-      }
-    );
+	
+		if(this.role == 1) {
+			this.apiNodeService.listAlarm().subscribe(
+			data => {
+				this.alarms = data;
+			});
+		}else {
+			this.apiNodeService.getAlarmByCompany(this.userData.id_company).subscribe(
+				data => {
+					this.alarms = data;
+				});
+		}
+	
   }
 
   closeMenu() {

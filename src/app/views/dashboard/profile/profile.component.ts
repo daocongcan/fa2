@@ -50,6 +50,10 @@ import { formatDate } from 'ngx-bootstrap/chronos/format';
 import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
+import { CompaniesService } from '../../../api/services/companies.service';
+import { Company } from '../../../api/models/company';
+
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -59,6 +63,8 @@ export class ProfileComponent implements OnInit {
 
   public node: Node = new Node();
   public node2: Node = new Node();
+
+  companies :Company[]= [];
 
   public modelProfile: NodeProfile = new NodeProfile();
   public modelProfiles: NodeProfile[] = [];
@@ -95,10 +101,9 @@ export class ProfileComponent implements OnInit {
   arrStatus = [{"text":'active',"id":'true'},{"text":'not active',"id":'false'}];
   nameNode;
   dateNode;
+  activeCompany=[];
+  @ViewChild('co') ngSelect: SelectComponent;
   
-  @ViewChild('gr') ngSelect: SelectComponent;
-  @ViewChild('status') ngSelectStatus: SelectComponent;
-  @ViewChild('groups') ngSelectAdd: SelectComponent;
 
   dateRang: Date;
   daterangepickerModel: Date[];
@@ -109,16 +114,23 @@ export class ProfileComponent implements OnInit {
   pluviometer ;
   activeChart;
   addactive = false;
+  selectCompany;
+  userString = sessionStorage.getItem('user');
+  userData = JSON.parse(this.userString);
+  role;
   constructor(
     private router: Router,
     private apiNodeService: NodeService,
     private apiGroupService: GroupsService,
     private commonService: CommonService,
     private modalService: BsModalService,
+    private apiCompanyService: CompaniesService,
     private locale: Locale,
     private datePipe: DatePipe,
     private spinnerService: Ng4LoadingSpinnerService,
-  ) { }
+  ) {
+    this.role = this.commonService.getRoleOfUser();
+  }
 
 
   ngOnInit() {
@@ -130,186 +142,12 @@ export class ProfileComponent implements OnInit {
     });
   }
  
-  onValueChange(date: Date): void {
-    this.dateRang = date;
-    if( date != null ) {
-     this.date1 =  this.datePipe.transform(this.dateRang[0],"yyyy-MM-dd");
-     this.date2 =  this.datePipe.transform(this.dateRang[1],"yyyy-MM-dd");
-    } else {
-      this.date1 = null;
-      this.date2 = null;
-    }
-    if (this.typeChart != null){
-      this.onchangeDraw(this.typeChart);
-    }
-  }
-
-  onchangeDraw(value) {
-    $('#chart_div').show();
-    let dateNow = new Date();
-    let dateNow7D = new Date();
-    
-    dateNow7D.setDate(dateNow7D.getDate() - 10 );
-    let now7Date = this.datePipe.transform(dateNow7D,"yyyy-MM-dd");
-    let nowDate = this.datePipe.transform(dateNow,"yyyy-MM-dd");
-    this.typeChart = value;
-    
-    if(value != 'accelerometer') {
-
-      this.apiNodeService.listDraw(this.chart,value).subscribe(
-        res => {
-          this.temperatures = res;
-          
-          var data = new google.visualization.DataTable();
-          data.addColumn('string', 'X');
-          data.addColumn('number', 'value');
-          
-          let arrFull = [];
-          let arrDate = [];
-          let arrData = [];
-          
-          if(this.temperatures.length > 0 ) {
-
-            this.temperatures.forEach(e => {
-              
-              arrData = (e.date.split("T"));
-              if( this.date1 != null && this.date2 != null && arrData[0] <= this.date2 && arrData[0] >= this.date1 ) {
-                arrDate.push([e.date,e.value]);
-                // console.log(arrData);
-              } else  {
-                if( arrData[0] >= now7Date &&  arrData[0] <= nowDate )
-                  arrFull.push([e.date,e.value]);
-                else {
-                  this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
-                }
-              }
-              
-            });
-
-          } else {
-            // this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
-          }
-
-          if(this.date1 != null && this.date2 != null) {
-            if( arrDate.length > 0 ) {
-              // console.log(arrDate.length);
-              data.addRows(arrDate);
-            }
-            else {
-              this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
-            } 
-
-          } else {
-
-            if(arrFull.length > 0) {
-              data.addRows(arrFull);
-            }
-            else {
-              this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
-            } 
-            
-          }
-          // Set chart options
-          
-          var options = {
-            "width": 800,
-            'height':300,
-            hAxis: {
-              title: 'Date'
-            },
-            vAxis: {
-              title: ''
-            }
-          };
-          // Instantiate and draw our chart, passing in some options.
-          var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-          chart.draw(data, options);
-
-          
-          
-          // chart.clearChart(); 
-          
-        }
-      );
-    } else {
-      
-      
-
-      // this.apiNodeService.listDrawAccelerometer(this.chart,value).subscribe(
-      //   res => {
-      //     this.accelerometers = res;
-          
-      //     let X,Y,Z;
-      //     var data = new google.visualization.DataTable();
-      //     data.addColumn('string', 'Date');
-      //     data.addColumn('number', 'X');
-      //     data.addColumn('number', 'Y');
-      //     data.addColumn('number', 'Z');
-
-      //     let arrFull = [];
-      //     let arrDate = [];
-
-      //     let arrData = [];
-          
-      //     this.accelerometers.forEach(e => {
-             
-      //         arrData = (e.date.split("T"));
-
-      //         if( this.date1 != null && this.date2 != null && arrData[0] <= this.date2 && arrData[0] >= this.date1 ) {
-      //           arrDate.push([e.date,e.value.X,e.value.Y,e.value.Z]);
-      //         } else {
-            
-      //           if( arrData[0] >= now7Date &&  arrData[0] <= nowDate ){
-      //             arrFull.push([e.date,e.value.X,e.value.Y,e.value.Z]);
-      //           }
-      //           else {
-      //             this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
-      //           }
-      //         }
-
-      //     });
-
-      //     if(this.date1 != null && this.date2 != null) {
-      //       if(arrDate.length >0) {
-      //         data.addRows(arrDate);
-      //       }
-      //       else {
-      //         this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
-      //       } 
-
-      //     } else {
-
-      //       if(arrFull.length > 0) {
-      //         data.addRows(arrFull);
-      //       }
-      //       else {
-      //         this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
-      //       } 
-      //     }
-      //     // Set chart options
-      //     var options = {
-      //       "width": 800,
-      //       'height':300,
-      //       hAxis: {
-      //         title: 'Date'
-      //       },
-      //       vAxis: {
-      //         title: ''
-      //       }
-      //     };
-      //     // Instantiate and draw our chart, passing in some options.
-      //     var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      //     chart.draw(data, options);
-      //   }
-      // );
-    }
-  }
-
   
   renderView(){
     this.getAllGroup();
     this.getAllNode();
     this.getAllProfile();
+    this.getAllCompany();
     google.charts.load('current', {'packages':['corechart','line']});
       // Set a callback to run when the Google Visualization API is loaded.
     // google.charts.setOnLoadCallback(this.drawChart);
@@ -332,13 +170,51 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  getAllProfile() {
-    this.apiNodeService.listProfile().subscribe(
+  getAllCompany() {
+    this.items = [];
+    this.apiCompanyService.listCompanies().subscribe(
       data => {
-        this.modelProfiles = data;
-        this.paginations = this.nodes.slice(0, 10);
+        this.companies = data;
+
+        if(this.role == 1){
+          data.forEach(e => {
+            this.items.push( {"text":e.name_company,"id":e._id});
+            // console.log(this.items);
+            // this.items = e.name_company;
+            this.ngSelect.items = this.items;
+          });
+        }else {
+          data.forEach(e => {
+            if( e._id == this.userData.id_company ) {
+              this.items.push( {"text":e.name_company,"id":e._id});
+              // console.log(this.items);
+              // this.items = e.name_company;
+              this.ngSelect.items = this.items;
+            }
+            
+          });
+        }
+        
       }
     );
+  }
+
+  getAllProfile() {
+    if( this.role == 1 ) {
+      this.apiNodeService.listProfile().subscribe(
+        data => {
+          this.modelProfiles = data;
+          this.paginations = this.nodes.slice(0, 10);
+        }
+      );
+    } else {
+      this.apiNodeService.getProfileByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.modelProfiles = data;
+          this.paginations = this.nodes.slice(0, 10);
+        }
+      );
+    }  
   }
 
   getAllGroup() {
@@ -452,9 +328,24 @@ export class ProfileComponent implements OnInit {
       _id: updateProfile._id,
       name_profile: updateProfile.name_profile,
       Codec: updateProfile.Codec,
+      id_company: updateProfile.id_company,
       
     };
-    
+
+    this.apiCompanyService.listCompanies().subscribe(
+      data => {
+        this.companies = data;
+        data.forEach(e => {
+          if(this.updateProfile.id_company == e._id){
+            this.activeCompany.push({'text':e.name_company,"id":e._id});
+            // console.log(this.activeCompany);
+            this.ngSelect.active = this.activeCompany;
+            this.selectCompany = e._id ;
+            // this.co=e.name_company;
+          }
+        });
+      }
+    );
   };
 
   public filterItems(query) {
@@ -463,46 +354,6 @@ export class ProfileComponent implements OnInit {
     })
   }
   
-  getGeo(id,name){
-    this.chart = name;
-    this.nodes.forEach(e => {
-      document.getElementById(e.name_node).style.color = "#007bff" ;  
-    });
-    
-    document.getElementById(name).style.color = "#23527c" ;
-    
-    this.apiNodeService.getNodeByName(id).subscribe(
-      data => {
-        this.nodeGPS = data;
-        if(data != null){
-
-          // this.nodes.forEach(e => {
-          //   if(e._id == data.id_node ){
-          //     this.nameNode = e.name_node;
-          //     this.dateNode = data.createtime;
-          //   }
-          // });
-          this.lat = this.nodeGPS.value.latitude;
-          this.long = this.nodeGPS.value.longitude; 
-          if ( data.value.latitude == 0 || data.value.longitude == 0 ||  Object.keys(data.value).length <1 ) {
-            this.commonService.notifyError(this.locale.SORRY, " Latitude or Longitude = "+ 0, 1500);  
-          }
-        }else {
-          this.lat=0;
-          this.long=0;
-          this.commonService.notifyError(this.locale.SORRY, " "+ name +" No Local ", 1500);
-        }
-      },
-      error => { 
-        this.lat=0;
-        this.long=0;
-        // console.log(this.lat);
-        this.commonService.notifyError(this.locale.SORRY, "Name ' "+ name +" 'No Local ", 1500);
-        // console.log('Received an errror: ' + error.status);
-      }
-    );
-  }
-
   public seachName (){
     
     this.apiNodeService.listNode().subscribe(
@@ -512,10 +363,7 @@ export class ProfileComponent implements OnInit {
         this.paginations = this.nodes.slice(0, 10);
       }
     );
-    
- 
   }
-
 
 
   getIdChecked(e,id){
@@ -556,54 +404,7 @@ export class ProfileComponent implements OnInit {
     // this.value = value;
   }
 
-  getChart(name){
-    // this.spinnerService.show();
-    this.typeChart = "";
-    $('.small-box').removeClass('active');
-    $("#selectedDraw").val("null");
-    $('#chart_div').hide();
-    if(name) {
-      this.apiNodeService.listGetsensor(name).subscribe(
-        data => {
-          this.getsensors = data;
-          
-          for (let index = 0; index < data.length; index++) {
-            this.apiNodeService.listDraw(this.chart, data[index] ).subscribe(
-              res => {
-                this.temperatures = res;
-
-                for (let index2 = 0; index < res.length; index++) {
-                    
-                    if( index2 = res.length -1 ) {
-                        if(data[0] == 'temperature'){
-                          
-                          this.temperature = res[index2].value;
-                        }
-                        else if ( data[1] == 'humidity'){
-                          this.humidity = res[index2].value;
-                        }
-                        else if ( data[2] == 'pluviometer'){
-                          this.pluviometer = res[index2].value;
-                        }
-                    }
-                }
-              },
-              err => {
-                this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);
-              }
-            );  
-          }
-          // this.paginations = this.nodes.slice(0, 10);
-        },
-        error => { 
-          // this.commonService.notifyError(this.locale.SORRY, "Name Node dosen't existed", 1500);   
-          this.getsensors= [];
-        }
-      );
-    }else {
-      // this.commonService.notifyError(this.locale.SORRY, "Enter name Node", 1500);    
-    }
-  }
+  
   
   nameExists2(value) {
     return this.nodes.some(function(el) {
@@ -682,6 +483,11 @@ export class ProfileComponent implements OnInit {
     this.addactive = true;
   }
   
+  public selected(value:any):void {
+    this.selectCompany = value.id;
+    
+  }
+
   // drawChart (){
   // }
 

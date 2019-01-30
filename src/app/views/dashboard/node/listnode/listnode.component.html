@@ -123,23 +123,30 @@
               <!-- <tab  heading="View" id="tab1"> -->
                 <table class="table table-striped table-hover capteur-list ng-star-inserted">
                   <thead>
-                    <tr>
-                      <td></td>
-                      <td>
+                    
+                      <th></th>
+                      <th>
                           
-                      </td>
-                      <td>
+                      </th>
+                      <th [class.active]="order === 'name_node'"
+                      (click)="setOrder('name_node')" >
                         Name
-                      </td>
-                      <td>
+                        <span [hidden]="reverse">▼</span>
+                        <span [hidden]="!reverse">▲</span>
+                      </th>
+                      <th 
+                      [class.active]="order === 'id_group'"
+                      (click)="setOrder('id_group')" >
                         Group
-                      </td>
-                      <td>
-                          Status
-                        </td>
-                    </tr>
+                        <span [hidden]="reverse">▼</span>
+                        <span [hidden]="!reverse">▲</span>
+                      </th>
+                      <th>
+                        Status
+                      </th>
+                    
                   </thead>
-                    <tr *ngFor="let node of nodes" >
+                    <tr *ngFor="let node of nodes | orderBy: order:reverse:'case-insensitive' " >
                       <td title="Delete" >
                         <input type="checkbox"  value="node._id" (change)="getIdChecked($event, node._id)"  name="delete" >
                       </td>

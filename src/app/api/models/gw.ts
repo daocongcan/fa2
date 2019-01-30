@@ -8,5 +8,6 @@ export class Gw {
     IP_public?: string;
     MAC_add?: string;
     OS?: string;
+    id_company?: string;
     Profile?:object;
 }

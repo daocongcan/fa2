@@ -48,10 +48,12 @@ import { formatDate } from 'ngx-bootstrap/chronos/format';
 import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
+import { OrderPipe } from 'ngx-order-pipe';
+
 @Component({
   selector: 'app-listnode',
   templateUrl: './listnode.component.html',
-  styleUrls: ['./listnode.component.css']
+  styleUrls: ['./listnode.component.scss']
 })
 export class ListnodeComponent implements OnInit {
 
@@ -103,6 +105,15 @@ export class ListnodeComponent implements OnInit {
   pluviometer ;
   activeChart;
   addactive = false;
+
+  role= null;
+  userString = sessionStorage.getItem('user');
+  userData = JSON.parse(this.userString);
+
+  order: string = 'name_node';
+  reverse: boolean = false;
+  sortedCollection: any[];
+  
   constructor(
     private router: Router,
     private apiNodeService: NodeService,
@@ -112,7 +123,11 @@ export class ListnodeComponent implements OnInit {
     private locale: Locale,
     private datePipe: DatePipe,
     private spinnerService: Ng4LoadingSpinnerService,
-  ) { }
+    private orderPipe: OrderPipe
+  ) {
+    this.role = this.commonService.getRoleOfUser();
+    this.sortedCollection = orderPipe.transform(this.nodes, 'name_node');
+  }
 
 
   ngOnInit() {
@@ -317,31 +332,59 @@ export class ListnodeComponent implements OnInit {
   }
 
   getAllNode() {
-    this.apiNodeService.listNode().subscribe(
-      data => {
-        this.nodes = data;
-        this.paginations = this.nodes.slice(0, 10);
-      }
-    );
+
+    if(this.role == 1) {
+      this.apiNodeService.listNode().subscribe(
+        data => {
+          this.nodes = data;
+          this.paginations = this.nodes.slice(0, 10);
+        }
+      );
+    }else {
+      this.apiNodeService.getByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.nodes = data;
+          this.paginations = this.nodes.slice(0, 10);
+        }
+      );
+    }
+
   }
 
   getAllGroup() {
-    this.items = [];
-    this.items2 = [];
-    this.apiGroupService.listGroups().subscribe(
-      data => {
-        this.groups = data;
-        
-        data.forEach(e => {
-          this.items.push( {"text":e.group_name,"id":e._id});
-          this.items2.push( {"text":e.group_name,"id":e._id});
+    
+    if(this.role == 1) {
+      this.items = [];
+      this.items2 = [];
+      this.apiGroupService.listGroups().subscribe(
+        data => {
+          this.groups = data;
           
-          this.ngSelect.items = this.items;
-          // this.ngSelectAdd.items = this.items2;
-          
-        });
-      }
-    );
+          data.forEach(e => {
+            this.items.push( {"text":e.group_name,"id":e._id});
+            this.items2.push( {"text":e.group_name,"id":e._id});
+            this.ngSelect.items = this.items;
+            // this.ngSelectAdd.items = this.items2;
+            
+          });
+        }
+      );
+    }else {
+      this.items = [];
+      this.items2 = [];
+      this.apiGroupService.getByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.groups = data;
+          data.forEach(e => {
+            this.items.push( {"text":e.group_name,"id":e._id});
+            this.items2.push( {"text":e.group_name,"id":e._id});
+            this.ngSelect.items = this.items;
+            // this.ngSelectAdd.items = this.items2;
+          });
+        }
+      );
+    }
+
   }
 
   nameExists(value,id) {
@@ -491,7 +534,7 @@ export class ListnodeComponent implements OnInit {
   }
   
   getGeo(id,name){
-    this.chart = name;
+    this.chart = id;
     this.nodes.forEach(e => {
       document.getElementById(e.name_node).style.color = "#007bff" ;  
     });
@@ -531,14 +574,26 @@ export class ListnodeComponent implements OnInit {
   }
 
   public seachName (){
+    if(this.role == 1) {
+      this.apiNodeService.listNode().subscribe(
+        data => {
+          this.nodes = data;
+          this.nodes = (this.filterItems(this.keySearch));
+          this.paginations = this.nodes.slice(0, 10);
+        }
+      );
+    }else {
+      this.apiNodeService.getByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.nodes = data;
+          this.nodes = (this.filterItems(this.keySearch));
+          this.paginations = this.nodes.slice(0, 10);
+        }
+      );
+    }
     
-    this.apiNodeService.listNode().subscribe(
-      data => {
-        this.nodes = data;
-        this.nodes = (this.filterItems(this.keySearch));
-        this.paginations = this.nodes.slice(0, 10);
-      }
-    );
+
+
     
     // this.apiNodeService.getNodeByName(this.keySearch).subscribe(
     //   data => {
@@ -598,14 +653,14 @@ export class ListnodeComponent implements OnInit {
     // this.value = value;
   }
 
-  getChart(name){
+  getChart(id){
     // this.spinnerService.show();
     this.typeChart = "";
     $('.small-box').removeClass('active');
     $("#selectedDraw").val("null");
     $('#chart_div').hide();
-    if(name) {
-      this.apiNodeService.listGetsensor(name).subscribe(
+    if(id) {
+      this.apiNodeService.listGetsensor(id).subscribe(
         data => {
           this.getsensors = data;
           
@@ -613,22 +668,6 @@ export class ListnodeComponent implements OnInit {
             this.apiNodeService.listDraw(this.chart, data[index] ).subscribe(
               res => {
                 this.temperatures = res;
-
-                for (let index2 = 0; index < res.length; index++) {
-                    
-                    if( index2 = res.length -1 ) {
-                        if(data[0] == 'temperature'){
-                          
-                          this.temperature = res[index2].value;
-                        }
-                        else if ( data[1] == 'humidity'){
-                          this.humidity = res[index2].value;
-                        }
-                        else if ( data[2] == 'pluviometer'){
-                          this.pluviometer = res[index2].value;
-                        }
-                    }
-                }
               },
               err => {
                 this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);
@@ -722,6 +761,13 @@ export class ListnodeComponent implements OnInit {
 
   addActive(){
     this.addactive = true;
+  }
+  
+  setOrder(value: string) {
+    if (this.order === value) {
+      this.reverse = !this.reverse;
+    }
+    this.order = value;
   }
   
   // drawChart (){

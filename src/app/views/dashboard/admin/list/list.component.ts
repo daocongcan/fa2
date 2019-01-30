@@ -13,11 +13,11 @@ import { CompaniesService } from '../../../../api/services/companies.service';
 import { Company } from '../../../../api/models/company';
 import { Locale } from '../../../../locale';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
-
+import { OrderPipe } from 'ngx-order-pipe';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.css']
+  styleUrls: ['./list.component.scss']
 })
 export class ListComponent implements OnInit {
 
@@ -30,6 +30,10 @@ export class ListComponent implements OnInit {
   role=null;
   checkAdd = false;
 
+  order: string = 'name_company';
+  reverse: boolean = false;
+  sortedCollection: any[];
+
   constructor(
     private router: Router,
     private apiCompanyService: CompaniesService,
@@ -37,9 +41,10 @@ export class ListComponent implements OnInit {
     private modalService: BsModalService,
     private locale: Locale,
     private dashboardService: DashboardService,
-    
+    private orderPipe: OrderPipe
   ){
     this.role = this.commonService.getRoleOfUser();
+    this.sortedCollection = orderPipe.transform(this.paginations, 'name_company');
    }
 
   ngOnInit() {
@@ -245,6 +250,13 @@ export class ListComponent implements OnInit {
 
   activeAdd(){
     this.checkAdd = true;
+  }
+
+  setOrder(value: string) {
+    if (this.order === value) {
+      this.reverse = !this.reverse;
+    }
+    this.order = value;
   }
 
 }

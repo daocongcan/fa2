@@ -27,10 +27,18 @@ import { NgClass } from '@angular/common';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { AgmSnazzyInfoWindowModule } from '@agm/snazzy-info-window';
 import { window } from 'rxjs/operators';
+import { SelectComponent } from 'ng2-select';
+
+import { GroupsService } from '../../../../api/services/groups.service';
+import { Group } from '../../../../api/models/group';
+
+import { CompaniesService } from '../../../../api/services/companies.service';
+import { Company } from '../../../../api/models/company';
+import { OrderPipe } from 'ngx-order-pipe';
 @Component({
   selector: 'app-listgw',
   templateUrl: './listgw.component.html',
-  styleUrls: ['./listgw.component.css']
+  styleUrls: ['./listgw.component.scss']
 })
 export class ListgwComponent implements OnInit {
 
@@ -85,21 +93,42 @@ export class ListgwComponent implements OnInit {
   profile = false;
 
   chart = null;
+  companies:Company[] = [];
+  role= null;
+  userString = sessionStorage.getItem('user');
+  userData = JSON.parse(this.userString);
+  items;
+  checkAddActive = false;
+  selectCompany;
+  activeCompany = [];
+
+  order: string = 'name_gw';
+  reverse: boolean = false;
+  sortedCollection: any[];
+
   constructor(
     private router: Router,
     private apigwService: GwService,
+    private apiCompanyService: CompaniesService,
+    private apiGroupService: GroupsService,
     private commonService: CommonService,
     private modalService: BsModalService,
     private locale: Locale,
-  ) { }
+    private orderPipe: OrderPipe
+  ) {
+    this.role = this.commonService.getRoleOfUser();
+    this.sortedCollection = orderPipe.transform(this.gws, 'name_gw');
+  }
 
   ngOnInit() {
     this.renderView();
   }
 
+  @ViewChild('co') ngSelect: SelectComponent;
   renderView(){
     
     this.getAllGw();
+    this.getAllCompany();
     
     // let height = ( $(document).height()) - 200;
     // $("agm-map").css("height",height+"px");
@@ -113,13 +142,54 @@ export class ListgwComponent implements OnInit {
     this.paginations = this.gws.slice(startItem, endItem);
     
   }
-
+  addActive(){
+    this.checkAddActive = true;
+  }
   getAllGw() {
-    this.apigwService.listGw().subscribe(
+    if( this.role == 1 ) {
+      this.apigwService.listGw().subscribe(
+        data => {
+          this.gws = data;
+          
+          this.paginations = this.gws.slice(0, 10);
+        }
+      );
+    }else {
+      this.apigwService.getByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.gws = data;
+          
+          this.paginations = this.gws.slice(0, 10);
+        }
+      );
+    } 
+  }
+
+  getAllCompany() {
+    this.items = [];
+    this.apiCompanyService.listCompanies().subscribe(
       data => {
-        this.gws = data;
+        this.companies = data;
+
+        if(this.role == 1){
+          data.forEach(e => {
+            this.items.push( {"text":e.name_company,"id":e._id});
+            // console.log(this.items);
+            // this.items = e.name_company;
+            this.ngSelect.items = this.items;
+          });
+        }else {
+          data.forEach(e => {
+            if( e._id == this.userData.id_company ) {
+              this.items.push( {"text":e.name_company,"id":e._id});
+              // console.log(this.items);
+              // this.items = e.name_company;
+              this.ngSelect.items = this.items;
+            }
+            
+          });
+        }
         
-        this.paginations = this.gws.slice(0, 10);
       }
     );
   }
@@ -132,12 +202,25 @@ export class ListgwComponent implements OnInit {
       MAC_add: updateGw.MAC_add,
       OS: updateGw.OS,
       Profile: updateGw.Profile,
+      id_company: updateGw.id_company,
     };
 
-    if( Object.keys(this.updateGw.Profile).length > 0 ) {
-      this.profile =  true;  
-    }
-    console.log(this.updateGw.Profile);
+    this.apiCompanyService.listCompanies().subscribe(
+      data => {
+        this.companies = data;
+        data.forEach(e => {
+          if(this.updateGw.id_company == e._id){
+            this.activeCompany.push({'text':e.name_company,"id":e._id});
+            // console.log(this.activeCompany);
+            this.ngSelect.active = this.activeCompany;
+            this.selectCompany = e._id ;
+            // this.co=e.name_company;
+          }
+        });
+      }
+    );
+    
+    
   };
 
 
@@ -182,14 +265,24 @@ export class ListgwComponent implements OnInit {
   }
 
   public seachName (){
+    if(this.role == 1) {
+      this.apigwService.listGw().subscribe(
+        data => {
+          this.gws = data;
+          this.gws = (this.filterItems(this.keySearch));
+          this.paginations = this.gws.slice(0, 10);
+        }
+      );
+    } else {
+      this.apigwService.getByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.gws = data;
+          this.gws = (this.filterItems(this.keySearch));
+          this.paginations = this.gws.slice(0, 10);
+        }
+      );
+    }
 
-    this.apigwService.listGw().subscribe(
-      data => {
-        this.gws = data;
-        this.gws = (this.filterItems(this.keySearch));
-        this.paginations = this.gws.slice(0, 10);
-      }
-    );
   }
 
   nameExists(value,id) {
@@ -276,10 +369,14 @@ export class ListgwComponent implements OnInit {
     else if ( !this.updateGw.OS || !this.updateGw.OS.trim()) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.OS_is_required, 1500);
     }
+
+    else if ( !this.selectCompany) {
+      this.commonService.notifyError(this.locale.SORRY, "Company Not Select", 1500);
+    }
    
     
     else {
-      
+      this.updateGw.id_company = this.selectCompany;
       this.apigwService.updateGw(this.updateGw)
         .subscribe(
           response => {
@@ -328,16 +425,23 @@ export class ListgwComponent implements OnInit {
       this.commonService.notifyError(this.locale.SORRY, this.locale.Ip_is_required, 1500);
     }
 
+    else if ( !this.gw.OS || !this.gw.OS.trim() ) {
+      this.commonService.notifyError(this.locale.SORRY, this.locale.OS_is_required, 1500);
+    }
+
     else if ( !this.gw.MAC_add || !this.gw.MAC_add.trim() ) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.Mac_is_required, 1500);
     }
 
-    else if ( !this.gw.OS || !this.gw.OS.trim() ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.OS_is_required, 1500);
+    else if ( !this.selectCompany) {
+      this.commonService.notifyError(this.locale.SORRY, "Company Not Select", 1500);
     }
+
+    
     
     else {
-      console.log(this.gw);
+      this.gw.id_company = this.selectCompany;
+      
       this.apigwService.createGw(this.gw)
         .subscribe(
           response => {
@@ -355,5 +459,32 @@ export class ListgwComponent implements OnInit {
   }
 
 
+  public selected(value:any):void {
+    this.selectCompany = value.id;
+  }
+ 
+  private set disabledV(value:string) {
+    // this._disabledV = value;
+    // this.disabled = this._disabledV === '1';
+  }
+ 
+  public removed(value:any):void {
+    // console.log('Removed value is: ', value);
+  }
+ 
+  public typed(value:any):void {
+    // console.log('New search input: ', value);
+  }
+ 
+  public refreshValue(value:any):void {
+    // this.value = value;
+  }
+
+  setOrder(value: string) {
+    if (this.order === value) {
+      this.reverse = !this.reverse;
+    }
+    this.order = value;
+  }
 
 }

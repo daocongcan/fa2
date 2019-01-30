@@ -23,12 +23,12 @@ import { SelectComponent } from 'ng2-select';
 import { NgClass } from '@angular/common';
 
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
-
+import { OrderPipe } from 'ngx-order-pipe';
 
 @Component({
   selector: 'app-listgroup',
   templateUrl: './listgroup.component.html',
-  styleUrls: ['./listgroup.component.css']
+  styleUrls: ['./listgroup.component.scss']
 })
 export class ListgroupComponent implements OnInit {
 
@@ -58,6 +58,13 @@ export class ListgroupComponent implements OnInit {
   paginations = [];
   checkAdd = false;
   checkUpdate = true;
+  role = null;
+  userString = sessionStorage.getItem('user');
+  userData = JSON.parse(this.userString);
+
+  order: string = 'group_name';
+  reverse: boolean = false;
+  sortedCollection: any[];
 
   constructor(
     private router: Router,
@@ -67,12 +74,14 @@ export class ListgroupComponent implements OnInit {
     private commonService: CommonService,
     private modalService: BsModalService,
     private locale: Locale,
-  ) { }
+    private orderPipe: OrderPipe
+  ) {
+    this.role = this.commonService.getRoleOfUser();
+    this.sortedCollection = orderPipe.transform(this.paginations, 'group_name');
+   }
 
   ngOnInit() {
     this.renderView();
-    
-    
   }
 
   @ViewChild('company') ngSelect: SelectComponent;
@@ -88,23 +97,43 @@ export class ListgroupComponent implements OnInit {
     const startItem = (event.page - 1) * event.itemsPerPage;
     const endItem = event.page * event.itemsPerPage;
     this.paginations = this.groups.slice(startItem, endItem);
-    // console.log(this.users);
   }
 
   getAllGroup() {
-    this.apiGroupService.listGroups().subscribe(
-      data => {
-        this.groups = data;
-        this.paginations = this.groups.slice(0, 10);
+    
+    if(this.role == 1){
+      this.apiGroupService.listGroups().subscribe(
+        data => {
+          this.groups = data;
+          this.paginations = this.groups.slice(0, 10);
+  
+          this.groups.forEach( e => {
+            this.itemGroups.push( {"text":e.group_name,"id":e._id});
+            // console.log(this.items);
+            // this.items = e.name_company;
+            // this.ngSelect2.items = this.itemGroups;
+          });
+          
+        }
+      );
+    } else {
 
-        this.groups.forEach( e => {
-          this.itemGroups.push( {"text":e.group_name,"id":e._id});
-          // console.log(this.items);
-          // this.items = e.name_company;
-          // this.ngSelect2.items = this.itemGroups;
-        });
-      }
-    );
+      this.apiGroupService.getByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.groups = data;
+          this.paginations = this.groups.slice(0, 10);
+          
+          this.groups.forEach( e => {
+            this.itemGroups.push( {"text":e.group_name,"id":e._id});
+            // console.log(this.items);
+            // this.items = e.name_company;
+            // this.ngSelect2.items = this.itemGroups;
+          });
+          
+        }
+      );
+    }
+
   };
 
   getAllNode() {
@@ -148,21 +177,28 @@ export class ListgroupComponent implements OnInit {
       data => {
         this.companies = data;
 
-        data.forEach(e => {
-          // console.log(e.name_company);
-          this.items.push( {"text":e.name_company,"id":e._id});
-          // console.log(this.items);
-          // this.items = e.name_company;
-          this.ngSelect.items = this.items;
-          
-          
-        });
+        if(this.role == 1){
+          data.forEach(e => {
+            this.items.push( {"text":e.name_company,"id":e._id});
+            // console.log(this.items);
+            // this.items = e.name_company;
+            this.ngSelect.items = this.items;
+          });
+        }else {
+          data.forEach(e => {
+            if( e._id == this.userData.id_company ) {
+              this.items.push( {"text":e.name_company,"id":e._id});
+              // console.log(this.items);
+              // this.items = e.name_company;
+              this.ngSelect.items = this.items;
+            }
+            
+          });
+        }
         
       }
     );
   }
-
-  
 
   selectedSearch(value:any):void {
     this.groups=[];
@@ -340,13 +376,24 @@ export class ListgroupComponent implements OnInit {
 
   public seachName (){
 
-    this.apiGroupService.listGroups().subscribe(
-      data => {
-        this.groups = data;
-        this.groups = (this.filterItems(this.keySearch));
-        this.paginations = this.groups.slice(0, 10);
-      }
-    );
+    if(this.role == 1) {
+      this.apiGroupService.listGroups().subscribe(
+        data => {
+          this.groups = data;
+          this.groups = (this.filterItems(this.keySearch));
+          this.paginations = this.groups.slice(0, 10);
+        }
+      );
+    }else {
+      this.apiGroupService.getByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.groups = data;
+          this.groups = (this.filterItems(this.keySearch));
+          this.paginations = this.groups.slice(0, 10);
+        }
+      );
+    }  
+
   }
 
   activeAdd(){
@@ -388,6 +435,12 @@ export class ListgroupComponent implements OnInit {
       }
     )
   };
-  
+
+  setOrder(value: string) {
+    if (this.order === value) {
+      this.reverse = !this.reverse;
+    }
+    this.order = value;
+  }
 
 }

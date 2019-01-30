@@ -110,6 +110,46 @@ export class NodeService extends BaseService {
     );
   }
 
+
+  /**
+   * get list of Node Profile /profile/getbycompany/5c4821fd15f3f1680c5c9a92
+
+
+   */
+  getProfileByCompanyResponse(id): Observable<HttpResponse<NodeProfile[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `profile/getbycompany/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: NodeProfile[] = null;
+        _body = _resp.body as NodeProfile[]
+        return _resp.clone({body: _body}) as HttpResponse<NodeProfile[]>;
+      })
+    );
+  }
+
+  /**
+   * get list of list Profile
+   */
+  getProfileByCompany(id): Observable<NodeProfile[]> {
+    return this.getProfileByCompanyResponse(id).pipe(
+      map(_r => _r.body)
+    );
+  }
+
   /**
    * get list of Alarm
    */
@@ -147,16 +187,55 @@ export class NodeService extends BaseService {
     );
   }
 
- 
-  //  listGetsensorResponse
 
-  listGetsensorResponse(name): Observable<HttpResponse<Getsensor[]>> {
+  /**
+   * get list of Alarm 
+   */
+  getAlarmByCompanyResponse(id): Observable<HttpResponse<Alarm[]>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
     let req = new HttpRequest<any>(
       "GET",
-      this.rootUrl + `chart/getsensor/${name}`,
+      this.rootUrl + `alarm/getbycompany/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: Alarm[] = null;
+        _body = _resp.body as Alarm[]
+        return _resp.clone({body: _body}) as HttpResponse<Alarm[]>;
+      })
+    );
+  }
+
+  /**
+   * get list of Alarm
+   */
+  getAlarmByCompany(id): Observable<Alarm[]> {
+    return this.getAlarmByCompanyResponse(id).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+
+ 
+  //  listGetsensorResponse
+
+  listGetsensorResponse(id): Observable<HttpResponse<Getsensor[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `chart/getsensor/${id}`,
       __body,
       {
         headers: __headers,
@@ -178,20 +257,56 @@ export class NodeService extends BaseService {
   /**
    * get list of Getsensor
    */
-  listGetsensor(name): Observable<Getsensor[]> {
-    return this.listGetsensorResponse(name).pipe(
+  listGetsensor(id): Observable<Getsensor[]> {
+    return this.listGetsensorResponse(id).pipe(
       map(_r => _r.body)
       
     );
   }
-  
-  listDrawAccelerometerResponse(name,value): Observable<HttpResponse<Accelerometer[]>> {
+  // /node/getbycompany/
+  getByCompanyResponse(id): Observable<HttpResponse<Node[]>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
     let req = new HttpRequest<any>(
       "GET",
-      this.rootUrl + `chart/getchart/${name}/${value}`,
+      this.rootUrl + `node/getbycompany/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: Node[] = null;
+        _body = _resp.body as Node[]
+        return _resp.clone({body: _body}) as HttpResponse<Node[]>;
+      })
+    );
+  }
+
+  /**
+   * get list of Getsensor
+   */
+  getByCompany(id): Observable<Node[]> {
+    return this.getByCompanyResponse(id).pipe(
+      map(_r => _r.body)
+      
+    );
+  }
+
+  //  listDrawAccelerometerResponse
+  listDrawAccelerometerResponse(id,name): Observable<HttpResponse<Accelerometer[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `chart/getchart/${id}/${name}`,
       __body,
       {
         headers: __headers,
@@ -213,8 +328,8 @@ export class NodeService extends BaseService {
   /**
    * get list of Getsensor
    */
-  listDrawAccelerometer(name,value): Observable<Accelerometer[]> {
-    return this.listDrawAccelerometerResponse(name,value).pipe(
+  listDrawAccelerometer(id,name): Observable<Accelerometer[]> {
+    return this.listDrawAccelerometerResponse(id,name).pipe(
       map(_r => _r.body)
     );
   }

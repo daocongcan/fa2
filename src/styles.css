@@ -37,3 +37,10 @@ table {
 .modal-title {
     text-transform: uppercase !important;
 }
+
+thead th  {
+    cursor: pointer;
+    margin-right: 15px;
+    margin-left: 15px;
+    padding: 5px;
+}

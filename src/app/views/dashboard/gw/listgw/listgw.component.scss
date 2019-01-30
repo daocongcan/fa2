@@ -48,3 +48,21 @@ table tr td a:hover, table tr td a:focus,table tr td a:active {
 .content-wrapper {
     min-height: 580px !important;
 }
+
+thead th  {
+    cursor: pointer;
+    margin-right: 15px;
+    margin-left: 15px;
+  
+    span {
+      visibility: hidden;
+    }
+  
+    &.active {
+      color: #000;
+  
+      span {
+        visibility: visible;
+      }
+    }
+  }

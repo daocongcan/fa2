@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators/map';
 import { filter } from 'rxjs/operators/filter';
 
 import { Group } from '../models/group';
+import { identifierName } from '@angular/compiler';
 // import { CreateGroup } from '../models/create-Group';
 // import { UpdateGroup } from '../models/update-Group';
 
@@ -171,6 +172,46 @@ export class GroupsService extends BaseService {
    */
   getGroupById(GroupId: number): Observable<Group> {
     return this.getGroupByIdResponse(GroupId).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * Returns a single Group
+   * 
+   */
+  getByCompanyResponse(id): Observable<HttpResponse<Group[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `group/getbycompany/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: Group[] = null;
+        _body = _resp.body as Group[]
+        return _resp.clone({body: _body}) as HttpResponse<Group[]>;
+      })
+    );
+  }
+
+  /**
+   * Returns a single Group
+   * @param GroupId - ID of Group to return
+   */
+  getByCompany(id): Observable<Group[]> {
+    return this.getByCompanyResponse(id).pipe(
       map(_r => _r.body)
     );
   }

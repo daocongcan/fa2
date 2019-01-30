@@ -43,30 +43,42 @@
       <div style="overflow-x:auto;"> 
         <table style="width: 100%;" class="table table-striped table-hover dataTable">
             <thead>
-              <tr>
+              
                 <th>
                   <!-- <input id="checkall" type="checkbox" name="delete" (change)="getCheckAll($event);"> -->
                 </th>
-                <th>
-                  Name
+                <th [class.active]="order === 'name_user'"
+                (click)="setOrder('name_user')">
+                  Name 
+                  <span [hidden]="reverse">▼</span>
+                  <span [hidden]="!reverse">▲</span>
                 </th>
-                <th>
+                <th [class.active]="order === 'email'"
+                (click)="setOrder('email')" >
                   Email   
+                  <span [hidden]="reverse">▼</span>
+                  <span [hidden]="!reverse">▲</span>   
                 </th>
-                <th>
+                <th [class.active]="order === 'id_role'"
+                (click)="setOrder('id_role')">
                   Role
+                  <span [hidden]="reverse">▼</span>
+                  <span [hidden]="!reverse">▲</span>   
                 </th>
     
-                <th>
-                  Company       
+                <th [class.active]="order === 'id_company'"
+                (click)="setOrder('id_company')" >
+                  Company
+                  <span [hidden]="reverse">▼</span>
+                  <span [hidden]="!reverse">▲</span>       
                 </th>
                 
                 <!-- <th style="width: 12%;"> 
                     
                 </th> -->
-              </tr>
+              
             </thead>
-            <tr class="user"  *ngFor="let user of returnedArray  "  >
+            <tr class="user"  *ngFor="let user of returnedArray | orderBy: order:reverse:'case-insensitive' "  >
               
               <td>
                 <input type="checkbox" class="checkbox" (change)="getIdChecked($event,user._id);" id="{{user._id}}">

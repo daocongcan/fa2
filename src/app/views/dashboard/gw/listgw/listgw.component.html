@@ -13,7 +13,7 @@
         <div class="input-group">
             <input type="text" (keyup.enter)="seachName()" [(ngModel)]="keySearch" class="form-control" placeholder="Search...">
               <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+                <button type="submit" (click)="seachName()" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
               </span>
         </div>
@@ -23,7 +23,7 @@
         <!-- breadcrumb <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Dashboard</li> [routerLink]="['/gw/add']" -->
 
-        <button data-toggle="modal" data-target="#addModal" class="btn btn-primary btn-add" ><i class="	fa fa-plus"></i> ADD</button>
+        <button data-toggle="modal" (click) ="addActive()" data-target="#addModal" class="btn btn-primary btn-add" ><i class="	fa fa-plus"></i> ADD</button>
         <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" ><i class="	fa fa-times"></i> DELETE</button>
       </ol>
     </section>
@@ -99,12 +99,12 @@
               <!-- <pagination *ngIf="gws.length>10"  [totalItems]="gws.length" (pageChanged)="pageChanged($event)"></pagination> -->
       
               <div class="col-md-12 col-sm-12" style="border: 6px solid #fff;padding: 0px;">
-                <div class="col-md-8 md" style="padding: 0" >
+                <div class="col-md-7 md" style="padding: 0" >
                   <agm-map [latitude]="10.8146287" [longitude]="106.6956878" [zoom]="1">
                     <agm-marker *ngIf=" lat != 0 && lng != 0 " [latitude]="lat" [longitude]="lng"></agm-marker>
                   </agm-map>
                 </div>
-                <div class="col-md-4 md" style="vertical-align: top;overflow-y: scroll;
+                <div class="col-md-5 md" style="vertical-align: top;overflow-y: scroll;
                 min-height: 420px;padding: 0" >
                   <tabset>
                         <div class="col-md-12"> 
@@ -113,23 +113,26 @@
                         </div>  
                         <table class="table table-striped table-hover capteur-list ng-star-inserted">
                           <thead>
-                            <tr>
-                              <td title="Delete">
-                              </td>
-                              <td title="Local" >
-                              </td>
-                              <td>
+                            
+                              <th title="Delete">
+                              </th>
+                              <th title="Local" >
+                              </th>
+                              <th style="width: 16%;" [class.active]="order === 'group_name'"
+                              (click)="setOrder('group_name')" >
                                 Name
-                              </td>
-                              <td>
+                                <span [hidden]="reverse">▼</span>
+                                <span [hidden]="!reverse">▲</span>
+                              </th>
+                              <th>
                                 IP
-                              </td>
-                              <td>
+                              </th>
+                              <th>
                                 LAST DATE
-                              </td>
-                            </tr>
+                              </th>
+                            
                             </thead>
-                            <tr *ngFor="let gw of gws " >
+                            <tr *ngFor="let gw of gws | orderBy: order:reverse:'case-insensitive'  " >
                               <td title="Delete">
                                 <input type="checkbox"  value="gw._id" (change)="getIdChecked($event, gw._id)"  name="delete" >
                               </td>
@@ -210,15 +213,16 @@
                           <input class="form-control" [(ngModel)]="updateGw.IP_public" type="text" name="IP_public" placeholder="IP PUBLIC">
                           <input class="form-control" [(ngModel)]="updateGw.OS" type="text" name="os" placeholder="OS">
                           <input class="form-control" [(ngModel)]="updateGw.MAC_add" type="text" name="mac_add" placeholder="MAC ADD">
-                          <!-- <textarea *ngIf="profile == true" class="form-control" rows="5" >
-time: {{updateGw.Profile.time}},
-rxnb: {{updateGw.Profile.rxnb}},
-rxok: {{updateGw.Profile.rxok}},
-rxfw: {{updateGw.Profile.rxfw}},
-ackr: {{updateGw.Profile.ackr}},
-dwnb: {{updateGw.Profile.dwnb}},
-txnb: {{updateGw.Profile.txnb}}                        
-                          </textarea> -->
+                          
+                          <ng-select title="Company" #co 
+                              [allowClear]="true"
+                              [items]="items"
+                              (data)="refreshValue($event)"
+                              (selected)="selected($event)"
+                              (removed)="removed($event)"
+                              (typed)="typed($event)"
+                              placeholder="No Name Group Selected">
+                            </ng-select>
 
                           <textarea rows="5" class="form-control">{{updateGw.Profile | json }}</textarea>
                         </div>
@@ -232,7 +236,7 @@ txnb: {{updateGw.Profile.txnb}}
                 </div>
               </div>
 
-              <div id="addModal" class="modal fade" role="dialog">
+              <div *ngIf="checkAddActive == true" id="addModal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
                   <form (ngSubmit)="add()">
                     <div class="modal-content">
@@ -245,7 +249,15 @@ txnb: {{updateGw.Profile.txnb}}
                             <input class="form-control" [(ngModel)]="gw.IP_public" type="text" name="IP_public" placeholder="IP PUBLIC">
                             <input class="form-control" [(ngModel)]="gw.OS" type="text" name="os" placeholder="OS">
                             <input class="form-control" [(ngModel)]="gw.MAC_add" type="text" name="mac_add" placeholder="MAC ADD">
-                            
+                            <ng-select title="Company" #co 
+                              [allowClear]="true"
+                              [items]="items"
+                              (data)="refreshValue($event)"
+                              (selected)="selected($event)"
+                              (removed)="removed($event)"
+                              (typed)="typed($event)"
+                              placeholder="No Name group Selected">
+                            </ng-select>
                         </div>
                       </div>
                       <div class="modal-footer">

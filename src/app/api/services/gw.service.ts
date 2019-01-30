@@ -96,6 +96,39 @@ export class GwService extends BaseService {
   }
 
 
+  // get by company 
+  getByCompanyResponse(id: number): Observable<HttpResponse<Gw[]>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    
+    let req = new HttpRequest<any>(
+      "GET",
+      this.rootUrl + `gw/getbycompany/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: Gw[] = null;
+        _body = _resp.body as Gw[]
+        return _resp.clone({body: _body}) as HttpResponse<Gw[]>;
+      })
+    );
+  }
+  //// get by company  
+  getByCompany(id: number): Observable<Gw[]> {
+    return this.getByCompanyResponse(id).pipe(
+      map(_r => _r.body)
+    );
+  }
+
   /**
    * Create Gw
    * @param body - Created Gw object

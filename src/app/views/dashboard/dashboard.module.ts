@@ -67,7 +67,7 @@ import { GoogleChartsModule } from 'angular-google-charts';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { DatePipe } from '@angular/common';
 import { ProfileComponent } from './profile/profile.component';
-
+import { OrderModule } from 'ngx-order-pipe';
 @NgModule({
   imports: [
     CommonModule,
@@ -90,7 +90,7 @@ import { ProfileComponent } from './profile/profile.component';
     BsDatepickerModule.forRoot(),
     GoogleChartsModule.forRoot(),
     TabsModule.forRoot(),
-    
+    OrderModule,
   ],
   providers: [
     AuthenticationService,

@@ -115,6 +115,9 @@
                   <td>
                     Codec
                   </td>
+                  <td>
+                    Company
+                  </td>
                   
                 </tr>
               </thead>
@@ -123,13 +126,21 @@
                     <input type="checkbox"  value="modelProfile._id" (change)="getIdChecked($event, modelProfile._id)"  name="delete" >
                   </td>
                   
-                  <td title="edit" style="cursor: pointer;" (click)="getUpdateProfile(modelProfile)" data-toggle="modal" data-target="#myModal" id="{{modelProfile._id}}" >
+                  <td  title="edit" style="cursor: pointer;" (click)="getUpdateProfile(modelProfile)" data-toggle="modal" data-target="#myModal" id="{{modelProfile._id}}" >
                     {{modelProfile.name_profile}}
                   </td>
 
-                  <td>
+                  <td  >
                     {{modelProfile.Codec | json }}
                   </td>
+                  <td >
+                    <div *ngFor="let company of companies">
+                      <span *ngIf="( company._id == modelProfile.id_company )">
+                        {{company.name_company}} 
+                      </span>
+                    </div>
+                  </td>
+
 
                 </tr>
               </table>  
@@ -148,11 +159,20 @@
               </div>
               <div class="row modal-body">
 
-                <div class="col-md-12 md gw-left">  
+                <div class="col-md-12 ">  
                   <input class="form-control" title="Name profile" type="text" [(ngModel)]="updateProfile.name_profile" name="name_profile"  placeholder="NAME">
                   <textarea rows="15" title="Codec" name="Codec" class="form-control">
 {{updateProfile.Codec | json}}
                   </textarea>
+                  <ng-select title="Company" #co  style="width: 100%;"
+                      [allowClear]="true"
+                      [items]="items"
+                      (data)="refreshValue($event)"
+                      (selected)="selected($event)"
+                      (removed)="removed($event)"
+                      (typed)="typed($event)"
+                      placeholder="NO COMPANY SELECTED">
+                    </ng-select>  
                 </div>
               </div>
               <div class="modal-footer">
@@ -175,12 +195,22 @@
                 <h4 class="modal-title">ADD PROFILE</h4>
               </div>
               <div class="row modal-body">
-                  <div class="col-md-6 md gw-left">  
+                  <div class="col-md-12 md gw-left">  
                     
                     <input class="form-control" type="text" [(ngModel)]="modelProfile.name_profile" name="name_profile"  placeholder="NAME NODE">
                     <textarea style="margin-bottom: 5px;" class="form-control" [(ngModel)]="modelProfile.Codec" name="Codec" placeholder="CODEC" rows="15">
             
                     </textarea>
+
+                    <ng-select title="Company" #co  style="width: 100%;"
+                      [allowClear]="true"
+                      [items]="items"
+                      (data)="refreshValue($event)"
+                      (selected)="selected($event)"
+                      (removed)="removed($event)"
+                      (typed)="typed($event)"
+                      placeholder="NO COMPANY SELECTED">
+                    </ng-select>  
                    
                   </div>
                   <div class="col-md-12 modal-footer">
