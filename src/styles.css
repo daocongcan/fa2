@@ -44,3 +44,23 @@ thead th  {
     margin-left: 15px;
     padding: 5px;
 }
+
+
+
+@media screen and (max-width: 1440px)  {
+	agm-map {
+        height: 795px !important;
+        width: 100%;
+        position: relative;
+        
+    }
+}
+
+@media screen  and  (max-width: 1024px) {
+    agm-map {
+        height: 495px !important;
+        width: 100%;
+        position: relative;
+        
+    }
+}

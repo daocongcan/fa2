@@ -11,7 +11,7 @@ import {AuthLayoutComponent} from './layouts/auth-layout/auth-layout.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/gw',
+    redirectTo: '/node',
     pathMatch: 'full'
   },
   {

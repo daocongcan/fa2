@@ -100,7 +100,7 @@
       
               <div class="col-md-12 col-sm-12" style="border: 6px solid #fff;padding: 0px;">
                 <div class="col-md-7 md" style="padding: 0" >
-                  <agm-map [latitude]="10.8146287" [longitude]="106.6956878" [zoom]="1">
+                  <agm-map [latitude]="lat" [longitude]="lng" [zoom]="mapZoom">
                     <agm-marker *ngIf=" lat != 0 && lng != 0 " [latitude]="lat" [longitude]="lng"></agm-marker>
                   </agm-map>
                 </div>

@@ -76,7 +76,7 @@ thead th  {
         
     }
 }
-@media (max-width: 1352px) and (min-width: 2000px) {
+@media (min-width: 1352px) and (max-width: 2000px) {
 	agm-map {
         height: 795px !important;
         width: 100%;

@@ -105,7 +105,7 @@
           <div class="col-md-8 md"  style="padding: 0">
 
           
-            <agm-map [latitude]="10.762622" [longitude]="106.660172" [zoom]="1">
+            <agm-map [latitude]="lat" [longitude]="long" [zoom]="mapZoom" >
               <agm-marker *ngIf=" lat != 0 && long != 0 "  [latitude]="lat" [longitude]="long">
                 <!-- <agm-info-window> 
                   <p><b>Name:</b> {{nameNode}} </p>

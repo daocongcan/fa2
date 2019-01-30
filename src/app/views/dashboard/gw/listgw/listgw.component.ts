@@ -105,7 +105,7 @@ export class ListgwComponent implements OnInit {
   order: string = 'name_gw';
   reverse: boolean = false;
   sortedCollection: any[];
-
+  mapZoom = 0;
   constructor(
     private router: Router,
     private apigwService: GwService,
@@ -323,9 +323,10 @@ export class ListgwComponent implements OnInit {
           // });
           this.lat = this.nodeGPS.value.latitude;
           this.lng = this.nodeGPS.value.longitude;
-          
+          this.mapZoom = 16;
           if ( data.value.latitude == 0 || data.value.longitude == 0 ||  Object.keys(data.value).length <1 ) {
-            this.commonService.notifyError(this.locale.SORRY, " Latitude or Longitude = "+ 0, 1500);  
+            this.commonService.notifyError(this.locale.SORRY, " Latitude or Longitude = "+ 0, 1500); 
+            this.mapZoom = 1; 
           }
 
         }else {
@@ -334,6 +335,7 @@ export class ListgwComponent implements OnInit {
           this.lng=0;
           // console.log(this.lat);
           this.commonService.notifyError(this.locale.SORRY, " "+ name +" doesn't exist", 1500);
+          this.mapZoom = 1; 
         }
         
         // this.paginations = this.nodes.slice(0, 10);
@@ -341,7 +343,7 @@ export class ListgwComponent implements OnInit {
       error => { 
         this.lat=0;
         this.lng=0;
-        
+        this.mapZoom = 1; 
         this.commonService.notifyError(this.locale.SORRY, "Name ' "+ name +" ' No Data", 1500);
         // console.log('Received an errror: ' + error.status);
       }

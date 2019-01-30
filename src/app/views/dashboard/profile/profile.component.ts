@@ -204,7 +204,7 @@ export class ProfileComponent implements OnInit {
       this.apiNodeService.listProfile().subscribe(
         data => {
           this.modelProfiles = data;
-          console.log(data);
+          
           this.paginations = this.nodes.slice(0, 10);
         },
         err => {
@@ -215,7 +215,7 @@ export class ProfileComponent implements OnInit {
       this.apiNodeService.getProfileByCompany(this.userData.id_company).subscribe(
         data => {
           this.modelProfiles = data;
-          console.log(data);
+          
           this.paginations = this.nodes.slice(0, 10);
         },
         err => {

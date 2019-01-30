@@ -113,7 +113,7 @@ export class ListnodeComponent implements OnInit {
   order: string = 'name_node';
   reverse: boolean = false;
   sortedCollection: any[];
-  
+  mapZoom = 1;
   constructor(
     private router: Router,
     private apiNodeService: NodeService,
@@ -554,19 +554,23 @@ export class ListnodeComponent implements OnInit {
           // });
           this.lat = this.nodeGPS.value.latitude;
           this.long = this.nodeGPS.value.longitude; 
+          this.mapZoom = 16;
           if ( data.value.latitude == 0 || data.value.longitude == 0 ||  Object.keys(data.value).length <1 ) {
             this.commonService.notifyError(this.locale.SORRY, " Latitude or Longitude = "+ 0, 1500);  
+            this.mapZoom = 1;
           }
         }else {
           this.lat=0;
           this.long=0;
           this.commonService.notifyError(this.locale.SORRY, " "+ name +" No Local ", 1500);
+          this.mapZoom = 1;
         }
       },
       error => { 
         this.lat=0;
         this.long=0;
         // console.log(this.lat);
+        this.mapZoom = 1;
         this.commonService.notifyError(this.locale.SORRY, "Name ' "+ name +" 'No Local ", 1500);
         // console.log('Received an errror: ' + error.status);
       }
