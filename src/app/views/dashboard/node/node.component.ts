@@ -137,7 +137,7 @@ export class NodeComponent implements OnInit {
     //   this.commonService.notifyError(this.locale.SORRY, this.locale.Profile_is_required, 1500);
     // }
     else {
-      this.node.id_group = this.selectGroup;
+      // this.node.id_group = this.selectGroup;
       this.node.status = this.selectStatus;
       
       this.apiNodeService.createNode(this.node).subscribe(

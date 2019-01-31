@@ -50,6 +50,8 @@ import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 import { OrderPipe } from 'ngx-order-pipe';
 
+import { NodeProfile } from '../../../../api/models/node-profile';
+
 @Component({
   selector: 'app-listnode',
   templateUrl: './listnode.component.html',
@@ -57,25 +59,27 @@ import { OrderPipe } from 'ngx-order-pipe';
 })
 export class ListnodeComponent implements OnInit {
 
-  public node: Node = new Node();
-  public node2: Node = new Node();
+  node: Node = new Node();
+  node2: Node = new Node();
+  
+  nodeProfiles:NodeProfile[] = [];
 
-  public getsensors: Getsensor[] = [];
-  public temperatures: Temperature[] = [];
-  public accelerometers: Accelerometer[] = [];
+  getsensors: Getsensor[] = [];
+  temperatures: Temperature[] = [];
+  accelerometers: Accelerometer[] = [];
 
   
-  public updateNode: Node = new Node();
+  updateNode: Node = new Node();
 
-  public nodeData: Nodedata = new Nodedata();
-  public nodeGPS: NodeGPS = new NodeGPS();
+  nodeData: Nodedata = new Nodedata();
+  nodeGPS: NodeGPS = new NodeGPS();
 
-  public nodes: Node[] = [];
+  nodes: Node[] = [];
   items:any = [] ;
   items2:any = [] ;
 
-  public group:Group = new Group(); 
-  public groups:Group[]= [] ;
+  group:Group = new Group(); 
+  groups:Group[]= [] ;
   lat;
   long;
   allIdChecked=[];
@@ -83,17 +87,17 @@ export class ListnodeComponent implements OnInit {
   paginations = [];
   date1 = null;
   date2 = null;
-  selectGroup = 0;
+  selectGroup ;
   keySearch = "";
   bsDaterangepicker = [];
-  profile = false;
+  checkProfile = false;
   selectStatus = null;
   arrStatus = [{"text":'active',"id":'true'},{"text":'not active',"id":'false'}];
   nameNode;
   dateNode;
   
   @ViewChild('gr') ngSelect: SelectComponent;
-  @ViewChild('status') ngSelectStatus: SelectComponent;
+  @ViewChild('profile') ngSelectProfile: SelectComponent;
   @ViewChild('groups') ngSelectAdd: SelectComponent;
 
   dateRang: Date;
@@ -114,6 +118,9 @@ export class ListnodeComponent implements OnInit {
   reverse: boolean = false;
   sortedCollection: any[];
   mapZoom = 1;
+  updateActive = true;
+  itemsProfile = [];
+  selectProfile
   constructor(
     private router: Router,
     private apiNodeService: NodeService,
@@ -337,6 +344,7 @@ export class ListnodeComponent implements OnInit {
       this.apiNodeService.listNode().subscribe(
         data => {
           this.nodes = data;
+          console.log(data);
           this.paginations = this.nodes.slice(0, 10);
         }
       );
@@ -349,6 +357,34 @@ export class ListnodeComponent implements OnInit {
       );
     }
 
+  }
+  getAllProfile(){
+    this.itemsProfile = [];
+    if(this.role == 1) {
+      this.apiNodeService.listProfile().subscribe(
+        data => {
+          this.nodeProfiles = data;
+          
+          data.forEach(e => {
+            this.itemsProfile.push( {"text":e.name_profile,"id":e._id});
+            this.ngSelectProfile.items = this.itemsProfile;
+            // this.ngSelectAdd.items = this.items2;
+            
+          });
+        }
+      );
+    }else {
+      this.apiNodeService.getProfileByCompany(this.userData.id_company).subscribe(
+        data => {
+          this.nodeProfiles = data;
+          data.forEach(e => {
+            this.itemsProfile.push( {"text":e.name_profile,"id":e._id});
+            this.ngSelectProfile.items = this.itemsProfile;
+            // this.ngSelectAdd.items = this.items2;
+          });
+        }
+      );
+    }
   }
 
   getAllGroup() {
@@ -421,9 +457,7 @@ export class ListnodeComponent implements OnInit {
     else if ( !this.updateNode.Manufacture || !this.updateNode.Manufacture.trim() ) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.Manufactuer_is_required , 1500);
     }
-    else if ( !this.updateNode.Codec || !this.updateNode.Codec.trim()) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.Codec_is_required , 1500);
-    }
+    
     else if ( !this.updateNode.OS || !this.updateNode.OS.trim()) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.OS_is_required, 1500);
     }
@@ -484,6 +518,7 @@ export class ListnodeComponent implements OnInit {
   };
 
   getUpdateNode( updateNode: Node){
+    this.updateActive = true;
     this.updateNode = {
       _id: updateNode._id,
       name_node: updateNode.name_node,
@@ -496,21 +531,24 @@ export class ListnodeComponent implements OnInit {
       app_eui: updateNode.app_eui,
       app_key: updateNode.app_key,
       Profile: updateNode.Profile,
+      id_profile: updateNode.id_profile,
     };
 
-    if( Object.keys(this.updateNode.Profile).length > 0 ) {
-      this.profile =  true;  
+    if(typeof this.updateNode.Profile != "undefined") {
+      this.checkProfile =  true;  
     }
+    
 
     let activeGroup = [];
+    let activeProfile = [];
     let text="";
     if(this.updateNode.status == 'true') {
       text = 'Active';
     } else {
       text = "Not Active"
     }
-    this.ngSelectStatus.active =[{ "id": this.updateNode.status,"text":text }];
     this.selectStatus = this.updateNode.status;
+
     this.apiGroupService.listGroups().subscribe(
       data => {
         this.groups = data;
@@ -525,6 +563,22 @@ export class ListnodeComponent implements OnInit {
         });
       }
     );
+
+    this.apiNodeService.listProfile().subscribe(
+      data => {
+        this.nodeProfiles = data;
+        
+        data.forEach(e => {
+          if(this.updateNode.id_profile == e._id){
+            activeProfile.push({'text':e.name_profile,"id":e._id});
+            this.ngSelectProfile.active = activeProfile;
+            this.selectProfile = e._id ;
+          }
+        });
+      }
+    );
+
+
   };
 
   public filterItems(query) {
@@ -632,6 +686,9 @@ export class ListnodeComponent implements OnInit {
   public selectedGroup(value:any):void {
     this.selectGroup = value.id;
   }
+  public selectedProfile(value:any):void {
+    this.selectProfile = value.id;
+  }
   public selectedStatus(value:any):void {
     this.selectStatus = value.id;
     
@@ -723,9 +780,9 @@ export class ListnodeComponent implements OnInit {
     else if ( !this.node2.Manufacture || !this.node2.Manufacture.trim()) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.Manufactuer_is_required, 1500);
     }
-    else if ( !this.node2.Codec || !this.node2.Codec.trim() ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.Codec_is_required, 1500);
-    }
+    // else if ( !this.node2.Codec || !this.node2.Codec.trim() ) {
+    //   this.commonService.notifyError(this.locale.SORRY, this.locale.Codec_is_required, 1500);
+    // }
     else if ( !this.node2.OS || !this.node2.OS.trim() ) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.OS_is_required , 1500);
     }
@@ -747,7 +804,9 @@ export class ListnodeComponent implements OnInit {
     // }
     else {
       this.node2.id_group = this.selectGroup;
+      this.node2.id_profile = this.selectProfile;
       this.node2.status = this.selectStatus;
+      console.log(this.node2);
       this.apiNodeService.createNode(this.node2).subscribe(
         response => {
           this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success, 1500);
@@ -765,6 +824,10 @@ export class ListnodeComponent implements OnInit {
 
   addActive(){
     this.addactive = true;
+    this.updateActive = false;
+    this.getAllGroup();
+    this.getAllProfile();
+    
   }
   
   setOrder(value: string) {

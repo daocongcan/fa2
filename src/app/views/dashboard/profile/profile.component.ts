@@ -93,7 +93,7 @@ export class ProfileComponent implements OnInit {
   paginations = [];
   date1 = null;
   date2 = null;
-  selectGroup = 0;
+  selectGroup;
   keySearch = "";
   bsDaterangepicker = [];
   profile = false;

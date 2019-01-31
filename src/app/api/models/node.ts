@@ -10,20 +10,11 @@ export class Node {
     dev_eui?:string;
     app_eui?:string;
     app_key?:string;
-    id_group?:number;
+    id_group?:string;
+    id_profile?:string;
     Manufacture?:string;
     longitude?:number;
     latitude?:number;
-    // Profile?:{
-    //     AppEUI?: string;
-    //     DevEUI?: string;
-    //     DevNonce?: string;
-    //     MACPayload?: string;
-    //     MHDR?: string;
-    //     MIC?: string;
-    //     MessageType?: string;
-    //     PHYPayload?: string;
-    // };
     Profile?:object;
     Codec?:string;
 }
