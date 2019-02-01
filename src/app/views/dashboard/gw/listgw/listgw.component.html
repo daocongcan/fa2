@@ -198,7 +198,7 @@
                 </div>
               </div>
               
-              <div id="myModal" class="modal fade" role="dialog">
+              <div *ngIf="checkUpdate == true" id="myModal" class="modal fade" role="dialog">
                 <div class="modal-dialog">
             
                   <form (ngSubmit)="save()">
@@ -224,7 +224,7 @@
                               placeholder="No Name Group Selected">
                             </ng-select>
 
-                          <textarea rows="5" class="form-control">{{updateGw.Profile | json }}</textarea>
+                          <textarea *ngIf="checkProfile == true" rows="5" class="form-control">{{updateGw.Profile | json }}</textarea>
                         </div>
                       </div>
                       <div class="modal-footer">

@@ -127,7 +127,7 @@
       <!-- Modal -->
       <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
-          <form (ngSubmit)="saveUser()">
+          <form (ngSubmit)="update()">
             <!-- Modal content -->
             <div class="modal-content">
               <div class="modal-header">
@@ -136,12 +136,11 @@
               <div class="row modal-body">
                 
                   <div class="col-md-12 md gw-left">  
-                    <!-- <input class="form-control" type="number" [(ngModel)]="company._id" name="id" id="_id" placeholder="ID" readonly value="{{updateUser._id}}"> -->
+                    
                     <input title="Username" class="form-control" type="text" [(ngModel)]="updateUser.name_user"  name="name_user" placeholder="User Name">
                     <input title="Email" class="form-control" type="email" [(ngModel)]="updateUser.email" name="email"  placeholder="Email">
                     <input title="Password"  autocomplete="off" class="form-control" type="password" [(ngModel)]="updateUser.password" name="password" placeholder="Password">
-                    <!-- <input class="form-control" type="password" [(ngModel)]="user.id_role" name="password" id="password" placeholder="Password">
-                    <input class="form-control" type="password" [(ngModel)]="user.id_company" name="password" id="password" placeholder="Password"> -->
+                 
                     <ng-select title="Company" #company 
                       [items]="items"
                       [allowClear]="true"

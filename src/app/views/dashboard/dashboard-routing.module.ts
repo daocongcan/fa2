@@ -64,7 +64,7 @@ const routes: Routes = [
   //   component: AdminComponent
   // },
   {
-    path: 'admin',
+    path: 'company',
     component: ListComponent
   },
   // {

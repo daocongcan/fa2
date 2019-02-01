@@ -19,7 +19,7 @@
     <ol class="col-md-5 ">
       <!-- breadcrumb <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
       <li class="active">Dashboard</li> [routerLink]="['/node/add']" -->
-      <button (click)="addActive()" data-toggle="modal" data-target="#addModal"   class="btn btn-primary btn-add" > <i class="fa fa-plus"></i> 
+      <button  (click)="addActive()" data-toggle="modal" data-target="#addModal"   class="btn btn-primary btn-add" > <i class="fa fa-plus"></i> 
         ADD
       </button>
       <button *ngIf=" chart != null " class="btn btn-info btn-chart" data-toggle="modal" data-target="#chart" (click)="getChart(chart)"><i class="fa fa-line-chart"></i>
@@ -121,21 +121,21 @@
                   
                 </tr>
               </thead>
-                <tr *ngFor="let modelProfile of modelProfiles" >
+                <tr *ngFor="let nodeProfile of nodeProfiles" >
                   <td title="Delete" >
-                    <input type="checkbox"  value="modelProfile._id" (change)="getIdChecked($event, modelProfile._id)"  name="delete" >
+                    <input type="checkbox"  value="nodeProfile._id" (change)="getIdChecked($event, nodeProfile._id)"  name="delete" >
                   </td>
                   
-                  <td  title="edit" style="cursor: pointer;" (click)="getUpdateProfile(modelProfile)" data-toggle="modal" data-target="#myModal" id="{{modelProfile._id}}" >
-                    {{modelProfile.name_profile}}
+                  <td  title="edit" style="cursor: pointer;" (click)="getUpdateProfile(nodeProfile)" data-toggle="modal" data-target="#myModal" id="{{nodeProfile._id}}" >
+                    {{nodeProfile.name_profile}}
                   </td>
 
                   <td  >
-                    {{modelProfile.Codec | json }}
+                    {{nodeProfile.Codec | json }}
                   </td>
                   <td >
                     <div *ngFor="let company of companies">
-                      <span *ngIf="( company._id == modelProfile.id_company )">
+                      <span *ngIf="( company._id == nodeProfile.id_company )">
                         {{company.name_company}} 
                       </span>
                     </div>
@@ -149,10 +149,10 @@
       
       
       <!-- Update Node -->
-      <div id="myModal" class="modal fade" role="dialog">
+      <div *ngIf="checkUpdate == true" id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
     
-          <form (ngSubmit)="save()">
+          <form (ngSubmit)="update()">
             <div class="modal-content">
               <div class="modal-header">
                 <h4 class="modal-title">UPDATE PROFILE</h4>
@@ -197,8 +197,8 @@
               <div class="row modal-body">
                   <div class="col-md-12 md gw-left">  
                     
-                    <input class="form-control" type="text" [(ngModel)]="modelProfile.name_profile" name="name_profile"  placeholder="NAME NODE">
-                    <textarea style="margin-bottom: 5px;" class="form-control" [(ngModel)]="modelProfile.Codec" name="Codec" placeholder="CODEC" rows="15">
+                    <input class="form-control" type="text" [(ngModel)]="nodeProfile.name_profile"  name="name_profile"  placeholder="NAME NODE">
+                    <textarea style="margin-bottom: 5px;" class="form-control" [(ngModel)]="nodeProfile.Codec"  name="Codec" placeholder="CODEC" rows="15">
             
                     </textarea>
 

@@ -488,6 +488,47 @@ export class NodeService extends BaseService {
   }
 
   /**
+   * Create Node
+   * @param body - Created Node object
+   */
+  createProfileResponse(body: NodeProfile): Observable<HttpResponse<NodeProfile>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = body;
+    let req = new HttpRequest<any>(
+      "POST",
+      this.rootUrl + `profile/create`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: NodeProfile = null;
+        _body = _resp.body as NodeProfile
+        return _resp.clone({body: _body}) as HttpResponse<NodeProfile>;
+      })
+    );
+  }
+
+  
+  /**
+   * Create Node
+   * @param body - Created Node object
+   */
+  createProfile(body: NodeProfile): Observable<NodeProfile> {
+    return this.createProfileResponse(body).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
    * Create getbystatusNode
    * @param body - Created getbystatusNode object
    */
@@ -561,6 +602,44 @@ export class NodeService extends BaseService {
    */
   updateNode(body?: Node): Observable<Node> {
     return this.updateNodeResponse(body).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+  /**
+   * @param body - undefined
+   */
+  updateProfileResponse(body?: NodeProfile): Observable<HttpResponse<NodeProfile>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = body;
+    let req = new HttpRequest<any>(
+      "PUT",
+      this.rootUrl + `profile/update/${body._id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: NodeProfile = null;
+        _body = _resp.body as NodeProfile
+        return _resp.clone({body: _body}) as HttpResponse<NodeProfile>;
+      })
+    );
+  }
+
+  /**
+   * @param body - undefined
+   */
+  updateProfile(body?: NodeProfile): Observable<NodeProfile> {
+    return this.updateProfileResponse(body).pipe(
       map(_r => _r.body)
     );
   }
@@ -683,7 +762,52 @@ export class NodeService extends BaseService {
     return this.deleteNodeResponse(NodeId).pipe(
       map(_r => _r.body)
     );
-  }}
+  }
+
+  /**
+   * Deletes a Node
+   * @param NodeId - Node id to delete
+   */
+  deleteProfileResponse(id): Observable<HttpResponse<void>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    
+    let req = new HttpRequest<any>(
+      "DELETE",
+      this.rootUrl + `profile/delete/${id}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'text'
+      });
+
+    return this.http.request<any>(req).pipe(
+      filter(_r => _r instanceof HttpResponse),
+      map(_r => {
+        let _resp = _r as HttpResponse<any>;
+        let _body: void = null;
+        
+        return _resp.clone({body: _body}) as HttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Deletes a Node
+   * @param NodeId - Node id to delete
+   */
+  deleteProfile(id): Observable<void> {
+    return this.deleteProfileResponse(id).pipe(
+      map(_r => _r.body)
+    );
+  }
+
+}
+
+
+  
 
 export module NodeService {
 }

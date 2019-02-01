@@ -399,6 +399,7 @@ export class ListgroupComponent implements OnInit {
   activeAdd(){
     this.checkAdd = true;
     this.checkUpdate = false;
+    this.getAllCompany();
   }
   
   

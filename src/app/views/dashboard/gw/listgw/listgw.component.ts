@@ -106,6 +106,9 @@ export class ListgwComponent implements OnInit {
   reverse: boolean = false;
   sortedCollection: any[];
   mapZoom = 0;
+  checkUpdate = true;
+
+  checkProfile = false;
   constructor(
     private router: Router,
     private apigwService: GwService,
@@ -144,13 +147,14 @@ export class ListgwComponent implements OnInit {
   }
   addActive(){
     this.checkAddActive = true;
+    this.checkUpdate = false;
+    this.getAllCompany();
   }
   getAllGw() {
     if( this.role == 1 ) {
       this.apigwService.listGw().subscribe(
         data => {
           this.gws = data;
-          
           this.paginations = this.gws.slice(0, 10);
         }
       );
@@ -158,7 +162,6 @@ export class ListgwComponent implements OnInit {
       this.apigwService.getByCompany(this.userData.id_company).subscribe(
         data => {
           this.gws = data;
-          
           this.paginations = this.gws.slice(0, 10);
         }
       );
@@ -195,6 +198,7 @@ export class ListgwComponent implements OnInit {
   }
 
   getUpdateGw(updateGw: Gw){
+    this.checkUpdate = true;
     this.updateGw = {
       _id: updateGw._id,
       name_gw: updateGw.name_gw,
@@ -204,6 +208,11 @@ export class ListgwComponent implements OnInit {
       Profile: updateGw.Profile,
       id_company: updateGw.id_company,
     };
+
+
+    if(typeof this.updateGw.Profile != "undefined") {
+      this.checkProfile =  true;  
+    }
 
     this.apiCompanyService.listCompanies().subscribe(
       data => {
@@ -384,7 +393,7 @@ export class ListgwComponent implements OnInit {
           response => {
             this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success, 1500);
             this.renderView();
-            $("#add").click();
+            $("#update").click();
           },
           err => {
             this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);
@@ -448,7 +457,7 @@ export class ListgwComponent implements OnInit {
         .subscribe(
           response => {
             this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success, 1500);
-            this.gw = new Gw ;  
+            this.gw = new Gw() ;  
             $("#add").click();
             this.renderView();
             // this.router.navigate(['/gw']);

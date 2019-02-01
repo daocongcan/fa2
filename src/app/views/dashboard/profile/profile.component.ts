@@ -66,8 +66,8 @@ export class ProfileComponent implements OnInit {
 
   companies :Company[]= [];
 
-  public modelProfile: NodeProfile = new NodeProfile();
-  public modelProfiles: NodeProfile[] = [];
+  public nodeProfile: NodeProfile = new NodeProfile();
+  public nodeProfiles: NodeProfile[] = [];
 
   public getsensors: Getsensor[] = [];
   public temperatures: Temperature[] = [];
@@ -75,6 +75,7 @@ export class ProfileComponent implements OnInit {
 
   
   public updateNode: Node = new Node();
+  
   public updateProfile: NodeProfile = new NodeProfile();
 
   public nodeData: Nodedata = new Nodedata();
@@ -102,6 +103,7 @@ export class ProfileComponent implements OnInit {
   nameNode;
   dateNode;
   activeCompany=[];
+
   @ViewChild('co') ngSelect: SelectComponent;
   
 
@@ -118,6 +120,7 @@ export class ProfileComponent implements OnInit {
   userString = sessionStorage.getItem('user');
   userData = JSON.parse(this.userString);
   role;
+  checkUpdate = true;
   constructor(
     private router: Router,
     private apiNodeService: NodeService,
@@ -203,7 +206,7 @@ export class ProfileComponent implements OnInit {
     if( this.role == 1 ) {
       this.apiNodeService.listProfile().subscribe(
         data => {
-          this.modelProfiles = data;
+          this.nodeProfiles = data;
           
           this.paginations = this.nodes.slice(0, 10);
         },
@@ -214,7 +217,7 @@ export class ProfileComponent implements OnInit {
     } else {
       this.apiNodeService.getProfileByCompany(this.userData.id_company).subscribe(
         data => {
-          this.modelProfiles = data;
+          this.nodeProfiles = data;
           
           this.paginations = this.nodes.slice(0, 10);
         },
@@ -237,10 +240,10 @@ export class ProfileComponent implements OnInit {
 
   nameExists(value,id) {
     let count = 1;
-    this.nodes.forEach(el => {
-      if( el.name_node.toLowerCase() == value.toLowerCase() &&  el._id == id ){
+    this.nodeProfiles.forEach(el => {
+      if( el.name_profile.toLowerCase() == value.toLowerCase() &&  el._id == id ){
         count = 1;
-      } else if ( el.name_node.toLowerCase() == value.toLowerCase() &&  el._id != id ) {
+      } else if ( el.name_profile.toLowerCase() == value.toLowerCase() &&  el._id != id ) {
         count += 1;
         return count;
       }
@@ -249,54 +252,28 @@ export class ProfileComponent implements OnInit {
     
   }
 
-  save() {
-    
-    if (this.updateNode._id == undefined ||  this.updateNode._id <1 ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.ID_IS_REQUIRED, 1500);
-    }
+  update() {
 
-    else if ( !this.updateNode.name_node || !this.updateNode.name_node.trim() ) {
+    if ( !this.updateProfile.name_profile || !this.updateProfile.name_profile.trim() ) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.NAME_IS_REQUIRED, 1500);
     }
 
-    else if (this.nameExists(this.updateNode.name_node,this.updateNode._id) > 1 ) {
+    else if (this.nameExists(this.updateProfile.name_profile,this.updateProfile._id) > 1 ) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.Name_Existed, 1500);
     }
+    
+    else if ( !this.updateProfile.Codec ) {
+      this.commonService.notifyError(this.locale.SORRY, "Codec Required" , 1500);
+    }
 
-    // else if ( this.selectStatus == null ) {
-    //   this.commonService.notifyError(this.locale.SORRY, this.locale.Status_is_required, 1500);
-    // }
-    else if ( !this.updateNode.Manufacture || !this.updateNode.Manufacture.trim() ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.Manufactuer_is_required , 1500);
-    }
-    else if ( !this.updateNode.Codec || !this.updateNode.Codec.trim()) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.Codec_is_required , 1500);
-    }
-    else if ( !this.updateNode.OS || !this.updateNode.OS.trim()) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.OS_is_required, 1500);
-    }
-    else if (this.selectGroup == 0 || this.selectGroup == undefined ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.Group_is_required , 1500);
-    }
-    else if ( !this.updateNode.dev_eui || !this.updateNode.dev_eui.trim()) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.Dev_Eui_is_required, 1500);
-    }
-    else if (!this.updateNode.app_eui || !this.updateNode.app_eui.trim() ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.App_Eui_is_required , 1500);
-    }
-    else if ( !this.updateNode.app_key || !this.updateNode.app_key.trim() ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.App_Key_is_required, 1500);
+    else if ( !this.selectCompany ) {
+      this.commonService.notifyError(this.locale.SORRY, this.locale.COMPANY_IS_REQUIRED , 1500);
     }
     
-    // else if ( !this.updateNode.Profile || this.updateNode.Profile.trim() ) {
-    //   this.commonService.notifyError(this.locale.SORRY, this.locale.Profile_is_required, 1500);
-    // }
-
     else {
-      this.updateNode.id_group = this.selectGroup;
-      this.updateNode.status = this.selectStatus;
-
-      this.apiNodeService.updateNode(this.updateNode).subscribe(
+      this.updateProfile.id_company = this.selectCompany;
+      
+      this.apiNodeService.updateProfile(this.updateProfile).subscribe(
           response => {
             this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Update_success, 1500);
             this.renderView();
@@ -309,11 +286,46 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  add() {
+    
+    if ( !this.nodeProfile.name_profile || !this.nodeProfile.name_profile.trim() ) {
+      this.commonService.notifyError(this.locale.SORRY, this.locale.NAME_IS_REQUIRED, 1500);
+    }
+
+    else if (this.nameExists2(this.nodeProfile.name_profile) == true) {
+      this.commonService.notifyError(this.locale.SORRY, this.locale.Name_Existed, 1500);
+    }
+
+    else if ( !this.nodeProfile.Codec ) {
+      this.commonService.notifyError(this.locale.SORRY, this.locale.Codec_is_required, 1500);
+    }
+
+    else if ( !this.selectCompany ) {
+      this.commonService.notifyError(this.locale.SORRY, this.locale.COMPANY_IS_REQUIRED, 1500);
+    }
+    
+    else {
+      this.nodeProfile.id_company = this.selectCompany;
+      
+      this.apiNodeService.createProfile(this.nodeProfile).subscribe(
+        response => {
+          this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success, 1500);
+          this.nodeProfile = new NodeProfile();
+          this.renderView();
+          $("#add").click();
+        },
+        err => {
+          this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);
+        }
+      );
+    }
+  }
+
   deleteAll(){
     if(this.allIdChecked.length>0 ) {
       if(confirm("Are you sure delete")){
         for (let index = 0; index < this.allIdChecked.length; index++) {
-          this.apiNodeService.deleteNode(this.allIdChecked[index]).subscribe(
+          this.apiNodeService.deleteProfile(this.allIdChecked[index]).subscribe(
             response => {
               this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Delete_success, 1500);
               
@@ -332,6 +344,7 @@ export class ProfileComponent implements OnInit {
   };
 
   getUpdateProfile( updateProfile: NodeProfile){
+    this.checkUpdate = true;
     this.updateProfile = {
       _id: updateProfile._id,
       name_profile: updateProfile.name_profile,
@@ -339,17 +352,15 @@ export class ProfileComponent implements OnInit {
       id_company: updateProfile.id_company,
       
     };
-
+    this.activeCompany = [];
     this.apiCompanyService.listCompanies().subscribe(
       data => {
         this.companies = data;
         data.forEach(e => {
           if(this.updateProfile.id_company == e._id){
             this.activeCompany.push({'text':e.name_company,"id":e._id});
-            // console.log(this.activeCompany);
             this.ngSelect.active = this.activeCompany;
             this.selectCompany = e._id ;
-            // this.co=e.name_company;
           }
         });
       }
@@ -357,7 +368,7 @@ export class ProfileComponent implements OnInit {
   };
 
   public filterItems(query) {
-    return this.modelProfiles.filter(function(el) {
+    return this.nodeProfiles.filter(function(el) {
         return el.name_profile.toLowerCase().indexOf(query.toLowerCase())  > -1;
     })
   }
@@ -367,17 +378,17 @@ export class ProfileComponent implements OnInit {
     if(this.role == 1) {
       this.apiNodeService.listProfile().subscribe(
         data => {
-          this.modelProfiles = data;
-          this.modelProfiles = (this.filterItems(this.keySearch));
-          this.paginations = this.modelProfiles.slice(0, 10);
+          this.nodeProfiles = data;
+          this.nodeProfiles = (this.filterItems(this.keySearch));
+          this.paginations = this.nodeProfiles.slice(0, 10);
         }
       );
     }else {
       this.apiNodeService.getProfileByCompany(this.userData.id_company).subscribe(
         data => {
-          this.modelProfiles = data;
-          this.modelProfiles = (this.filterItems(this.keySearch));
-          this.paginations = this.modelProfiles.slice(0, 10);
+          this.nodeProfiles = data;
+          this.nodeProfiles = (this.filterItems(this.keySearch));
+          this.paginations = this.nodeProfiles.slice(0, 10);
         }
       );
     }
@@ -426,80 +437,21 @@ export class ProfileComponent implements OnInit {
   
   
   nameExists2(value) {
-    return this.nodes.some(function(el) {
-      return el.name_node.toLowerCase()== value.toLowerCase();
+    return this.nodeProfiles.some(function(el) {
+      return el.name_profile.toLowerCase()== value.toLowerCase();
     }); 
   }
 
   idExists(value) {
-    return this.nodes.some(function(el) {
+    return this.nodeProfiles.some(function(el) {
       return el._id == value;
     }); 
   }
   
-  add() {
-    // if ( !this.node._id ||  this.node._id <1 ) {
-    //   this.commonService.notifyError(this.locale.SORRY, this.locale.ID_IS_REQUIRED, 1500);
-    // }
-    // else if (this.idExists(this.node._id) == true ) {
-    //   this.commonService.notifyError(this.locale.SORRY, this.locale.ID_Existed, 1500);
-    // }
-    if ( !this.node2.name_node || !this.node2.name_node.trim() ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.NAME_IS_REQUIRED, 1500);
-    }
-
-    else if (this.nameExists2(this.node2.name_node) == true) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.Name_Existed, 1500);
-    }
-
-    // else if ( this.selectStatus == null ) {
-    //   this.commonService.notifyError(this.locale.SORRY, this.locale.Status_is_required, 1500);
-    // }
-    else if ( !this.node2.Manufacture || !this.node2.Manufacture.trim()) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.Manufactuer_is_required, 1500);
-    }
-    else if ( !this.node2.Codec || !this.node2.Codec.trim() ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.Codec_is_required, 1500);
-    }
-    else if ( !this.node2.OS || !this.node2.OS.trim() ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.OS_is_required , 1500);
-    }
-    else if ( this.selectGroup == 0 || this.selectGroup == undefined ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.Group_is_required , 1500);
-    }
-    else if ( !this.node2.dev_eui || !this.node2.dev_eui.trim() ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.Dev_Eui_is_required, 1500);
-    }
-    else if ( !this.node2.app_eui || !this.node2.app_eui.trim() ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.App_Eui_is_required, 1500);
-    }
-    else if ( !this.node2.app_key || !this.node2.app_key.trim() ) {
-      this.commonService.notifyError(this.locale.SORRY, this.locale.App_Key_is_required, 1500);
-    }
-   
-    // else if ( !this.node.Profile || !this.node.Profile.trim() ) { 
-    //   this.commonService.notifyError(this.locale.SORRY, this.locale.Profile_is_required, 1500);
-    // }
-    else {
-      this.node2.id_group = this.selectGroup;
-      this.node2.status = this.selectStatus;
-      this.apiNodeService.createNode(this.node2).subscribe(
-        response => {
-          this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success, 1500);
-          this.node2 = new Node;
-          this.renderView();
-          $("#add").click();
-          this.router.navigate(['/node']);
-        },
-        err => {
-          this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);
-        }
-      );
-    }
-  }
-
   addActive(){
     this.addactive = true;
+    this.getAllCompany();
+    this.checkUpdate = false;
   }
   
   public selected(value:any):void {

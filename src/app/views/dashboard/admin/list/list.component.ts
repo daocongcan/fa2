@@ -158,7 +158,7 @@ export class ListComponent implements OnInit {
     return count;
   }
 
-  saveCompany(){
+  update(){
     
     if ( !this.updateCompany.name_company || !this.updateCompany.name_company.trim()) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.NAME_IS_REQUIRED, 1500);
@@ -173,7 +173,8 @@ export class ListComponent implements OnInit {
     } else if ( !this.updateCompany.phone) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.Phone_is_required , 1500);
     } else {
-
+      
+      
       this.apiCompanyService.updateCompany(this.updateCompany)
         .subscribe(
           response => {

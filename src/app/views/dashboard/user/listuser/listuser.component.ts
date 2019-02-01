@@ -157,10 +157,9 @@ export class ListuserComponent implements OnInit {
         this.companies = data;
         data.forEach(e => {
           this.items.push({'text':e.name_company,"id":e._id});
-          
           this.ngSelect.items = this.items;
-          
         });
+        
       }
     );   
   }
@@ -182,22 +181,6 @@ export class ListuserComponent implements OnInit {
     );
   };
   
-
-  public selected(value:any):void {
-    this.co = value.id;
-    this.apiCompanyService.listCompanies().subscribe(
-      data => {
-        this.companies = data;
-        data.forEach(e => {
-          if(this.co === e.name_company) {
-            this.updateUser.id_company = e._id;
-            // console.log(this.user.id_company);
-          }
-        });
-      }
-    );
-  }
-
   public selectedSearch(value:any):void {
     let name = value.text;
     this.users=[];
@@ -217,6 +200,20 @@ export class ListuserComponent implements OnInit {
       // console.log(this.users);
   }
 
+  public selected(value:any):void {
+    this.co = value.id;
+    this.apiCompanyService.listCompanies().subscribe(
+      data => {
+        this.companies = data;
+        data.forEach(e => {
+          if(this.co === e.name_company) {
+            this.updateUser.id_company = e._id;
+            // console.log(this.user.id_company);
+          }
+        });
+      }
+    );
+  }
 
   public selected2(value:any):void {
     this.ro = value.id;
@@ -315,27 +312,29 @@ export class ListuserComponent implements OnInit {
       id_company: updateUser.id_company,
       id_role: updateUser.id_role
     };
+    
     this.items = [];
     this.activeCompany=[];
+
     this.apiCompanyService.listCompanies().subscribe(
       data => {
         this.companies = data;
         data.forEach(e => {
           if(this.role == 2) {
             if(this.updateUser.id_company == e._id){
-              this.activeCompany.push({'text':e.name_company,"id":e.name_company});
+              this.activeCompany.push({'text':e.name_company,"id":e._id});
               this.ngSelect.active = this.activeCompany;
-              this.items.push({'text':e.name_company,"id":e.name_company});
+              this.items.push({'text':e.name_company,"id":e._id});
               this.ngSelect.items = this.items;
-              this.co=e.name_company;
+              this.co=e._id;
             }
           }else {
             if(this.updateUser.id_company == e._id){
-              this.activeCompany.push({'text':e.name_company,"id":e.name_company});
+              this.activeCompany.push({'text':e.name_company,"id":e._id});
               this.ngSelect.active = this.activeCompany;
-              this.co=e.name_company;
+              this.co=e._id;
             }
-            this.items.push({'text':e.name_company,"id":e.name_company});
+            this.items.push({'text':e.name_company,"id":e._id});
             this.ngSelect.items = this.items;
           }
         });
@@ -408,7 +407,7 @@ export class ListuserComponent implements OnInit {
     
   }
 
-  saveUser() {
+  update() {
     if( this.co === "" ) {
       this.commonService.notifyError(this.locale.SORRY, this.locale.COMPANY_IS_REQUIRED, 1500);
     }
@@ -441,7 +440,7 @@ export class ListuserComponent implements OnInit {
 
       this.updateUser.id_role = this.ro;
       this.updateUser.id_company = this.co;
-      
+      console.log(this.updateUser);
       this.apiUserService.updateUser(this.updateUser)
         .subscribe(
           response => {
