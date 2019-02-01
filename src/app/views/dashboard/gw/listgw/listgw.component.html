@@ -209,10 +209,10 @@
                       <div class="row modal-body">
                         <div class="col-md-12 md gw-left">  
                           
-                          <input class="form-control" [(ngModel)]="updateGw.name_gw" type="text" name="name_gw" placeholder="Name GW">
-                          <input class="form-control" [(ngModel)]="updateGw.IP_public" type="text" name="IP_public" placeholder="IP PUBLIC">
-                          <input class="form-control" [(ngModel)]="updateGw.OS" type="text" name="os" placeholder="OS">
-                          <input class="form-control" [(ngModel)]="updateGw.MAC_add" type="text" name="mac_add" placeholder="MAC ADD">
+                          <input class="form-control" title="Name" [(ngModel)]="updateGw.name_gw" type="text" name="name_gw" placeholder="Name GW">
+                          <input class="form-control" title="IP" [(ngModel)]="updateGw.IP_public" type="text" name="IP_public" placeholder="IP PUBLIC">
+                          <input class="form-control" title="OS" [(ngModel)]="updateGw.OS" type="text" name="os" placeholder="OS">
+                          <input class="form-control" title="Mac" [(ngModel)]="updateGw.MAC_add" type="text" name="mac_add" placeholder="MAC ADD">
                           
                           <ng-select title="Company" #co 
                               [allowClear]="true"
@@ -224,7 +224,7 @@
                               placeholder="No Name Group Selected">
                             </ng-select>
 
-                          <textarea *ngIf="checkProfile == true" rows="5" class="form-control">{{updateGw.Profile | json }}</textarea>
+                          <textarea *ngIf="checkProfile == true" title="Profile" rows="5" class="form-control">{{updateGw.Profile | json }}</textarea>
                         </div>
                       </div>
                       <div class="modal-footer">

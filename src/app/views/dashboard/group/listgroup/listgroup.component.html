@@ -133,11 +133,8 @@
             </div>
             <div class="row modal-body">
     
-              
-
                 <div class="col-md-12">  
-                  
-                  <input title="Group Name" class="form-control" type="text" [(ngModel)]="updateGroup.group_name"  name="group_name" id="group_name" placeholder="Group Name">
+                  <input title="Name" class="form-control" type="text" [(ngModel)]="updateGroup.group_name"  name="group_name" id="group_name" placeholder="Group Name">
                   <ng-select title="Company" #company 
                     [items]="items"
                     [allowClear]="true"

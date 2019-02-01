@@ -96,28 +96,20 @@
       <!-- Modal -->
       <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
-          <form (ngSubmit)="saveCompany()">
+          <form (ngSubmit)="update()">
           <!-- Modal content-->
             <div class="modal-content">
               <div class="modal-header">
                 <h4 class="modal-title" style="text-transform: uppercase" >Update Company</h4>
               </div>
               <div class="row modal-body">
-      
-                
                   <div class="col-md-12 md gw-left">  
                     <!-- <input class="form-control" type="number" [(ngModel)]="company._id" name="id" id="_id" placeholder="ID" readonly value="{{updateCompany._id}}"> -->
-                    <input class="form-control" type="text" [(ngModel)]="updateCompany.name_company" name="company" id="name_company" placeholder="COMPANY" value="{{updateCompany.name_company}}">
-                    <input class="form-control" type="text" [(ngModel)]="updateCompany.address" name="address" id="address" placeholder="ADDRESS" value="{{updateCompany.address}}">
-                    <input class="form-control" type="number" [(ngModel)]="updateCompany.tax_number"  name="tax_number" id="tax_number" placeholder="TAX" value="{{updateCompany.tax_number}}">
-                    <input class="form-control" type="number" [(ngModel)]="updateCompany.phone" name="phone" id="phone" placeholder="PHONE" value="{{updateCompany.phone}}">
-            
+                    <input class="form-control" type="text" [(ngModel)]="updateCompany.name_company" title="Name" name="company" id="name_company" placeholder="COMPANY" value="{{updateCompany.name_company}}">
+                    <input class="form-control" type="text" [(ngModel)]="updateCompany.address" title="Address" name="address" id="address" placeholder="ADDRESS" value="{{updateCompany.address}}">
+                    <input class="form-control" type="number" [(ngModel)]="updateCompany.tax_number" title="Tax "  name="tax_number" id="tax_number" placeholder="TAX" value="{{updateCompany.tax_number}}">
+                    <input class="form-control" type="number" [(ngModel)]="updateCompany.phone" name="Phone" title="phone" id="phone" placeholder="PHONE" value="{{updateCompany.phone}}">
                   </div>
-                  
-                
-      
-                
-      
               </div>
               <div class="modal-footer">
                 <button type="button" id="closeModal" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -140,7 +132,7 @@
               <div class="row modal-body">
 
                 <div class="col-md-12">
-                  <input class="form-control" type="text" [(ngModel)]="company.name_company" name="name_company" id="name_company" placeholder="COMPANY NAME">
+                  <input class="form-control" type="text" [(ngModel)]="company.name_company"  name="name_company" id="name_company" placeholder="COMPANY NAME">
                   <input class="form-control" type="text" [(ngModel)]="company.address" name="address" id="address" placeholder="ADDRESS">
                   <input class="form-control" type="number" [(ngModel)]="company.tax_number"  name="tax_number" id="tax_number" placeholder="TAX">
                   <input class="form-control" type="number" [(ngModel)]="company.phone" name="phone" id="phone" placeholder="PHONE">

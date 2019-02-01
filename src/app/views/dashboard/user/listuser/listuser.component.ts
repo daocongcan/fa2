@@ -74,7 +74,7 @@ export class ListuserComponent implements OnInit {
   order: string = 'name_user';
   reverse: boolean = false;
   sortedCollection: any[];
-
+  password = "******";
   constructor(
     private router: Router,
     private apiUserService: UsersService,
@@ -312,7 +312,7 @@ export class ListuserComponent implements OnInit {
       id_company: updateUser.id_company,
       id_role: updateUser.id_role
     };
-    
+
     this.items = [];
     this.activeCompany=[];
 
@@ -434,13 +434,17 @@ export class ListuserComponent implements OnInit {
       this.commonService.notifyError(this.locale.SORRY, this.locale.ROLE_IS_REQUIRED, 1500);
     }
     else {
-      // console.log(this.updateUser);
+      
       this.encrypted = CryptoJS.AES.encrypt(this.updateUser.password, this.key).toString();
       this.updateUser.password = this.encrypted;
 
+      if( this.password != "******" ){
+        this.encrypted = CryptoJS.AES.encrypt(this.password, this.key).toString();
+        this.updateUser.password = this.encrypted;
+      }
       this.updateUser.id_role = this.ro;
       this.updateUser.id_company = this.co;
-      console.log(this.updateUser);
+      
       this.apiUserService.updateUser(this.updateUser)
         .subscribe(
           response => {

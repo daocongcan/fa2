@@ -239,7 +239,7 @@
                 <div class="row modal-body">
 
                     <div class="col-md-12 md gw-left">  
-                        <input class="form-control" type="text" [(ngModel)]="updateNode.name_node" name="name_node"  placeholder="NAME NODE">
+                        <input class="form-control" title="Name" type="text" [(ngModel)]="updateNode.name_node" name="name_node"  placeholder="NAME NODE">
                         <!-- <input class="form-control" type="text" [(ngModel)]="updateNode.status" name="status" placeholder="STATUS"> -->
 
                         <ng-select title="" #status   style="width: 100%;display: none;"
@@ -252,10 +252,10 @@
                           placeholder="NO STATUS SELECTED">
                         </ng-select>  
 
-                        <input class="form-control" type="text" [(ngModel)]="updateNode.Manufacture" name="Manufacture" placeholder="MANUFACTURE">
-                        <input class="form-control" type="text" [(ngModel)]="updateNode.OS" name="OS" placeholder="OS">
+                        <input class="form-control" title="Manufacture" type="text" [(ngModel)]="updateNode.Manufacture" name="Manufacture" placeholder="MANUFACTURE">
+                        <input class="form-control" title="OS" type="text" [(ngModel)]="updateNode.OS" name="OS" placeholder="OS">
                         
-                        <ng-select title="" #gr  style="width: 100%;"
+                        <ng-select title="Group" #gr  style="width: 100%;"
                           [allowClear]="true"
                           [items]="items"
                           (data)="refreshValue($event)"
@@ -264,7 +264,7 @@
                           (typed)="typed($event)"
                           placeholder="NO GROUP SELECTED">
                         </ng-select>  
-                        <ng-select title="" #profile  style="width: 100%;"
+                        <ng-select title="Profile" #profile  style="width: 100%;"
                           [allowClear]="true"
                           [items]="itemsProfile"
                           (data)="refreshValue($event)"
@@ -274,11 +274,11 @@
                           placeholder="NO PROFILE SELECTED">
                         </ng-select>  
 
-                        <input class="form-control" type="text" [(ngModel)]="updateNode.dev_eui" name="dev_eui" placeholder="DEVEUI">
-                        <input class="form-control" type="text" [(ngModel)]="updateNode.app_eui" name="app_eui" placeholder="APPEUI">
-                        <input class="form-control" type="text" [(ngModel)]="updateNode.app_key" name="app_key" placeholder="APPKEY">
+                        <input title="Dev eui" class="form-control" type="text" [(ngModel)]="updateNode.dev_eui" name="dev_eui" placeholder="DEVEUI">
+                        <input title="App eui" class="form-control" type="text" [(ngModel)]="updateNode.app_eui" name="app_eui" placeholder="APPEUI">
+                        <input title="App key" class="form-control" type="text" [(ngModel)]="updateNode.app_key" name="app_key" placeholder="APPKEY">
                         <!-- <input class="form-control" type="text" [(ngModel)]="updateNode.Profile" name="Profile" placeholder="PROFILE"> -->
-                        <textarea *ngIf="checkProfile == true" rows="5" title="Profile" class="form-control">
+                        <textarea  *ngIf="checkProfile == true" rows="5" title="Profile" class="form-control">
 {{ updateNode.Profile | json  }}                          
                         </textarea>
                         

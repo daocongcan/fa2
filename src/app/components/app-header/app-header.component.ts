@@ -69,6 +69,7 @@ export class AppHeaderComponent implements OnInit {
   encrypted = "";
   decrypted ="";
   key="dfmsecret";
+  password = "******"
   public alarms: Alarm[] = [];
   // contentArray = [];
   public returnedArray= [];
@@ -361,6 +362,12 @@ export class AppHeaderComponent implements OnInit {
 	
 				this.encrypted = CryptoJS.AES.encrypt(this.updateUser.password, this.key).toString();
 				this.updateUser.password = this.encrypted;
+
+				if( this.password != "******" ){
+					this.encrypted = CryptoJS.AES.encrypt(this.password, this.key).toString();
+					this.updateUser.password = this.encrypted;
+				  }
+
 				this.updateUser.id_company = this.userData.id_company;
 				this.updateUser.id_role = this.userData.id_role;
 
