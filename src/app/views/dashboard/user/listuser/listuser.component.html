@@ -44,7 +44,7 @@
         <table style="width: 100%;" class="table table-striped table-hover dataTable">
             <thead>
               
-                <th>
+                <th style="width: 10px;">
                   <!-- <input id="checkall" type="checkbox" name="delete" (change)="getCheckAll($event);"> -->
                 </th>
                 <th [class.active]="order === 'name_user'"
@@ -81,7 +81,11 @@
             <tr class="user"  *ngFor="let user of returnedArray | orderBy: order:reverse:'case-insensitive' "  >
               
               <td>
-                <input type="checkbox" class="checkbox" (change)="getIdChecked($event,user._id);" id="{{user._id}}">
+                <!-- <input type="checkbox" class="checkbox" (change)="getIdChecked($event,user._id);" id="{{user._id}}"> -->
+                <div class="checkbox checkbox-primary">
+                  <input id="{{user._id}}"  type="checkbox" value="group._id" (change)="getIdChecked($event, user._id)" >
+                  <label for="{{user._id}}"></label>
+                </div>
               </td>
     
               <td title="edit" style="cursor: pointer;" (click)="getUpdateUser(user)" data-toggle="modal" data-target="#myModal" id="{{user._id}}"  >

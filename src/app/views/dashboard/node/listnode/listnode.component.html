@@ -124,7 +124,7 @@
                 <table class="table table-striped table-hover capteur-list ng-star-inserted">
                   <thead>
                     
-                      <th></th>
+                      <th style="width: 10px;"></th>
                       <th>
                           
                       </th>
@@ -148,7 +148,11 @@
                   </thead>
                     <tr *ngFor="let node of nodes | orderBy: order:reverse:'case-insensitive' " >
                       <td title="Delete" >
-                        <input type="checkbox"  value="node._id" (change)="getIdChecked($event, node._id)"  name="delete" >
+                        <!-- <input type="checkbox"  value="node._id" (change)="getIdChecked($event, node._id)"  name="delete" > -->
+                        <div class="checkbox checkbox-primary">
+                          <input id="{{node._id}}"  type="checkbox" value="node._id" (change)="getIdChecked($event, node._id)" >
+                          <label for="{{node._id}}"></label>
+                        </div>
                       </td>
                       <td title="Local">
                         <a class="icon-geo" id="{{node.name_node}}" href="javascript:void(0)" (click)="getGeo(node._id,node.name_node)" ><i class="fa fa-crosshairs fa-lg"></i></a>

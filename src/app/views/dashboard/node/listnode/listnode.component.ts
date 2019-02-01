@@ -344,7 +344,7 @@ export class ListnodeComponent implements OnInit {
       this.apiNodeService.listNode().subscribe(
         data => {
           this.nodes = data;
-          console.log(data);
+          
           this.paginations = this.nodes.slice(0, 10);
         }
       );
@@ -806,7 +806,7 @@ export class ListnodeComponent implements OnInit {
       this.node2.id_group = this.selectGroup;
       this.node2.id_profile = this.selectProfile;
       this.node2.status = this.selectStatus;
-      console.log(this.node2);
+      
       this.apiNodeService.createNode(this.node2).subscribe(
         response => {
           this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Add_success, 1500);
