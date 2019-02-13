@@ -42,6 +42,9 @@ table {
     padding-left: 0 !important;
 }
 
+.modal-tooltip, .modal-tilte {
+    text-transform: uppercase !important;
+}
 thead th  {
     cursor: pointer;
     margin-right: 15px;
