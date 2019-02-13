@@ -38,6 +38,10 @@ table {
     text-transform: uppercase !important;
 }
 
+.pdLeft {
+    padding-left: 0 !important;
+}
+
 thead th  {
     cursor: pointer;
     margin-right: 15px;
