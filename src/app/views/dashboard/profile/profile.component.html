@@ -64,7 +64,7 @@
             <input type="checkbox"  value="node._id" (change)="getIdChecked($event, node._id)"  name="delete" >
           </td>
 
-          <td title="edit" style="cursor: pointer;" (click)="getUpdateNode(node)" data-toggle="modal" data-target="#myModal" id="{{node._id}}"  >
+          <td tooltip="edit" style="cursor: pointer;" (click)="getUpdateNode(node)" data-toggle="modal" data-target="#myModal" id="{{node._id}}"  >
            {{node.name_node}}
            
           
@@ -122,7 +122,7 @@
                 </tr>
               </thead>
                 <tr *ngFor="let nodeProfile of nodeProfiles" >
-                  <td title="Delete" >
+                  <td tooltip="Delete" >
                     <!-- <input type="checkbox"  value="nodeProfile._id" (change)="getIdChecked($event, nodeProfile._id)"  name="delete" > -->
                     <div class="checkbox checkbox-primary">
                       <input id="{{nodeProfile._id}}"  type="checkbox" value="nodeProfile._id" (change)="getIdChecked($event, nodeProfile._id)" >
@@ -130,7 +130,7 @@
                     </div>
                   </td>
                   
-                  <td  title="edit" style="cursor: pointer;" (click)="getUpdateProfile(nodeProfile)" data-toggle="modal" data-target="#myModal" id="{{nodeProfile._id}}" >
+                  <td  tooltip="edit" style="cursor: pointer;" (click)="getUpdateProfile(nodeProfile)" data-toggle="modal" data-target="#myModal" id="{{nodeProfile._id}}" >
                     {{nodeProfile.name_profile}}
                   </td>
 
@@ -159,16 +159,16 @@
           <form (ngSubmit)="update()">
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">UPDATE PROFILE</h4>
+                <h4 class="modal-tooltip">UPDATE PROFILE</h4>
               </div>
               <div class="row modal-body">
 
                 <div class="col-md-12 ">  
-                  <input class="form-control" title="Name profile" type="text" [(ngModel)]="updateProfile.name_profile" name="name_profile"  placeholder="NAME">
-                  <textarea rows="15" title="Codec" name="Codec" class="form-control">
+                  <input class="form-control" tooltip="Name profile" type="text" [(ngModel)]="updateProfile.name_profile" name="name_profile"  placeholder="NAME">
+                  <textarea rows="15" tooltip="Codec" name="Codec" class="form-control">
 {{updateProfile.Codec | json}}
                   </textarea>
-                  <ng-select title="Company" #co  style="width: 100%;"
+                  <ng-select tooltip="Company" #co  style="width: 100%;"
                       [allowClear]="true"
                       [items]="items"
                       (data)="refreshValue($event)"
@@ -196,17 +196,17 @@
           <form (ngSubmit)="add()">
             <div class="row modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">ADD PROFILE</h4>
+                <h4 class="modal-tooltip">ADD PROFILE</h4>
               </div>
               <div class="row modal-body">
                   <div class="col-md-12 md gw-left">  
                     
-                    <input class="form-control" type="text" [(ngModel)]="nodeProfile.name_profile"  name="name_profile"  placeholder="NAME NODE">
-                    <textarea style="margin-bottom: 5px;" class="form-control" [(ngModel)]="nodeProfile.Codec"  name="Codec" placeholder="CODEC" rows="15">
+                    <input class="form-control" type="text" [(ngModel)]="nodeProfile.name_profile" tooltip="Name"  name="name_profile"  placeholder="NAME NODE">
+                    <textarea style="margin-bottom: 5px;" class="form-control" tooltip="Codec" [(ngModel)]="nodeProfile.Codec"  name="Codec" placeholder="CODEC" rows="15">
             
                     </textarea>
 
-                    <ng-select title="Company" #co  style="width: 100%;"
+                    <ng-select tooltip="Company" #co  style="width: 100%;"
                       [allowClear]="true"
                       [items]="items"
                       (data)="refreshValue($event)"

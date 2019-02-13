@@ -120,7 +120,7 @@ export class ListnodeComponent implements OnInit {
   mapZoom = 1;
   updateActive = true;
   itemsProfile = [];
-  selectProfile
+  selectProfile;
   constructor(
     private router: Router,
     private apiNodeService: NodeService,
@@ -185,9 +185,7 @@ export class ListnodeComponent implements OnInit {
           let arrData = [];
           
           if(this.temperatures.length > 0 ) {
-
             this.temperatures.forEach(e => {
-              
               arrData = (e.date.split("T"));
               if( this.date1 != null && this.date2 != null && arrData[0] <= this.date2 && arrData[0] >= this.date1 ) {
                 arrDate.push([e.date,e.value]);
@@ -199,13 +197,10 @@ export class ListnodeComponent implements OnInit {
                   this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
                 }
               }
-              
             });
-
           } else {
             // this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
           }
-
           if(this.date1 != null && this.date2 != null) {
             if( arrDate.length > 0 ) {
               // console.log(arrDate.length);
@@ -216,17 +211,14 @@ export class ListnodeComponent implements OnInit {
             } 
 
           } else {
-
             if(arrFull.length > 0) {
               data.addRows(arrFull);
             }
             else {
               this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
             } 
-            
           }
           // Set chart options
-          
           var options = {
             "width": 800,
             'height':300,
@@ -240,17 +232,9 @@ export class ListnodeComponent implements OnInit {
           // Instantiate and draw our chart, passing in some options.
           var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
           chart.draw(data, options);
-
-          
-          
-          // chart.clearChart(); 
-          
         }
       );
     } else {
-      
-      
-
       // this.apiNodeService.listDrawAccelerometer(this.chart,value).subscribe(
       //   res => {
       //     this.accelerometers = res;
@@ -326,7 +310,7 @@ export class ListnodeComponent implements OnInit {
     this.getAllGroup();
     this.getAllNode();
     google.charts.load('current', {'packages':['corechart','line']});
-      // Set a callback to run when the Google Visualization API is loaded.
+    // Set a callback to run when the Google Visualization API is loaded.
     // google.charts.setOnLoadCallback(this.drawChart);
 
   }
@@ -356,8 +340,8 @@ export class ListnodeComponent implements OnInit {
         }
       );
     }
-
   }
+  
   getAllProfile(){
     this.itemsProfile = [];
     if(this.role == 1) {
@@ -420,7 +404,6 @@ export class ListnodeComponent implements OnInit {
         }
       );
     }
-
   }
 
   nameExists(value,id) {
@@ -434,7 +417,6 @@ export class ListnodeComponent implements OnInit {
       }
     }); 
     return count;
-    
   }
 
   save() {
@@ -483,15 +465,15 @@ export class ListnodeComponent implements OnInit {
       this.updateNode.status = this.selectStatus;
 
       this.apiNodeService.updateNode(this.updateNode).subscribe(
-          response => {
-            this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Update_success, 1500);
-            this.renderView();
-            $("#update").click();
-          },
-          err => {
-            this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);
-          }
-        );
+        response => {
+          this.commonService.notifySuccess(this.locale.CONGRATULATION, this.locale.Update_success, 1500);
+          this.renderView();
+          $("#update").click();
+        },
+        err => {
+          this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);
+        }
+      );
     }
   }
 
@@ -537,7 +519,6 @@ export class ListnodeComponent implements OnInit {
     if(typeof this.updateNode.Profile != "undefined") {
       this.checkProfile =  true;  
     }
-    
 
     let activeGroup = [];
     let activeProfile = [];
@@ -577,8 +558,6 @@ export class ListnodeComponent implements OnInit {
         });
       }
     );
-
-
   };
 
   public filterItems(query) {
@@ -649,9 +628,6 @@ export class ListnodeComponent implements OnInit {
         }
       );
     }
-    
-
-
     
     // this.apiNodeService.getNodeByName(this.keySearch).subscribe(
     //   data => {
@@ -724,21 +700,24 @@ export class ListnodeComponent implements OnInit {
       this.apiNodeService.listGetsensor(id).subscribe(
         data => {
           this.getsensors = data;
-          
-          for (let index = 0; index < data.length; index++) {
-            this.apiNodeService.listDraw(this.chart, data[index] ).subscribe(
-              res => {
-                this.temperatures = res;
-              },
-              err => {
-                this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);
-              }
-            );  
+          if(data.length > 0){
+            for (let index = 0; index < data.length; index++) {
+              this.apiNodeService.listDraw(this.chart, data[index] ).subscribe(
+                res => {
+                  this.temperatures = res;
+                },
+                err => {
+                  this.commonService.notifyError(this.locale.SORRY, "No Data Sensor", 1500);
+                }
+              );  
+            }
+          } else {
+            this.commonService.notifyError(this.locale.SORRY, "No Data Sensor", 1500);  
           }
           // this.paginations = this.nodes.slice(0, 10);
         },
         error => { 
-          // this.commonService.notifyError(this.locale.SORRY, "Name Node dosen't existed", 1500);   
+          this.commonService.notifyError(this.locale.SORRY, "No Data", 1500);   
           this.getsensors= [];
         }
       );
@@ -749,7 +728,7 @@ export class ListnodeComponent implements OnInit {
   
   nameExists2(value) {
     return this.nodes.some(function(el) {
-      return el.name_node.toLowerCase()== value.toLowerCase();
+      return el.name_node.toLowerCase() == value.toLowerCase();
     }); 
   }
 
@@ -813,7 +792,7 @@ export class ListnodeComponent implements OnInit {
           this.node2 = new Node;
           this.renderView();
           $("#add").click();
-          this.router.navigate(['/node']);
+          
         },
         err => {
           this.commonService.notifyError(this.locale.SORRY, this.locale.Error, 1500);
@@ -827,7 +806,6 @@ export class ListnodeComponent implements OnInit {
     this.updateActive = false;
     this.getAllGroup();
     this.getAllProfile();
-    
   }
   
   setOrder(value: string) {

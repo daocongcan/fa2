@@ -68,6 +68,7 @@ import { NotfoundComponent } from './notfound/notfound.component';
 import { DatePipe } from '@angular/common';
 import { ProfileComponent } from './profile/profile.component';
 import { OrderModule } from 'ngx-order-pipe';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 @NgModule({
   imports: [
     CommonModule,
@@ -90,6 +91,7 @@ import { OrderModule } from 'ngx-order-pipe';
     BsDatepickerModule.forRoot(),
     GoogleChartsModule.forRoot(),
     TabsModule.forRoot(),
+    TooltipModule.forRoot(),
     OrderModule,
   ],
   providers: [

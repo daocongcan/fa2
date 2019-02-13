@@ -36,7 +36,7 @@
                 </button>
               </span>
         </div> -->
-        <!-- <ng-select title="Role" #search 
+        <!-- <ng-select tooltip="Role" #search 
           [allowClear]="true"
           [items]="itemGroups"
           (data)="refreshValue($event)"
@@ -96,7 +96,7 @@
               </div>
             </td>
 
-            <td title="edit" style="cursor: pointer;" (click)="getUpdateGroup(group)" data-toggle="modal" data-target="#myModal" id="{{group._id}}"  >
+            <td tooltip="edit" style="cursor: pointer;" (click)="getUpdateGroup(group)" data-toggle="modal" data-target="#myModal" id="{{group._id}}"  >
             {{group.group_name}} 
             
             <!-- <i class="fa fa-lg fa-edit edit"></i> -->
@@ -133,13 +133,13 @@
           <!-- Modal content -->
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title" >Update group</h4>
+              <h4 class="modal-tooltip" >Update group</h4>
             </div>
             <div class="row modal-body">
     
                 <div class="col-md-12">  
-                  <input title="Name" class="form-control" type="text" [(ngModel)]="updateGroup.group_name"  name="group_name" id="group_name" placeholder="Group Name">
-                  <ng-select title="Company" #company 
+                  <input tooltip="Name" class="form-control" type="text" [(ngModel)]="updateGroup.group_name"  name="group_name" id="group_name" placeholder="Group Name">
+                  <ng-select tooltip="Company" #company 
                     [items]="items"
                     [allowClear]="true"
                     (data)="refreshValue($event)"
@@ -167,12 +167,12 @@
           <!-- Modal content  -->
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">ADD GROUP</h4>
+              <h4 class="modal-tooltip">ADD GROUP</h4>
             </div>
             <div class="row modal-body">
                 <div class="col-md-12 md gw-left">  
-                  <input title="Group Name" class="form-control" type="text" [(ngModel)]="group.group_name"  name="group_name" id="group_name" placeholder="Group Name">
-                  <ng-select title="Company" #company 
+                  <input tooltip="Group Name" class="form-control" type="text" [(ngModel)]="group.group_name"  name="group_name" id="group_name" placeholder="Group Name">
+                  <ng-select tooltip="Company" #company 
                     [items]="items"
                     [allowClear]="true"
                     (data)="refreshValue($event)"
@@ -201,14 +201,14 @@
           <!-- Modal content -->
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title"> <span *ngIf="nodes.length < 1" > No Data </span> List Nodes  </h4>
+              <h4 class="modal-tooltip"> <span *ngIf="nodes.length < 1" > No Data </span> List Nodes  </h4>
               
             </div>
             <div *ngIf="nodes.length > 0" class="modal-body">
               <table class="table table-striped table-hover capteur-list ng-star-inserted">
                 <thead>
                   <tr>
-                    <!-- <td title= "Total node: {{ nodes.length }}" >
+                    <!-- <td tooltip= "Total node: {{ nodes.length }}" >
                         
                     </td> -->
                     <td>
@@ -223,7 +223,7 @@
                   </tr>
                 </thead>
                 <tr *ngFor="let node of nodes" >
-                  <!-- <td> (click)="getUpdateNode(node)" data-toggle="modal" data-target="#myModal" id="{{node._id}}" title="edit" style="cursor: pointer;" 
+                  <!-- <td> (click)="getUpdateNode(node)" data-toggle="modal" data-target="#myModal" id="{{node._id}}" tooltip="edit" style="cursor: pointer;" 
                     <a class="icon-geo" id="{{node.name_node}}" href="javascript:void(0)" (click)="getGeo(node._id,node.name_node)" ><i class="fa fa-crosshairs fa-lg"></i></a>
                   </td> -->
                   <td >
@@ -257,7 +257,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title"> <span *ngIf="nodesByGroup.length < 1" > No Data </span> List Nodes  </h4>
+              <h4 class="modal-tooltip"> <span *ngIf="nodesByGroup.length < 1" > No Data </span> List Nodes  </h4>
             </div>
             <div *ngIf="nodesByGroup.length > 0" class="modal-body">
               <table class="table table-striped table-hover capteur-list ng-star-inserted">

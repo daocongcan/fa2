@@ -75,6 +75,9 @@ export class ListuserComponent implements OnInit {
   reverse: boolean = false;
   sortedCollection: any[];
   password = "******";
+  currentPage = 1;
+  smallnumPages = 0;
+  page=1;
   constructor(
     private router: Router,
     private apiUserService: UsersService,
@@ -111,6 +114,7 @@ export class ListuserComponent implements OnInit {
     const startItem = (event.page - 1) * event.itemsPerPage;
     const endItem = event.page * event.itemsPerPage;
     this.returnedArray = this.users.slice(startItem, endItem);
+    this.page = event.page;
     // console.log(this.users);
   }
 

@@ -72,7 +72,7 @@
                 <label for="{{company._id}}"></label>
               </div>
             </td>
-            <td title="edit" style="cursor: pointer;" (click)="getUpdateCompany(company)" data-toggle="modal" data-target="#myModal" title="edit">
+            <td tooltip="edit" style="cursor: pointer;" (click)="getUpdateCompany(company)" data-toggle="modal" data-target="#myModal" tooltip="edit">
               {{company.name_company}}
             </td>
             <td>
@@ -104,15 +104,15 @@
           <!-- Modal content-->
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title" style="text-transform: uppercase" >Update Company</h4>
+                <h4 class="modal-tooltip" style="text-transform: uppercase" >Update Company</h4>
               </div>
               <div class="row modal-body">
                   <div class="col-md-12 md gw-left">  
                     <!-- <input class="form-control" type="number" [(ngModel)]="company._id" name="id" id="_id" placeholder="ID" readonly value="{{updateCompany._id}}"> -->
-                    <input class="form-control" type="text" [(ngModel)]="updateCompany.name_company" title="Name" name="company" id="name_company" placeholder="COMPANY" value="{{updateCompany.name_company}}">
-                    <input class="form-control" type="text" [(ngModel)]="updateCompany.address" title="Address" name="address" id="address" placeholder="ADDRESS" value="{{updateCompany.address}}">
-                    <input class="form-control" type="number" [(ngModel)]="updateCompany.tax_number" title="Tax "  name="tax_number" id="tax_number" placeholder="TAX" value="{{updateCompany.tax_number}}">
-                    <input class="form-control" type="number" [(ngModel)]="updateCompany.phone" name="Phone" title="phone" id="phone" placeholder="PHONE" value="{{updateCompany.phone}}">
+                    <input class="form-control" type="text" [(ngModel)]="updateCompany.name_company" tooltip="Name" name="company" id="name_company" placeholder="COMPANY" value="{{updateCompany.name_company}}">
+                    <input class="form-control" type="text" [(ngModel)]="updateCompany.address" tooltip="Address" name="address" id="address" placeholder="ADDRESS" value="{{updateCompany.address}}">
+                    <input class="form-control" type="number" [(ngModel)]="updateCompany.tax_number" tooltip="Tax "  name="tax_number" id="tax_number" placeholder="TAX" value="{{updateCompany.tax_number}}">
+                    <input class="form-control" type="number" [(ngModel)]="updateCompany.phone" name="Phone" tooltip="phone" id="phone" placeholder="PHONE" value="{{updateCompany.phone}}">
                   </div>
               </div>
               <div class="modal-footer">
@@ -131,7 +131,7 @@
           <!-- Modal content-->
             <div class="modal-content">
               <div class="modal-header">
-                <h4 class="modal-title">ADD COMPANY</h4>
+                <h4 class="modal-tooltip">ADD COMPANY</h4>
               </div>
               <div class="row modal-body">
 

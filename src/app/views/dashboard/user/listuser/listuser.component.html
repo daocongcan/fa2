@@ -12,7 +12,7 @@
           <button [ngClass]="'delete'"  class="btn-search btn-delete "  (click)="deleteAll()" >DELETE</button>
         </div> -->
           <section class="row  content-header">
-            <div class="col-md-3">
+            <div class="col-md-2">
               <strong >
                 User
                 <!-- <small><button data-toggle="collapse" data-target="#data" > Control panel</button></small> -->
@@ -29,7 +29,7 @@
                   </span>
               </div>
             </div>
-            <ol class="col-md-5 ">
+            <ol class="col-md-6 ">
       
               <!-- breadcrumb <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
               <li class="active">Dashboard</li> [routerLink]="['/user/add']" -->
@@ -38,6 +38,22 @@
               <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" > <i class="	fa fa-times"></i> DELETE</button>
               
             </ol>
+            <!-- <div class="col-md-3">
+              <p style="height: 34px;margin: 0; line-height: 34px;padding: 0;" class="col-md-4">
+                  
+              </p>
+              <div class="col-md-8 pdLeft">
+                <pager
+                  [totalItems]="users.length"
+                  (pageChanged)="pageChanged($event)"
+                  pageBtnClass="btn"
+                  [itemsPerPage]="10"
+                  previousText="&lsaquo;" 
+                  nextText="&rsaquo;" 
+                  class="pull-left">
+                </pager>
+              </div>  
+            </div> -->
           </section>
       </div>
       <div style="overflow-x:auto;"> 
@@ -122,13 +138,21 @@
                 <button type="button" class="btn btn-danger"  >
                   <i class="fa fa-lg fa-times"></i>
                 </button>
-              </td> -->
+              </td> {{page}}/{{smallnumPages}} Total {{users.length}} -->
             </tr>
         </table>
       </div>
+      <div *ngIf="users.length > 10" class="col-md-12 pdLeft"> 
+        <span style="height: 79px;line-height: 79px;padding-right: 0;" class="col-md-1">
+          {{page}}/{{smallnumPages}} Total {{users.length}}
+        </span>
+        <div class="col-md-11">
+          <pagination (numPages)="smallnumPages = $event"  previousText="&lsaquo;" nextText="&rsaquo;" [totalItems]="users.length" (pageChanged)="pageChanged($event)"></pagination>
+        </div>
+      </div>
       
-      <pagination *ngIf="users.length > 10" [totalItems]="users.length" (pageChanged)="pageChanged($event)"></pagination>
-      <!-- Modal -->
+      
+      <!-- Modal *ngIf="users.length > 10" (numPages)="smallnumPages = $event" -->
       <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
           <form (ngSubmit)="update()">
