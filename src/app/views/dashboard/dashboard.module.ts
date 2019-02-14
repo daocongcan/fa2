@@ -69,6 +69,8 @@ import { DatePipe } from '@angular/common';
 import { ProfileComponent } from './profile/profile.component';
 import { OrderModule } from 'ngx-order-pipe';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import {NgxPaginationModule} from 'ngx-pagination';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -92,6 +94,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     GoogleChartsModule.forRoot(),
     TabsModule.forRoot(),
     TooltipModule.forRoot(),
+    NgxPaginationModule,
     OrderModule,
   ],
   providers: [

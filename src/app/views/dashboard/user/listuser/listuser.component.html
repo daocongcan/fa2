@@ -29,14 +29,36 @@
                   </span>
               </div>
             </div>
-            <ol class="col-md-6 ">
+            <ol class="col-md-6  ">
       
               <!-- breadcrumb <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
               <li class="active">Dashboard</li> [routerLink]="['/user/add']" -->
-      
-              <button (click)="activeAdd()" data-toggle="modal" data-target="#addModal"  class="btn btn-primary" ><i class="	fa fa-plus"></i> ADD</button>
-              <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" > <i class="	fa fa-times"></i> DELETE</button>
-              
+              <div class="col-md-5">
+                <button (click)="activeAdd()" data-toggle="modal" data-target="#addModal"  class="btn btn-primary" ><i class="	fa fa-plus"></i> ADD</button>
+                <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" > <i class="	fa fa-times"></i> DELETE</button>
+              </div>  
+              <div class="col-md-7">
+                <span style="float: right; margin-right: 10px ">
+                  <span>
+                    {{p-p+1}} - <span *ngIf="numberPage*p < users.length " >{{numberPage*p}}</span>
+                    <span *ngIf="numberPage*p > users.length " >{{users.length}}</span>
+                  </span>  
+                  <!-- <span *ngIf="p !=1">
+                    {{p-p+1+numberPage}} - <span *ngIf="numberPage*p < users.length " >{{numberPage*p}}</span>
+                    <span *ngIf="numberPage*p > users.length " >{{users.length}}</span>
+                  </span>   -->
+                  Total
+                  {{users.length}}
+                </span>
+                <span style="float: right; margin-right: 10px ">
+                  Number row
+                  <select (change)="onChangeRow($event.target.value)" >
+                    <option  *ngFor="let row of rowRecores" value="{{row}}">                
+                      {{row}}
+                    </option>
+                  </select>
+                </span>
+              </div>
             </ol>
             <!-- <div class="col-md-3">
               <p style="height: 34px;margin: 0; line-height: 34px;padding: 0;" class="col-md-4">
@@ -94,7 +116,7 @@
                 </th> -->
               
             </thead>
-            <tr class="user"  *ngFor="let user of returnedArray | orderBy: order:reverse:'case-insensitive' "  >
+            <tr class="user"  *ngFor="let user of users | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: numberPage, currentPage: p, totalItems: users.length }  "  >
               
               <td>
                 <!-- <input type="checkbox" class="checkbox" (change)="getIdChecked($event,user._id);" id="{{user._id}}"> -->
@@ -142,12 +164,16 @@
             </tr>
         </table>
       </div>
-      <div *ngIf="users.length > 10" class="col-md-12 pdLeft"> 
-        <span style="height: 79px;line-height: 79px;padding-right: 0;padding-left: 0" class="col-md-1">
+      <div *ngIf="users.length > numberPage" class="col-md-12 pdLeft" style="text-align: center;"> 
+        <!-- <span style="height: 79px;line-height: 79px;padding-right: 0;padding-left: 0" class="col-md-1">
           {{page}}/{{smallnumPages}} Total {{users.length}}
-        </span>
-        <div class="col-md-11">
-          <pagination (numPages)="smallnumPages = $event"  previousText="&lsaquo;" nextText="&rsaquo;" [totalItems]="users.length" (pageChanged)="pageChanged($event)"></pagination>
+        </span> -->
+        <div>
+          <!-- <pagination (numPages)="smallnumPages = $event"  previousText="&lsaquo;" nextText="&rsaquo;" [totalItems]="users.length" (pageChanged)="pageChanged($event)"></pagination> -->
+          <!-- <span>
+              Total {{users.length}}  (pageChange)="p = $event"
+          </span> -->
+          <pagination-controls (pageChange)="onPageChange($event)" previousLabel="‹" nextLabel="›" ></pagination-controls>
         </div>
       </div>
       

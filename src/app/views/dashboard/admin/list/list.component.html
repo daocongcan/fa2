@@ -30,7 +30,6 @@
   
           <!-- breadcrumb <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
           <li class="active">Dashboard</li> [routerLink]="['/admin/add']" -->
-  
           <button (click)="activeAdd()" data-toggle="modal" data-target="#addModal"   class="btn btn-primary btn-add" ><i class="fa fa-plus"></i> ADD</button>
           <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" ><i class="	fa fa-times"></i> DELETE</button>
           

@@ -45,6 +45,12 @@ table {
 .modal-tooltip, .modal-tilte {
     text-transform: uppercase !important;
 }
+
+.ngx-pagination li a::after,.ngx-pagination li a::before, .ngx-pagination li::after,.ngx-pagination li::before{
+    content: '' !important;
+    display: none;
+    margin-left: 0 !important;
+}
 thead th  {
     cursor: pointer;
     margin-right: 15px;

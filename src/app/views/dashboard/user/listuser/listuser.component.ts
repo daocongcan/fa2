@@ -25,6 +25,7 @@ import * as CryptoJS from 'crypto-js';
 
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { OrderPipe } from 'ngx-order-pipe';
+import { NgxPaginationModule } from 'ngx-pagination';
 @Component({
   selector: 'app-listuser',
   templateUrl: './listuser.component.html',
@@ -78,6 +79,9 @@ export class ListuserComponent implements OnInit {
   currentPage = 1;
   smallnumPages = 0;
   page=1;
+  p: number = 1;
+  rowRecores = [10,20,30,40,50];
+  numberPage = 10;
   constructor(
     private router: Router,
     private apiUserService: UsersService,
@@ -110,12 +114,19 @@ export class ListuserComponent implements OnInit {
     this.getAllRole();
   };
 
-  pageChanged(event: PageChangedEvent): void {
-    const startItem = (event.page - 1) * event.itemsPerPage;
-    const endItem = event.page * event.itemsPerPage;
-    this.returnedArray = this.users.slice(startItem, endItem);
-    this.page = event.page;
-    // console.log(this.users);
+  // pageChanged(event: PageChangedEvent): void {
+  //   const startItem = (event.page - 1) * event.itemsPerPage;
+  //   const endItem = event.page * event.itemsPerPage;
+  //   this.returnedArray = this.users.slice(startItem, endItem);
+  //   this.page = event.page;
+  //   this.currentPage = event.page;
+  //   console.log(this.currentPage);
+    
+  // }
+
+  onPageChange(number: number) {
+    this.p = number;
+    this.currentPage = number;
   }
 
   getAllUser() {
@@ -601,6 +612,9 @@ export class ListuserComponent implements OnInit {
       this.reverse = !this.reverse;
     }
     this.order = value;
+  }
+  onChangeRow(value){
+    this.numberPage= value;
   }
 
 }

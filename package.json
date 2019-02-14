@@ -34,6 +34,7 @@
     "ng4-loading-spinner": "^1.2.3",
     "ngx-bootstrap": "^3.1.4",
     "ngx-order-pipe": "^2.0.2",
+    "ngx-pagination": "^3.2.1",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",
     "snazzy-info-window": "^1.1.1",
