@@ -7,7 +7,7 @@
         <small >Control panel</small>
       </strong>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="input-group">
           <input type="text" (keyup.enter)="seachName()" [(ngModel)]="keySearch" class="form-control" placeholder="Search...">
             <span class="input-group-btn">
@@ -16,18 +16,42 @@
             </span>
       </div>
     </div>
-    <ol class="col-md-5 ">
+    <ol class="col-md-6 ">
       <!-- breadcrumb <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
       <li class="active">Dashboard</li> [routerLink]="['/node/add']" -->
-      <button  (click)="addActive()" data-toggle="modal" data-target="#addModal"   class="btn btn-primary btn-add" > <i class="fa fa-plus"></i> 
-        ADD
-      </button>
-      <button *ngIf=" chart != null " class="btn btn-info btn-chart" data-toggle="modal" data-target="#chart" (click)="getChart(chart)"><i class="fa fa-line-chart"></i>
-        CHART
-      </button>
-      <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" >
-        <i class="	fa fa-times"></i> DELETE
-      </button>
+      <div class="col-md-5">
+        <button  (click)="addActive()" data-toggle="modal" data-target="#addModal"   class="btn btn-primary btn-add" > <i class="fa fa-plus"></i> 
+          ADD
+        </button>
+        <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" >
+          <i class="	fa fa-times"></i> DELETE
+        </button>
+      </div>
+      <div class="col-md-7">
+        <span style="float: right; margin-right: 10px ">
+          <span>
+            <span *ngIf="p == 1" >
+              {{1}} 
+            </span>
+            <span *ngIf="p > 1" >
+              {{numberPage*(p-1)+1}}
+            </span>
+            - <span *ngIf="numberPage*p < nodeProfiles.length " >{{numberPage*p}}</span>
+            <span *ngIf="numberPage*p > nodeProfiles.length " >{{nodeProfiles.length}}</span>
+          </span>  
+          
+          Total
+          {{nodeProfiles.length}}
+        </span>
+        <span style="float: right; margin-right: 10px ">
+          Number row
+          <select  (change)="onChangeRow($event.target.value)"  >
+            <option  *ngFor="let row of rowRecores" value="{{row}}">                
+              {{row}}
+            </option>
+          </select>
+        </span>
+      </div>
     </ol>
   </section>
   <div class="col-md-12">
@@ -121,7 +145,7 @@
                   
                 </tr>
               </thead>
-                <tr *ngFor="let nodeProfile of nodeProfiles" >
+                <tr *ngFor="let nodeProfile of nodeProfiles | paginate: { itemsPerPage: numberPage, currentPage: p, totalItems: nodeProfiles.length }  " >
                   <td tooltip="Delete" >
                     <!-- <input type="checkbox"  value="nodeProfile._id" (change)="getIdChecked($event, nodeProfile._id)"  name="delete" > -->
                     <div class="checkbox checkbox-primary">
@@ -144,13 +168,14 @@
                       </span>
                     </div>
                   </td>
-
-
                 </tr>
               </table>  
         </tabset>
       </div>
       
+      <div *ngIf="nodeProfiles.length > numberPage" class="col-md-12 pdLeft" style="text-align: center;"> 
+        <pagination-controls (pageChange)="onPageChange($event)" previousLabel="‹" nextLabel="›" ></pagination-controls>
+      </div>
       
       <!-- Update Node -->
       <div *ngIf="checkUpdate == true" id="myModal" class="modal fade" role="dialog">

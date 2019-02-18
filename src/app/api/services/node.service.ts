@@ -376,13 +376,13 @@ export class NodeService extends BaseService {
    * list Draw Response
    */
 
-  listDrawResponse(name,value): Observable<HttpResponse<Temperature[]>> {
+  listDrawResponse(id,name,date1,date2): Observable<HttpResponse<Temperature[]>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
     let req = new HttpRequest<any>(
       "GET",
-      this.rootUrl + `chart/getchart/${name}/${value}`,
+      this.rootUrl + `chart/getchart/${id}/${name}/${date1}/${date2}`,
       __body,
       {
         headers: __headers,
@@ -404,8 +404,8 @@ export class NodeService extends BaseService {
   /**
    * get list of Getsensor
    */
-  listDraw(name,value): Observable<Temperature[]> {
-    return this.listDrawResponse(name,value).pipe(
+  listDraw(id,name,date1,date2): Observable<Temperature[]> {
+    return this.listDrawResponse(id,name,date1,date2).pipe(
       map(_r => _r.body)
     );
   }

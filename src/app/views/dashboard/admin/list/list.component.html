@@ -17,7 +17,7 @@
             <small >Control panel</small>
           </strong>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="input-group">
               <input type="text" (keyup.enter)="seachName()" [(ngModel)]="keySearch" class="form-control" placeholder="Search...">
                 <span class="input-group-btn">
@@ -26,13 +26,39 @@
                 </span>
           </div>
         </div>
-        <ol class="col-md-5 ">
+        <ol class="col-md-6 ">
   
           <!-- breadcrumb <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
           <li class="active">Dashboard</li> [routerLink]="['/admin/add']" -->
-          <button (click)="activeAdd()" data-toggle="modal" data-target="#addModal"   class="btn btn-primary btn-add" ><i class="fa fa-plus"></i> ADD</button>
-          <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" ><i class="	fa fa-times"></i> DELETE</button>
-          
+          <div class="col-md-5">
+            <button (click)="activeAdd()" data-toggle="modal" data-target="#addModal"   class="btn btn-primary btn-add" ><i class="fa fa-plus"></i> ADD</button>
+            <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" ><i class="	fa fa-times"></i> DELETE</button>
+          </div>
+          <div class="col-md-7">
+              <span style="float: right; margin-right: 10px ">
+                <span>
+                  <span *ngIf="p == 1" >
+                    {{1}} 
+                  </span>
+                  <span *ngIf="p > 1" >
+                    {{numberPage*(p-1)+1}}
+                  </span>
+                  - <span *ngIf="numberPage*p < companies.length " >{{numberPage*p}}</span>
+                  <span *ngIf="numberPage*p > companies.length " >{{companies.length}}</span>
+                </span>  
+                
+                Total
+                {{companies.length}}
+              </span>
+              <span style="float: right; margin-right: 10px ">
+                Number row
+                <select  (change)="onChangeRow($event.target.value)"  >
+                  <option  *ngFor="let row of rowRecores" value="{{row}}">                
+                    {{row}}
+                  </option>
+                </select>
+              </span>
+            </div>
         </ol>
       </section>
     </div>
@@ -62,7 +88,7 @@
               <!-- <th  style="width: 12%;"> 
               </th> -->
           </thead>
-          <tr *ngFor="let company of paginations | orderBy: order:reverse:'case-insensitive' ">
+          <tr *ngFor="let company of companies | orderBy: order:reverse:'case-insensitive' | paginate: { itemsPerPage: numberPage, currentPage: p, totalItems: companies.length } ">
             <td>
               <!-- {{company._id}} -->
               <!-- <input type="checkbox" (change)="getIdChecked($event, company._id)" > -->
@@ -95,7 +121,19 @@
           </tr>
       </table>
     </div>
-      <pagination *ngIf="companies.length>10" [totalItems]="companies.length" (pageChanged)="pageChanged($event)"></pagination>
+      <!-- <pagination *ngIf="companies.length>10" [totalItems]="companies.length" (pageChanged)="pageChanged($event)"></pagination> -->
+    <div *ngIf="companies.length > numberPage" class="col-md-12 pdLeft" style="text-align: center;"> 
+      <!-- <span style="height: 79px;line-height: 79px;padding-right: 0;padding-left: 0" class="col-md-1">
+        {{page}}/{{smallnumPages}} Total {{companies.length}}
+      </span> -->
+      <div>
+        <!-- <pagination (numPages)="smallnumPages = $event"  previousText="&lsaquo;" nextText="&rsaquo;" [totalItems]="companies.length" (pageChanged)="pageChanged($event)"></pagination> -->
+        <!-- <span>
+            Total {{companies.length}}  (pageChange)="p = $event"
+        </span> -->
+        <pagination-controls (pageChange)="onPageChange($event)" previousLabel="‹" nextLabel="›" ></pagination-controls>
+      </div>
+    </div>
       <!-- Modal -->
       <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">

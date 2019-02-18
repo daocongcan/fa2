@@ -25,6 +25,7 @@ import * as CryptoJS from 'crypto-js';
 
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { OrderPipe } from 'ngx-order-pipe';
+
 import { NgxPaginationModule } from 'ngx-pagination';
 @Component({
   selector: 'app-listuser',
@@ -78,10 +79,11 @@ export class ListuserComponent implements OnInit {
   password = "******";
   currentPage = 1;
   smallnumPages = 0;
-  page=1;
+  page:number=1;
   p: number = 1;
   rowRecores = [10,20,30,40,50];
-  numberPage = 10;
+  public numberPage: number = 10;
+  
   constructor(
     private router: Router,
     private apiUserService: UsersService,
@@ -127,6 +129,7 @@ export class ListuserComponent implements OnInit {
   onPageChange(number: number) {
     this.p = number;
     this.currentPage = number;
+    
   }
 
   getAllUser() {
@@ -613,8 +616,10 @@ export class ListuserComponent implements OnInit {
     }
     this.order = value;
   }
-  onChangeRow(value){
-    this.numberPage= value;
+
+  onChangeRow(value:number){
+    this.p=1;
+    this.numberPage = value;
   }
 
 }

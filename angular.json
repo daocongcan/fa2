@@ -33,6 +33,7 @@
               "src/assets/bower_components/jvectormap/jquery-jvectormap.css",
               "src/assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css",
               "src/assets/bower_components/bootstrap-daterangepicker/daterangepicker.css",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "src/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css"
             ],
             "scripts": [

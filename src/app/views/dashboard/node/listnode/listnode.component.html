@@ -103,8 +103,6 @@
       
       <div class="col-md-12 col-sm-12" style="border: 6px solid #fff;padding: 0px;">
         <div class="col-md-8 md"  style="padding: 0">
-
-        
           <agm-map [latitude]="lat" [longitude]="long" [zoom]="mapZoom" >
             <agm-marker *ngIf=" lat != 0 && long != 0 "  [latitude]="lat" [longitude]="long">
               <!-- <agm-info-window> 
@@ -112,21 +110,16 @@
                 <p><b>Create time:</b> {{dateNode}}</p>
               </agm-info-window> -->
             </agm-marker>
-            
           </agm-map>
-
         </div>
-
         <div class="col-md-4 md" style="vertical-align: top; overflow-y: scroll;
         min-height: 420px;padding: 0">
           <tabset>
             <!-- <tab  heading="View" id="tab1"> -->
               <table class="table table-striped table-hover capteur-list ng-star-inserted">
                 <thead>
-                  
                   <th style="width: 10px;"></th>
                   <th>
-                      
                   </th>
                   <th [class.active]="order === 'name_node'"
                   (click)="setOrder('name_node')" >
@@ -144,7 +137,6 @@
                   <th>
                     Status
                   </th>
-                  
                 </thead>
                 <tr *ngFor="let node of nodes | orderBy: order:reverse:'case-insensitive' " >
                   <td tooltip="Delete" >
@@ -166,7 +158,6 @@
                         {{ group.group_name }} 
                       </span>
                     </div>
-                    
                   </td>
                   <td *ngIf="node.status == 'true'">
                     active
@@ -226,14 +217,12 @@
       <!-- Update Node -->
       <div *ngIf="updateActive == true" id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
-    
           <form (ngSubmit)="save()">
             <div class="modal-content">
               <div class="modal-header">
                 <h4 class="modal-tooltip">UPDATE NODE</h4>
               </div>
               <div class="row modal-body">
-
                   <div class="col-md-12 md gw-left">  
                       <input class="form-control" tooltip="Name" type="text" [(ngModel)]="updateNode.name_node" name="name_node"  placeholder="NAME NODE">
                       <!-- <input class="form-control" type="text" [(ngModel)]="updateNode.status" name="status" placeholder="STATUS"> -->
@@ -367,8 +356,8 @@
 
       <!-- End Add Node -->  
 
-      <!-- Chart  -->
-      <div *ngIf="temperatures.length > 0"  id="chart" class="modal fade" role="dialog">
+      <!-- Chart *ngIf="temperatures.length > 0"  -->
+      <div   id="chart" class="modal fade" role="dialog">
         <div    class="modal-dialog"  >
           <!-- Modal content -->
           <div class="modal-content">
@@ -383,16 +372,16 @@
                 (typed)="typed($event)"
                 placeholder="NO SELECTED">
               </ng-select>   -->
-              <div  class="col-md-12 form-group" *ngIf="getsensors.length > 0 " >
-                <!-- <input  type="text" 
-                placeholder="DATE"
-                
-                class="form-control"
-                bsDaterangepicker 
-                #drp="bsDaterangepicker"
-                [bsConfig]="{ rangeInputFormat: 'DD-MM-YYYY', containerClass: 'theme-dark-blue' }"
-                (bsValueChange)="onValueChange($event)" >  -->
-
+              <div  class="row col-md-12 form-group" style="padding: 0" *ngIf="getsensors.length > 0 " >
+                <div class="col-md-12" >
+                  <input  type="text" 
+                  placeholder="DATE"
+                  class="form-control"
+                  bsDaterangepicker 
+                  #drp="bsDaterangepicker"
+                  [bsConfig]="{ rangeInputFormat: 'DD-MM-YYYY', containerClass: 'theme-dark-blue' }"
+                  (bsValueChange)="onValueChange($event)" > 
+                </div>
                   
                 <!-- <select   (change)="onchangeDraw($event.target.value)" class="form-control" name="selectedDraw" id="selectedDraw">
                     <option value="null"> Slected Value </option>
@@ -445,7 +434,6 @@
               <button type="button" id="" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
           </div>
-    
         </div>
       </div>
       <!-- END Chart        -->

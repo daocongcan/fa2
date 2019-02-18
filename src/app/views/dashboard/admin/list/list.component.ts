@@ -14,6 +14,7 @@ import { Company } from '../../../../api/models/company';
 import { Locale } from '../../../../locale';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { OrderPipe } from 'ngx-order-pipe';
+import { NgxPaginationModule } from 'ngx-pagination';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -33,6 +34,12 @@ export class ListComponent implements OnInit {
   order: string = 'name_company';
   reverse: boolean = false;
   sortedCollection: any[];
+
+  currentPage = 1;
+  smallnumPages = 0;
+  p: number = 1;
+  rowRecores = [10,20,30,40,50];
+  numberPage: number = 10;
 
   constructor(
     private router: Router,
@@ -259,5 +266,17 @@ export class ListComponent implements OnInit {
     }
     this.order = value;
   }
+
+  onPageChange(number: number) {
+    this.p = number;
+    this.currentPage = number;
+    
+  }
+
+  onChangeRow(value:number){
+    this.p=1;
+    this.numberPage = value;
+  }
+
 
 }

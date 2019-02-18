@@ -148,6 +148,7 @@ export class ListnodeComponent implements OnInit {
  
   onValueChange(date: Date): void {
     this.dateRang = date;
+    console.log(this.typeChart);
     if( date != null ) {
      this.date1 =  this.datePipe.transform(this.dateRang[0],"yyyy-MM-dd");
      this.date2 =  this.datePipe.transform(this.dateRang[1],"yyyy-MM-dd");
@@ -155,7 +156,7 @@ export class ListnodeComponent implements OnInit {
       this.date1 = null;
       this.date2 = null;
     }
-    if (this.typeChart != null){
+    if (this.typeChart){
       this.onchangeDraw(this.typeChart);
     }
   }
@@ -172,7 +173,7 @@ export class ListnodeComponent implements OnInit {
     
     if(value != 'accelerometer') {
 
-      this.apiNodeService.listDraw(this.chart,value).subscribe(
+      this.apiNodeService.listDraw(this.chart,value,this.date1,this.date2).subscribe(
         res => {
           this.temperatures = res;
           
@@ -194,12 +195,12 @@ export class ListnodeComponent implements OnInit {
                 if( arrData[0] >= now7Date &&  arrData[0] <= nowDate )
                   arrFull.push([e.date,e.value]);
                 else {
-                  this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
+                  this.commonService.notifyError(this.locale.SORRY, "No Data 1" + value, 1500);
                 }
               }
             });
           } else {
-            // this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
+            this.commonService.notifyError(this.locale.SORRY, "No Data 2" + value, 1500);
           }
           if(this.date1 != null && this.date2 != null) {
             if( arrDate.length > 0 ) {
@@ -207,7 +208,7 @@ export class ListnodeComponent implements OnInit {
               data.addRows(arrDate);
             }
             else {
-              this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
+              this.commonService.notifyError(this.locale.SORRY, "No Data 3" + value, 1500);
             } 
 
           } else {
@@ -215,7 +216,7 @@ export class ListnodeComponent implements OnInit {
               data.addRows(arrFull);
             }
             else {
-              this.commonService.notifyError(this.locale.SORRY, "No Data " + value, 1500);
+              this.commonService.notifyError(this.locale.SORRY, "No Data 4" + value, 1500);
             } 
           }
           // Set chart options
@@ -232,6 +233,9 @@ export class ListnodeComponent implements OnInit {
           // Instantiate and draw our chart, passing in some options.
           var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
           chart.draw(data, options);
+        },
+        error => {
+          this.commonService.notifyError(this.locale.SORRY, "No Data Sensor " + value, 1500);
         }
       );
     } else {
@@ -700,24 +704,25 @@ export class ListnodeComponent implements OnInit {
       this.apiNodeService.listGetsensor(id).subscribe(
         data => {
           this.getsensors = data;
-          if(data.length > 0){
-            for (let index = 0; index < data.length; index++) {
-              this.apiNodeService.listDraw(this.chart, data[index] ).subscribe(
-                res => {
-                  this.temperatures = res;
-                },
-                err => {
-                  this.commonService.notifyError(this.locale.SORRY, "No Data Sensor", 1500);
-                }
-              );  
-            }
-          } else {
-            this.commonService.notifyError(this.locale.SORRY, "No Data Sensor", 1500);  
-          }
+          
+          // if(data.length > 0){
+          //   for (let index = 0; index < data.length; index++) {
+          //     this.apiNodeService.listDraw(this.chart, data[index] ).subscribe(
+          //       res => {
+          //         this.temperatures = res;
+          //       },
+          //       err => {
+          //         // this.commonService.notifyError(this.locale.SORRY, "No Data Sensor", 1500);
+          //       }
+          //     );  
+          //   }
+          // } else {
+          //   // this.commonService.notifyError(this.locale.SORRY, "No Data Sensor", 1500);  
+          // }
           // this.paginations = this.nodes.slice(0, 10);
         },
         error => { 
-          this.commonService.notifyError(this.locale.SORRY, "No Data", 1500);   
+          this.commonService.notifyError(this.locale.SORRY, "Error No Data Sensor", 1500);   
           this.getsensors= [];
         }
       );

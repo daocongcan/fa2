@@ -40,19 +40,22 @@
               <div class="col-md-7">
                 <span style="float: right; margin-right: 10px ">
                   <span>
-                    {{p-p+1}} - <span *ngIf="numberPage*p < users.length " >{{numberPage*p}}</span>
+                    <span *ngIf="p == 1" >
+                      {{1}} 
+                    </span>
+                    <span *ngIf="p > 1" >
+                      {{numberPage*(p-1)+1}}
+                    </span>
+                    - <span *ngIf="numberPage*p < users.length " >{{numberPage*p}}</span>
                     <span *ngIf="numberPage*p > users.length " >{{users.length}}</span>
                   </span>  
-                  <!-- <span *ngIf="p !=1">
-                    {{p-p+1+numberPage}} - <span *ngIf="numberPage*p < users.length " >{{numberPage*p}}</span>
-                    <span *ngIf="numberPage*p > users.length " >{{users.length}}</span>
-                  </span>   -->
+                  
                   Total
                   {{users.length}}
                 </span>
                 <span style="float: right; margin-right: 10px ">
                   Number row
-                  <select (change)="onChangeRow($event.target.value)" >
+                  <select  (change)="onChangeRow($event.target.value)"  >
                     <option  *ngFor="let row of rowRecores" value="{{row}}">                
                       {{row}}
                     </option>

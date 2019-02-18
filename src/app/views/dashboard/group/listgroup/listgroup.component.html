@@ -9,7 +9,7 @@
             <small >Control panel</small>
           </strong>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="input-group">
               <input type="text" (keyup.enter)="seachName()" [(ngModel)]="keySearch" class="form-control" placeholder="Search...">
                 <span class="input-group-btn">
@@ -18,43 +18,41 @@
                 </span>
           </div>
         </div>
-        <ol class="col-md-5 ">
+        <ol class="col-md-6 ">
   
           <!-- breadcrumb <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
           <li class="active">Dashboard</li> [routerLink]="['/group/add']" -->
-          <button (click)="activeAdd()" data-toggle="modal" data-target="#addModal"   class="btn btn-primary btn-add" ><i class="fa fa-plus"></i> ADD</button>
-          <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" ><i class="	fa fa-times"></i> DELETE</button>
+          <div class="col-md-5">
+            <button (click)="activeAdd()" data-toggle="modal" data-target="#addModal"   class="btn btn-primary btn-add" ><i class="fa fa-plus"></i> ADD</button>
+            <button *ngIf="allIdChecked.length > 0" [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" ><i class="	fa fa-times"></i> DELETE</button>
+          </div>  
+          <div class="col-md-7">
+            <span style="float: right; margin-right: 10px ">
+              <span>
+                <span *ngIf="p == 1" >
+                  {{1}} 
+                </span>
+                <span *ngIf="p > 1" >
+                  {{numberPage*(p-1)+1}}
+                </span>
+                - <span *ngIf="numberPage*p < groups.length " >{{numberPage*p}}</span>
+                <span *ngIf="numberPage*p > groups.length " >{{groups.length}}</span>
+              </span>  
+              
+              Total
+              {{groups.length}}
+            </span>
+            <span style="float: right; margin-right: 10px ">
+              Number row
+              <select  (change)="onChangeRow($event.target.value)"  >
+                <option  *ngFor="let row of rowRecores" value="{{row}}">                
+                  {{row}}
+                </option>
+              </select>
+            </span>
+          </div>
         </ol>
       </section>
-
-      <div class="col-md-6 md">
-        <!-- <input type="text" (keyup.enter)="seachName()" [(ngModel)]="keySearch" placeholder="Enter name Group"  class="form-control"> -->
-        <!-- <div class="input-group">
-            <input type="text" (keyup.enter)="seachName()" [(ngModel)]="keySearch" class="form-control" placeholder="Search...">
-              <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                </button>
-              </span>
-        </div> -->
-        <!-- <ng-select tooltip="Role" #search 
-          [allowClear]="true"
-          [items]="itemGroups"
-          (data)="refreshValue($event)"
-          (selected)="selectedSearch($event)"
-          (removed)="removed($event)"
-          (typed)="typed($event)"
-          placeholder="No Name group Selected">
-        </ng-select> -->
-      </div>
-      <div class="col-md-6 md">
-        <!-- <button class="btn-search" (click)="seachName()">SEARCH</button> -->
-        
-        <!-- <button [routerLink]="['/group/add']" [routerLinkActive]="['router-link-active']" class="btn btn-primary btn-add" >ADD</button>
-        <button [ngClass]="'delete'"  class="btn btn-danger btn-delete "  (click)="deleteAll()" >DELETE</button> -->
-
-
-
-      </div>
     </div>
 
     <div style="overflow-x:auto;">
@@ -80,10 +78,6 @@
               <th> 
                 List Node of Group
               </th>
-              
-              <!-- <th style="width: 12%;"> 
-                  
-              </th> -->
             
           </thead>
           <tr class="group"  *ngFor="let group of paginations | orderBy: order:reverse:'case-insensitive' ">
@@ -125,7 +119,10 @@
           </tr>
       </table>
     </div>
-      <pagination *ngIf="groups.length>10" [totalItems]="groups.length" (pageChanged)="pageChanged($event)"></pagination>
+      <!-- <pagination *ngIf="groups.length>10" [totalItems]="groups.length" (pageChanged)="pageChanged($event)"></pagination> -->
+      <div *ngIf="groups.length > numberPage" class="col-md-12 pdLeft" style="text-align: center;"> 
+        <pagination-controls (pageChange)="onPageChange($event)" previousLabel="‹" nextLabel="›" ></pagination-controls>
+      </div>
       <!-- Modal -->
       <div *ngIf=" checkUpdate == true "  id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -222,7 +219,7 @@
                       </td>
                   </tr>
                 </thead>
-                <tr *ngFor="let node of nodes" >
+                <tr *ngFor="let node of nodes | paginate: { itemsPerPage: numberPage, currentPage: p, totalItems: nodes.length } " >
                   <!-- <td> (click)="getUpdateNode(node)" data-toggle="modal" data-target="#myModal" id="{{node._id}}" tooltip="edit" style="cursor: pointer;" 
                     <a class="icon-geo" id="{{node.name_node}}" href="javascript:void(0)" (click)="getGeo(node._id,node.name_node)" ><i class="fa fa-crosshairs fa-lg"></i></a>
                   </td> -->

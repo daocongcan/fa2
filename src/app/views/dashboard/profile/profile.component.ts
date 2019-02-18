@@ -52,7 +52,7 @@ import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 
 import { CompaniesService } from '../../../api/services/companies.service';
 import { Company } from '../../../api/models/company';
-
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-profile',
@@ -121,6 +121,12 @@ export class ProfileComponent implements OnInit {
   userData = JSON.parse(this.userString);
   role;
   checkUpdate = true;
+
+  currentPage = 1;
+  smallnumPages = 0;
+  p: number = 1;
+  rowRecores = [10,20,30,40,50];
+  numberPage: number = 10;
   constructor(
     private router: Router,
     private apiNodeService: NodeService,
@@ -459,6 +465,17 @@ export class ProfileComponent implements OnInit {
     
   }
 
+
+  onPageChange(number: number) {
+    this.p = number;
+    this.currentPage = number;
+    
+  }
+
+  onChangeRow(value:number){
+    this.p=1;
+    this.numberPage = value;
+  }
   // drawChart (){
   // }
 

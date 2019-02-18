@@ -24,7 +24,7 @@ import { NgClass } from '@angular/common';
 
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { OrderPipe } from 'ngx-order-pipe';
-
+import { NgxPaginationModule } from 'ngx-pagination';
 @Component({
   selector: 'app-listgroup',
   templateUrl: './listgroup.component.html',
@@ -65,7 +65,11 @@ export class ListgroupComponent implements OnInit {
   order: string = 'group_name';
   reverse: boolean = false;
   sortedCollection: any[];
-
+  currentPage = 1;
+  smallnumPages = 0;
+  p: number = 1;
+  rowRecores = [10,20,30,40,50];
+  numberPage: number = 10;
   constructor(
     private router: Router,
     private apiGroupService: GroupsService,
@@ -442,6 +446,17 @@ export class ListgroupComponent implements OnInit {
       this.reverse = !this.reverse;
     }
     this.order = value;
+  }
+
+  onPageChange(number: number) {
+    this.p = number;
+    this.currentPage = number;
+    
+  }
+
+  onChangeRow(value:number){
+    this.p=1;
+    this.numberPage = value;
   }
 
 }
