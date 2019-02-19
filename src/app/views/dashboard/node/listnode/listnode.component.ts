@@ -121,6 +121,12 @@ export class ListnodeComponent implements OnInit {
   updateActive = true;
   itemsProfile = [];
   selectProfile;
+
+  minDate: Date;
+  maxDate: Date;
+
+  dateFrom ;
+  dateTo ;
   constructor(
     private router: Router,
     private apiNodeService: NodeService,
@@ -134,6 +140,11 @@ export class ListnodeComponent implements OnInit {
   ) {
     this.role = this.commonService.getRoleOfUser();
     this.sortedCollection = orderPipe.transform(this.nodes, 'name_node');
+    this.minDate = new Date("2019-1-1");
+    this.maxDate = new Date();
+    this.minDate.setDate(this.minDate.getDate());    
+    // console.log(this.minDate);
+    this.maxDate.setDate(this.maxDate.getDate());
   }
 
 
@@ -147,16 +158,40 @@ export class ListnodeComponent implements OnInit {
   }
  
   onValueChange(date: Date): void {
-    this.dateRang = date;
-    console.log(this.typeChart);
+    let dateFrom = date;
+    this.dateFrom = date;
     if( date != null ) {
-     this.date1 =  this.datePipe.transform(this.dateRang[0],"yyyy-MM-dd");
-     this.date2 =  this.datePipe.transform(this.dateRang[1],"yyyy-MM-dd");
+     this.date1 =  this.datePipe.transform(dateFrom,"yyyy-MM-dd");
     } else {
       this.date1 = null;
+    }
+    if(this.date2 < this.date1) {
+      let tam = this.date2;
+      this.date2 = this.date1;
+      this.date1 = tam;
+    }
+
+    if (this.typeChart && this.date2){
+      this.onchangeDraw(this.typeChart);
+    }
+  }
+
+  onValueChangeTo(date: Date): void {
+    let dateTo = date;
+    this.dateTo = date;
+    if( date != null ) {
+     this.date2 =  this.datePipe.transform(dateTo,"yyyy-MM-dd");
+    } else {
       this.date2 = null;
     }
-    if (this.typeChart){
+    if(this.date2 < this.date1) {
+      let tam = this.date2;
+      this.date2 = this.date1;
+      this.date1 = tam;
+      
+    }
+    
+    if (this.typeChart && this.date1){
       this.onchangeDraw(this.typeChart);
     }
   }
@@ -169,14 +204,17 @@ export class ListnodeComponent implements OnInit {
     dateNow7D.setDate(dateNow7D.getDate() - 10 );
     let now7Date = this.datePipe.transform(dateNow7D,"yyyy-MM-dd");
     let nowDate = this.datePipe.transform(dateNow,"yyyy-MM-dd");
+    if(!this.date1 && !this.date2 ) {
+      this.date1 = now7Date;
+      this.date2 = nowDate;
+    }
+
     this.typeChart = value;
-    
     if(value != 'accelerometer') {
 
       this.apiNodeService.listDraw(this.chart,value,this.date1,this.date2).subscribe(
         res => {
           this.temperatures = res;
-          
           var data = new google.visualization.DataTable();
           data.addColumn('string', 'X');
           data.addColumn('number', 'value');
@@ -188,38 +226,13 @@ export class ListnodeComponent implements OnInit {
           if(this.temperatures.length > 0 ) {
             this.temperatures.forEach(e => {
               arrData = (e.date.split("T"));
-              if( this.date1 != null && this.date2 != null && arrData[0] <= this.date2 && arrData[0] >= this.date1 ) {
-                arrDate.push([e.date,e.value]);
-                // console.log(arrData);
-              } else  {
-                if( arrData[0] >= now7Date &&  arrData[0] <= nowDate )
-                  arrFull.push([e.date,e.value]);
-                else {
-                  this.commonService.notifyError(this.locale.SORRY, "No Data 1" + value, 1500);
-                }
-              }
+              arrDate.push([e.date,e.value]);
             });
           } else {
             this.commonService.notifyError(this.locale.SORRY, "No Data 2" + value, 1500);
           }
-          if(this.date1 != null && this.date2 != null) {
-            if( arrDate.length > 0 ) {
-              // console.log(arrDate.length);
-              data.addRows(arrDate);
-            }
-            else {
-              this.commonService.notifyError(this.locale.SORRY, "No Data 3" + value, 1500);
-            } 
-
-          } else {
-            if(arrFull.length > 0) {
-              data.addRows(arrFull);
-            }
-            else {
-              this.commonService.notifyError(this.locale.SORRY, "No Data 4" + value, 1500);
-            } 
-          }
-          // Set chart options
+          data.addRows(arrDate);
+          // Set chart options data.addRows(arrFull);
           var options = {
             "width": 800,
             'height':300,
@@ -235,7 +248,12 @@ export class ListnodeComponent implements OnInit {
           chart.draw(data, options);
         },
         error => {
-          this.commonService.notifyError(this.locale.SORRY, "No Data Sensor " + value, 1500);
+          if(!this.date1 && !this.date2) {
+            this.commonService.notifyError(this.locale.SORRY, "No Data Sensor " + value +" the last 10 days " , 3000);
+          } else {
+            this.commonService.notifyError(this.locale.SORRY, "No Data Sensor " + value +" from "+ this.date1 + " - " + this.date2 , 3000);
+          }
+          
         }
       );
     } else {

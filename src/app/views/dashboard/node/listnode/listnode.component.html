@@ -371,16 +371,33 @@
                 (removed)="removed($event)"
                 (typed)="typed($event)"
                 placeholder="NO SELECTED">
-              </ng-select>   -->
-              <div  class="row col-md-12 form-group" style="padding: 0" *ngIf="getsensors.length > 0 " >
-                <div class="col-md-12" >
-                  <input  type="text" 
-                  placeholder="DATE"
-                  class="form-control"
-                  bsDaterangepicker 
-                  #drp="bsDaterangepicker"
-                  [bsConfig]="{ rangeInputFormat: 'DD-MM-YYYY', containerClass: 'theme-dark-blue' }"
-                  (bsValueChange)="onValueChange($event)" > 
+              </ng-select> bsDaterangepicker  -->
+              <div  class="row col-md-12 form-group" style="padding: 0;" *ngIf="getsensors.length > 0 " >
+                <div class="col-md-12" style="padding-bottom: 10px;" >
+                  <div class="col-md-6 pdLeft">
+                    <input  type="text" 
+                    tooltip="FROM DATE"
+                    placeholder="FROM DATE"
+                    class="form-control"
+                    bsDatepicker
+                    #drp="bsDatepicker"
+                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass: 'theme-dark-blue' }"
+                    (bsValueChange)="onValueChange($event)" 
+                    [minDate] = "minDate"
+                    [maxDate]="maxDate">
+                  </div>
+                  <div class="col-md-6 " style="padding-right: 0" >
+                    <input  type="text" 
+                    tooltip="TO DATE"
+                    placeholder="TO DATE"
+                    class="form-control"
+                    bsDatepicker
+                    #drp2="bsDatepicker"
+                    [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass: 'theme-dark-blue' }"
+                    (bsValueChange)="onValueChangeTo($event)" 
+                    [minDate] = "minDate"
+                    [maxDate]="maxDate">
+                  </div>
                 </div>
                   
                 <!-- <select   (change)="onchangeDraw($event.target.value)" class="form-control" name="selectedDraw" id="selectedDraw">
